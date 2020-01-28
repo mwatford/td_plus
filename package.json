@@ -4,15 +4,26 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest",
+    "test": "cross-env NODE_ENV=test jest --watch",
     "server": "cross-env NODE_ENV=dev nodemon server/index",
-    "db": "mongod --dbpath db"
+    "db": "mongod --dbpath db",
+    "dev": "webpack-dev-server --config webpack.dev.js"
   },
   "author": "Melville Watford",
   "license": "ISC",
   "devDependencies": {
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
     "jest": "^25.1.0",
-    "nodemon": "^2.0.2"
+    "node-sass": "^4.13.1",
+    "nodemon": "^2.0.2",
+    "vue-loader": "^15.8.3",
+    "vue-style-loader": "^4.1.2",
+    "vue-template-compiler": "^2.6.11",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1",
+    "webpack-merge": "^4.2.2"
   },
   "dependencies": {
     "bcrypt": "^3.0.7",
@@ -28,6 +39,9 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-google-plus": "^0.5.1",
     "passport-google-plus-token": "^2.1.0",
-    "save": "^2.4.0"
+    "save": "^2.4.0",
+    "vue": "^2.6.11",
+    "vue-router": "^3.1.5",
+    "vuex": "^3.1.2"
   }
 }
