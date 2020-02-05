@@ -11,6 +11,10 @@ module.exports = {
       {
         test: /\.html$/,
         use: ["html-loader"]
+      },
+      {
+        test: /\.vue$/,
+        use: ["vue-loader"]
       }
       // {
       //   test: /\.(png|jpe?g|svg|gif)$/,
