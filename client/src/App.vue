@@ -1,11 +1,28 @@
 <template>
   <div id="app">
-    asd
+    <side-bar></side-bar>
+    <router-view class="display"></router-view>
   </div>
 </template>
 
 <script>
-export default {};
+import { mapActions } from "vuex";
+import sideBar from "./components/side-bar.vue";
+
+export default {
+  components: {
+    "side-bar": sideBar
+  },
+  computed: {},
+  methods: {
+    ...mapActions({
+      fetchUser: actions => actions.fetchUser
+    })
+  },
+  mounted() {
+    this.$store.dispatch("user/fetchUser");
+  }
+};
 </script>
 
 <style lang="scss">
@@ -19,7 +36,13 @@ body {
   background-size: 400% 400%;
   animation: Gradient 20s ease-in-out infinite;
 }
-
+#app {
+  display: flex;
+  width: 100vw;
+}
+.display {
+  width: 100%;
+}
 @keyframes Gradient {
   0% {
     background-position: 50% 10%;
