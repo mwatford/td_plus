@@ -25,9 +25,9 @@ router.post("/users/register/local", async (req, res) => {
 
       await userService.createLocalUser(profile);
 
-      res.status(201).send({ message: "account created", type: "success" });
+      res.status(201).send({ message: "Account created", type: "success" });
     } catch (err) {
-      res.status(500).send();
+      res.status(500).send({ message: "Server error", type: "error" });
     }
   }
 });
@@ -42,15 +42,19 @@ router.post("/users/login/local", async (req, res) => {
   const user = await userService.findByEmail(req.body.email);
 
   if (!user) {
-    return res.status(400).json({ message: "cannot find user" });
+    return res.send({ message: "Cannot find user", type: "error" });
   }
 
   try {
     if (await bcrypt.compare(req.body.password, user.password)) {
       const accessToken = jwt.sign({ id: user._id }, keys.jwt);
-      res.json({ message: "you are logged in", token: accessToken });
+      res.json({
+        message: "You have logged in successfully.",
+        type: "success",
+        token: accessToken
+      });
     } else {
-      res.json({ message: "something went wrong" });
+      res.json({ message: "Incorrect password", type: "error" });
     }
   } catch (err) {
     return res.status(500).send();
