@@ -12,11 +12,7 @@
         v-model="password"
         required
       />
-      <button
-        name="submit"
-        :class="['button', { 'button--inactive': !valid }]"
-        :active="!valid"
-      >
+      <button name="submit" :class="['button']" :active="!valid">
         Login
       </button>
     </form>
@@ -33,11 +29,7 @@ export default {
       password: ""
     };
   },
-  computed: {
-    valid() {
-      return false;
-    }
-  },
+  computed: {},
   methods: {
     register() {
       this.$router.push({ name: "register" });
@@ -56,16 +48,25 @@ export default {
           }
         })
           .then(response => {
-            alert(response.data.message);
+            this.$store.dispatch("alerts/display", {
+              message: response.data.message,
+              type: response.data.type
+            });
             const token = response.data.token;
 
             if (token) {
               window.localStorage.setItem("auth", token);
               this.$store.commit("user/ASSIGN_TOKEN", token);
+              this.$store.dispatch("user/fetchUser", token);
               this.$router.push({ name: "home" });
             }
           })
-          .catch();
+          .catch(err => {
+            this.$store.dispatch("alerts/display", {
+              message: err,
+              type: "error"
+            });
+          });
       }
     }
   }
