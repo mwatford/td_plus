@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <side-bar v-if="user.email"></side-bar>
+    <alerts></alerts>
     <transition mode="out-in" name="slide">
       <timeline v-if="app.timeline"></timeline>
     </transition>
@@ -12,11 +13,13 @@
 import { mapState, mapActions } from "vuex";
 import sideBar from "./components/side-bar.vue";
 import timeline from "./components/timeline.vue";
+import alerts from "./components/alerts.vue";
 
 export default {
   components: {
     "side-bar": sideBar,
-    timeline: timeline
+    timeline: timeline,
+    alerts
   },
   computed: {
     ...mapState({
