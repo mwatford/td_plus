@@ -14,10 +14,6 @@ module.exports = merge(common, {
       {
         test: /\.scss$/,
         use: ["style-loader", "css-loader", "sass-loader"]
-      },
-      {
-        test: /\.vue$/,
-        use: ["vue-loader"]
       }
     ]
   },
@@ -26,7 +22,15 @@ module.exports = merge(common, {
     hot: true,
     port: 8080,
     proxy: {
-      "/api": "http://localhost:3000"
+      "/api": "http://localhost:8000"
+    },
+    historyApiFallback: {
+      rewrites: [
+        {
+          from: /.*/,
+          to: path.posix.join("dist", "index.html")
+        }
+      ]
     }
   }
 });
