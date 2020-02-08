@@ -133,11 +133,17 @@ export default {
         }
       })
         .then(response => {
-          alert(response.data.message);
+          this.$store.dispatch("alerts/display", {
+            message: response.data.message,
+            type: response.data.type
+          });
           this.$router.push({ name: "login" });
         })
         .catch(err => {
-          alert(err);
+          this.$store.dispatch("alerts/display", {
+            message: response.data.message,
+            type: 'error'
+          });
         });
     }
   }
