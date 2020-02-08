@@ -53,6 +53,11 @@ export default {
     },
     logout() {
       this.$store.dispatch("user/logout");
+      this.$store.dispatch("alerts/display", {
+        message: "You have been logged out",
+        type: "success"
+      });
+      this.$router.push({ name: "login" });
     }
   }
 };
