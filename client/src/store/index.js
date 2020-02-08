@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import user from "./user/index";
+import app from "./app/index";
 
 Vue.use(Vuex);
 
@@ -15,6 +16,7 @@ export const moduleMocker = (module, name) => {
 export default new Vuex.Store({
   strict: true,
   modules: {
-    user
+    user,
+    app
   }
 });

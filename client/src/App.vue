@@ -1,31 +1,50 @@
 <template>
   <div id="app">
-    <side-bar></side-bar>
+    <side-bar v-if="user.email"></side-bar>
+    <transition mode="out-in" name="slide">
+      <timeline v-if="app.timeline"></timeline>
+    </transition>
     <router-view class="display"></router-view>
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 import sideBar from "./components/side-bar.vue";
+import timeline from "./components/timeline.vue";
 
 export default {
   components: {
-    "side-bar": sideBar
+    "side-bar": sideBar,
+    timeline: timeline
   },
-  computed: {},
-  methods: {
-    ...mapActions({
-      fetchUser: actions => actions.fetchUser
+  computed: {
+    ...mapState({
+      token: state => state.user.token,
+      app: state => state.app,
+      user: state => state.user
     })
   },
+  methods: {
+    getToken() {
+      const token = window.localStorage.getItem("auth");
+
+      if (token) {
+        this.$store.commit("user/ASSIGN_TOKEN", token);
+        this.$store.dispatch("user/fetchUser", token);
+        return this.$router.push({ name: "home" });
+      }
+      this.$router.push({ name: "login" });
+    }
+  },
   mounted() {
-    this.$store.dispatch("user/fetchUser");
+    this.getToken();
   }
 };
 </script>
 
 <style lang="scss">
+@import url("https://fonts.googleapis.com/css?family=Orbitron&display=swap");
 body {
   overflow: hidden;
   margin: 0;
@@ -38,10 +57,14 @@ body {
 }
 #app {
   display: flex;
-  width: 100vw;
+  font-family: Orbitron;
+  width: 100%;
+  height: 100%;
 }
 .display {
+  display: flex;
   width: 100%;
+  height: 100%;
 }
 @keyframes Gradient {
   0% {
@@ -59,5 +82,17 @@ body {
   100% {
     background-position: 50% 10%;
   }
+}
+.slide-enter-active {
+  transition: all 0.3s ease;
+}
+.slide-leave-active {
+  transition: all 0.3s ease;
+}
+.slide-enter {
+  transform: translateX(-100%);
+}
+.slide-leave-to {
+  transform: translateX(-100%);
 }
 </style>

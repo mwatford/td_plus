@@ -1,15 +1,14 @@
 const passport = require("passport");
 const GooglePlusStrategy = require("passport-google-oauth20").Strategy;
 const GithubStrategy = require("passport-github").Strategy;
+const passportJWT = require("passport-jwt");
+const jwt = require("jsonwebtoken");
 const keys = require("./keys");
 const userService = require("../modules/user/index");
 const JWTStrategy = require("passport-jwt").Strategy;
+const ExtractJwt = passportJWT.ExtractJwt;
 
-passport.serializeUser((user, done) => {
-  const id = user._id;
-  console.log("serialize", id);
-  done(null, id);
-});
+passport.serializeUser((user, done) => done(null, user._id));
 
 passport.deserializeUser(async (id, done) => {
   const user = await userService.findById(id);

@@ -1,10 +1,7 @@
 export const defaultState = () => {
   return {
-    id: "",
-    name: "",
-    email: "",
-    projects: [],
-    token: null
+    projects: false,
+    timeline: false
   };
 };
 

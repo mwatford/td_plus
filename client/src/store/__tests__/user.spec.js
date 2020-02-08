@@ -6,7 +6,7 @@ import store from "../index";
 // let store;
 
 beforeEach(() => {
-  // store = moduleMocker(user, "user");
+  store.commit("user/RESET_STATE");
 });
 
 describe("user", () => {

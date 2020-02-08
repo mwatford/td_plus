@@ -4,24 +4,18 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const passport = require("passport");
 const passportSetup = require("../config/passport");
-const expressSession = require("express-session");
-const { session } = require("../config/keys");
-// const passport = require("passport");
 const path = require("path");
-const cookieParser = require("cookie-parser");
+// const history = require("express-history-api-fallback");
 
 const app = express();
+
+app.use(express.json());
 
 app.get("/", (req, res) => {
   res.sendFile(path.resolve(__dirname, "../../public/index.html"));
 });
 app.get("/app", (req, res) => {
   res.sendFile(path.resolve(__dirname, "../../dist/index.html"));
-});
-app.get("/profile", (req, res) => {
-  console.log("session", req.user);
-
-  res.sendFile(path.resolve(__dirname, "../../public/profile.html"));
 });
 
 app.use(express.static("dist"));
@@ -30,18 +24,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use(
-  expressSession({
-    // name: "session",
-    // maxAge: 24 * 60 * 60 * 1000,
-    secret: session.cookieKey,
-    saveUninitialized: false,
-    resave: false,
-    secure: false
-  })
-);
-
-// app.use(history("index.html", { root }));
+// app.use(history("index.html", { global: '/dist' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
