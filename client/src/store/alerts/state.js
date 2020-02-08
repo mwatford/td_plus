@@ -1,7 +1,5 @@
 export const defaultState = () => {
-  return {
-    
-  }
+  return [];
 };
 
 export const state = defaultState();
