@@ -1,6 +1,6 @@
 export const defaultState = () => {
   return {
-    token: localStorage.getItem("auth") || null,
+    token: null,
     status: ""
   };
 };
