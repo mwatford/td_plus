@@ -23,41 +23,11 @@ export default {
   },
   computed: {
     ...mapState({
-      token: state => state.auth.token,
       app: state => state.app,
       user: state => state.user
     })
   },
-  methods: {
-    tryLogIn() {
-      this.getToken();
-
-      if (this.token) {
-        this.getUser(this.token).then(this.handleResponse);
-      }
-    },
-    getToken() {
-      const token = window.localStorage.getItem("auth");
-
-      if (token) {
-        this.$store.commit("auth/SET_TOKEN", token);
-        return true;
-      }
-      return false;
-    },
-    getUser() {
-      return this.$store.dispatch("user/fetchUser");
-    },
-    handleResponse(response) {
-      this.$store.commit("user/SET_USER", response.data);
-      this.$store.commit("auth/SET_AUTH", true);
-      this.$router.push({ name: "home" });
-    }
-  },
-  mounted() {
-    // this.tryLogIn();
-    this.getUser();
-  }
+  methods: {}
 };
 </script>
 
