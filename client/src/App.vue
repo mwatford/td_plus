@@ -23,30 +23,46 @@ export default {
   },
   computed: {
     ...mapState({
-      token: state => state.user.token,
+      token: state => state.auth.token,
       app: state => state.app,
       user: state => state.user
     })
   },
   methods: {
+    tryLogIn() {
+      this.getToken();
+
+      if (this.token) {
+        this.getUser(this.token).then(this.handleResponse);
+      }
+    },
     getToken() {
       const token = window.localStorage.getItem("auth");
 
       if (token) {
-        this.$store.commit("user/ASSIGN_TOKEN", token);
-        this.$store.dispatch("user/fetchUser", token);
-        return this.$router.push({ name: "home" });
+        this.$store.commit("auth/SET_TOKEN", token);
+        return true;
       }
-      this.$router.push({ name: "login" });
+      return false;
+    },
+    getUser() {
+      return this.$store.dispatch("user/fetchUser");
+    },
+    handleResponse(response) {
+      this.$store.commit("user/SET_USER", response.data);
+      this.$store.commit("auth/SET_AUTH", true);
+      this.$router.push({ name: "home" });
     }
   },
   mounted() {
-    this.getToken();
+    // this.tryLogIn();
+    this.getUser();
   }
 };
 </script>
 
 <style lang="scss">
+@import url("https://fonts.googleapis.com/css?family=Ubuntu&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Orbitron&display=swap");
 body {
   overflow: hidden;
@@ -54,20 +70,32 @@ body {
   padding: 0;
   width: 100vw;
   height: 100vh;
-  background: radial-gradient(#829e34, #852d52, #254a81);
+  // background: radial-gradient(#829e34, #852d52, #254a81);
+  background-color: #f4d03f;
+  background-image: radial-gradient(#f4d03f 0%, #16a085 100%);
+
   background-size: 400% 400%;
   animation: Gradient 20s ease-in-out infinite;
 }
 #app {
   display: flex;
-  font-family: Orbitron;
+  font-family: Ubuntu;
   width: 100%;
   height: 100%;
+  color: #fff;
 }
 .display {
   display: flex;
   width: 100%;
   height: 100%;
+}
+.row {
+  display: flex;
+  flex-direction: row;
+}
+.col {
+  display: flex;
+  flex-direction: column;
 }
 @keyframes Gradient {
   0% {

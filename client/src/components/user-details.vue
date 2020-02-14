@@ -1,6 +1,7 @@
 <template>
-  <div class="userDetails">
-    {{ user }}
+  <div class="userDetails col">
+    <h3>{{ user.name ? user.name : "Not Set" }}</h3>
+    <h4>{{ user.email }}</h4>
   </div>
 </template>
 
@@ -16,6 +17,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 .userDetails {
   color: #fff;
   position: absolute;
@@ -25,7 +31,7 @@ export default {
   left: 100%;
   margin: 20px;
   background: #000000;
-  border-radius: 16px;
   box-shadow: 0 0 15px 2px #0000006e;
+  padding: 20px 0 0 20px;
 }
 </style>

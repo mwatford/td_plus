@@ -1,26 +1,33 @@
 export const actions = requestModule => {
   return {
     fetchUser({ commit }, token) {
-      requestModule({
+      return requestModule({
         method: "get",
         url: "/api/users/current",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
         }
-      })
-        .then(response => {
-          const user = response.data;
-          commit("SET_USER", user);
-        })
-        .catch(err => {});
+      });
     },
     resetState({ commit }) {
       commit("RESET_STATE");
     },
     logout({ commit }) {
       commit("RESET_STATE");
-      window.localStorage.removeItem("auth");
+    },
+    save({ commit }, { user, token }) {
+      return requestModule({
+        method: "put",
+        url: "/api/users/current/update",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        data: {
+          user
+        }
+      });
     }
   };
 };

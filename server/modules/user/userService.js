@@ -30,19 +30,19 @@ const findByEmail = User => email => {
 };
 
 const findById = User => id => {
-  return User.findById(id, 'email name projects');
+  return User.findById(id, "email name projects");
 };
 
 const getAll = User => () => {
   return User.find({});
 };
 
-const updateUser = User => async (id, changedUser) => {
-  const user = await User.findById(id);
+const updateUser = User => async (id, { user }) => {
+  const userInDb = await User.findById(id);
 
-  Object.assign(user, changedUser);
+  Object.assign(userInDb, user);
 
-  return user.save();
+  return userInDb.save();
 };
 
 module.exports = User => {

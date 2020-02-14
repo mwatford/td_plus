@@ -1,5 +1,3 @@
-import { moduleMocker } from "../index";
-import user from "../user/index";
 import { defaultState } from "../user/state";
 import store from "../index";
 

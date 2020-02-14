@@ -41,6 +41,7 @@ export default {
   justify-content: center;
   align-items: center;
   border-radius: 8px;
+  z-index: 5;
 
   p {
     text-align: center;

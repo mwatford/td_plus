@@ -1,30 +1,33 @@
 <template>
-  <form
-    action=""
-    @submit.prevent="submit"
-    :class="['register', { 'register--valid': valid }]"
-  >
-    <h2 class="header">Register</h2>
-    <label for="email">Email:</label>
-    <input type="text" class="input" name="email" v-model="form.email" />
-    <label for="password">Password:</label>
-    <input
-      type="password"
-      class="input"
-      name="password"
-      v-model="form.password"
-    />
-    <label for="passwordRepeat">Repeat password:</label>
-    <input
-      type="password"
-      class="input"
-      name="passwordRepeat"
-      v-model="form.repeat"
-    />
+  <form @submit.prevent="submit" class="form form--inverted">
+    <div class="col">
+      <h2 class="header">Register</h2>
+      <input
+        placeholder="email"
+        type="text"
+        class="input"
+        name="email"
+        v-model="form.email"
+      />
+      <input
+        placeholder="password"
+        type="password"
+        class="input"
+        name="password"
+        v-model="form.password"
+      />
+      <input
+        placeholder="repeat password"
+        type="password"
+        class="input"
+        name="passwordRepeat"
+        v-model="form.repeat"
+      />
+    </div>
     <button
       name="submit"
       :disabled="!valid"
-      :class="['button', { 'button--inactive': !valid }]"
+      :class="['button button--inverted']"
     >
       Register
     </button>
@@ -137,51 +140,15 @@ export default {
             message: response.data.message,
             type: response.data.type
           });
-          this.$router.push({ name: "login" });
         })
         .catch(err => {
           this.$store.dispatch("alerts/display", {
             message: response.data.message,
-            type: 'error'
+            type: "error"
           });
         });
     }
-  }
+  },
+  mounted() {}
 };
 </script>
-
-<style lang="scss" scoped>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-.register {
-  width: 350px;
-  height: 400px;
-  display: flex;
-  flex-direction: column;
-  margin: auto;
-  background: #000000a2;
-  color: #fff;
-  align-items: center;
-  justify-content: center;
-  border-radius: 16px;
-  transition: all 0.3s ease;
-
-  &--valid {
-    box-shadow: 0 0 20px 5px #5ef523b0;
-  }
-}
-.header {
-  margin-bottom: 20px;
-}
-.input {
-  width: 200px;
-  margin: 10px 0px;
-}
-.button {
-  margin-top: 10px;
-  width: 120px;
-}
-</style>
