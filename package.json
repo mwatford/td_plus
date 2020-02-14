@@ -53,6 +53,7 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
+    "@auth0/auth0-spa-js": "^1.6.4",
     "axios": "^0.19.2",
     "bcrypt": "^3.0.7",
     "bcryptjs": "^2.4.3",
