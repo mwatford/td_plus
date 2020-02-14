@@ -10,13 +10,11 @@ export const actions = requestModule => {
         })
           .then(response => {
             const token = response.data.token;
-            localStorage.setItem("auth", token);
             commit("AUTH_SUCCESS", token);
             resolve(response.data);
           })
           .catch(err => {
             commit("AUTH_ERROR", err);
-            localStorage.removeItem("auth");
             reject(err);
           });
       });
@@ -24,7 +22,6 @@ export const actions = requestModule => {
     logout({ commit, dispatch }) {
       return new Promise((resolve, reject) => {
         commit("AUTH_LOGOUT");
-        localStorage.removeItem("auth");
         resolve();
       });
     }
