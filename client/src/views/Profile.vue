@@ -44,7 +44,7 @@ export default {
   computed: {
     ...mapState({
       user: state => state.user,
-      auth: state => state.auth
+      token: state => state.auth.token
     }),
     valid() {
       return this.testName;
@@ -61,8 +61,9 @@ export default {
   },
   methods: {
     save() {
+      console.log(this.token);
       this.$store
-        .dispatch("user/save", { user: this.changes, token: this.auth.token })
+        .dispatch("user/save", { user: this.changes, token: this.token })
         .then(this.handleResponse);
     },
     handleResponse(response) {
