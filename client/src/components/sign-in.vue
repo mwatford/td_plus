@@ -44,8 +44,8 @@ export default {
           return this.$store.dispatch("user/fetchUser", token);
         })
         .then(user => {
-          console.log(user);
-          this.$store.commit("user/SET_USER", user);
+          console.log(user.data);
+          this.$store.commit("user/SET_USER", user.data);
           this.$router.push({ name: "home" });
         })
         .catch(err => {
