@@ -7,7 +7,7 @@ const userSchema = new Schema({
   password: String,
   name: { type: String, default: "" },
   projects: [],
-  img: String,
+  friends: [],
   loginStrategy: String,
   createdAt: { type: Date, default: Date.now }
 });
