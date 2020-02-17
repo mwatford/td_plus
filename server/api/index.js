@@ -1,3 +1,4 @@
 const users = require("./users");
+const projects = require("./projects");
 
-module.exports = [users];
+module.exports = [users, projects];
