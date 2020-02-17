@@ -6,6 +6,7 @@
   "scripts": {
     "test:server": "cross-env NODE_ENV=test jest server/ --watch --config jest.config.js",
     "test:client": "jest client/ --watch",
+    "test:vue": "jest /*-vue.spec.js --watch",
     "server": "cross-env NODE_ENV=dev nodemon server/index",
     "db": "mongod --dbpath db",
     "dev": "webpack-dev-server --config webpack.dev.js",
