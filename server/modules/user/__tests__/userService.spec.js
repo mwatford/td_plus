@@ -21,12 +21,10 @@ describe("userService test", () => {
   describe("create test", () => {
     test("creates a user", () => {
       const save = jest.fn();
-      let id;
-      let loginStrategy;
+      let email;
 
       const MockModel = function(data) {
-        id = data.id;
-        loginStrategy = data.loginStrategy;
+        email = data.email;
 
         return {
           ...data,
@@ -36,10 +34,9 @@ describe("userService test", () => {
 
       const userService = UserService(MockModel);
 
-      userService.createUser({ id: "1334" }, "google");
+      userService.createUser({ email: "asd@asd.com" });
 
-      expect(id).toEqual("1334");
-      expect(loginStrategy).toEqual("google");
+      expect(email).toEqual("asd@asd.com");
       expect(save).toHaveBeenCalledTimes(1);
     });
   });
@@ -86,12 +83,12 @@ describe("userService test", () => {
       const userChanges = {
         name: "Mark"
       };
-      const findById = jest.fn(() => {
+      const findOne = jest.fn(() => {
         return user;
       });
 
       const MockModel = {
-        findById
+        findOne
       };
       const userService = UserService(MockModel);
 

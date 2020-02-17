@@ -11,7 +11,7 @@ router.post("/users/current", authenticate, async (req, res) => {
     const profile = {
       email: req.body.email
     };
-    user = await userService.createLocalUser(profile);
+    user = await userService.createUser(profile);
   }
 
   res.send(user);

@@ -1,18 +1,8 @@
-const create = User => (profile, loginStrategy) => {
-  if (!profile || !loginStrategy) {
+const createUser = User => profile => {
+  if (!profile) {
     throw new Error(`Profile: ${profile} loginStrategy: ${loginStrategy}`);
   }
 
-  const user = new User({
-    id: profile.id,
-    email: profile.emails ? profile.emails[0].value : "",
-    loginStrategy
-  });
-
-  return user.save();
-};
-
-const createLocalUser = User => profile => {
   const user = new User({
     email: profile.email
   });
@@ -29,7 +19,7 @@ const findByEmail = User => email => {
 };
 
 const findById = User => id => {
-  return User.findById(id, "email name projects");
+  return User.findById(id);
 };
 
 const getAll = User => () => {
@@ -46,12 +36,11 @@ const updateUser = User => async (email, changes) => {
 
 module.exports = User => {
   return {
-    createUser: create(User),
+    createUser: createUser(User),
     find: find(User),
     findById: findById(User),
     getAll: getAll(User),
     updateUser: updateUser(User),
-    findByEmail: findByEmail(User),
-    createLocalUser: createLocalUser(User)
+    findByEmail: findByEmail(User)
   };
 };

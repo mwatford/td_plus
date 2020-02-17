@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test:server": "cross-env NODE_ENV=test jest --watch --config jest.config.js",
+    "test:server": "cross-env NODE_ENV=test jest server/ --watch --config jest.config.js",
     "test:client": "jest client/ --watch",
     "server": "cross-env NODE_ENV=dev nodemon server/index",
     "db": "mongod --dbpath db",
