@@ -1,12 +1,15 @@
 export const actions = requestModule => {
   return {
-    fetchUser({ commit }, token) {
+    fetchUser({ commit }, { token, email }) {
       return requestModule({
-        method: "get",
+        method: "post",
         url: "/api/users/current",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
+        },
+        data: {
+          email
         }
       });
     },
@@ -16,7 +19,7 @@ export const actions = requestModule => {
     logout({ commit }) {
       commit("RESET_STATE");
     },
-    save({ commit }, { user, token }) {
+    save({ commit }, { email, changes, token }) {
       return requestModule({
         method: "put",
         url: "/api/users/current/update",
@@ -25,7 +28,8 @@ export const actions = requestModule => {
           "Content-Type": "application/json"
         },
         data: {
-          user
+          changes,
+          email
         }
       });
     }

@@ -36,14 +36,5 @@ export default [
     meta: {
       guest: true
     }
-    // beforeEnter(to, from, next) {
-    //   const loggedIn = store.state.auth.loggedIn;
-
-    //   if (loggedIn) {
-    //     next({ name: "home" });
-    //   } else {
-    //     next();
-    //   }
-    // }
   }
 ];

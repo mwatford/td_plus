@@ -1,11 +1,6 @@
 <template>
   <div class="start row">
-    <section>
-      <Login></Login>
-    </section>
-    <section class="register ">
-      <Register></Register>
-    </section>
+    <Login></Login>
   </div>
 </template>
 
@@ -34,6 +29,8 @@ export default {
   width: 100%;
   height: 100%;
   position: relative;
+  align-items: center;
+  justify-content: center;
 }
 .form {
   min-width: 350px;

@@ -1,13 +1,9 @@
 export const mutations = {
-  AUTH_REQUEST(state) {
-    state.status = "loading";
+  SET_STATUS(state, status) {
+    state.status = status;
   },
-  AUTH_SUCCESS(state, token) {
-    state.status = "success";
+  SET_TOKEN(state, token) {
     state.token = token;
-  },
-  AUTH_ERROR(state) {
-    state.status = "error";
   },
   AUTH_LOGOUT(state) {
     state.token = null;

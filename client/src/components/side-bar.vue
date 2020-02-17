@@ -62,9 +62,8 @@ export default {
       this.$router.push({ name: "profile" });
     },
     logout() {
-      this.$store.dispatch("user/logout");
-      this.$store.dispatch("auth/logout").then(() => {
-        this.$router.push({ name: "start" });
+      this.$auth.logout({
+        returnTo: window.location.origin
       });
     }
   }

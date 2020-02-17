@@ -14,8 +14,7 @@ const create = User => (profile, loginStrategy) => {
 
 const createLocalUser = User => profile => {
   const user = new User({
-    email: profile.email,
-    password: profile.password
+    email: profile.email
   });
 
   return user.save();
@@ -37,12 +36,12 @@ const getAll = User => () => {
   return User.find({});
 };
 
-const updateUser = User => async (id, { user }) => {
-  const userInDb = await User.findById(id);
+const updateUser = User => async (email, changes) => {
+  const user = await User.findOne({ email });
 
-  Object.assign(userInDb, user);
+  Object.assign(user, changes);
 
-  return userInDb.save();
+  return user.save();
 };
 
 module.exports = User => {

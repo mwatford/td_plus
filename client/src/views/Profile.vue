@@ -25,7 +25,7 @@
         <button class="button" @click="save" type="submit" :disabled="!valid">
           Save
         </button>
-        <button class="button" @click="cancel">Cancel</button>
+        <button class="button" @click="cancel">Back</button>
       </div>
     </form>
   </div>
@@ -61,9 +61,12 @@ export default {
   },
   methods: {
     save() {
-      console.log(this.token);
       this.$store
-        .dispatch("user/save", { user: this.changes, token: this.token })
+        .dispatch("user/save", {
+          email: this.user.email,
+          changes: this.changes,
+          token: this.token
+        })
         .then(this.handleResponse);
     },
     handleResponse(response) {

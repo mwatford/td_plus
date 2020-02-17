@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <side-bar v-if="user.email"></side-bar>
+    <side-bar v-if="isAuthenticated"></side-bar>
     <alerts></alerts>
     <transition mode="out-in" name="slide">
       <timeline v-if="app.timeline"></timeline>
@@ -24,7 +24,8 @@ export default {
   computed: {
     ...mapState({
       app: state => state.app,
-      user: state => state.user
+      user: state => state.user,
+      isAuthenticated: state => state.auth.status
     })
   },
   methods: {}
