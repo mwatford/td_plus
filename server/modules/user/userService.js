@@ -34,6 +34,10 @@ const updateUser = User => async (email, changes) => {
   return user.save();
 };
 
+const getId = User => email => {
+  return User.findOne({ email }, "_id");
+};
+
 module.exports = User => {
   return {
     createUser: createUser(User),
@@ -41,6 +45,7 @@ module.exports = User => {
     findById: findById(User),
     getAll: getAll(User),
     updateUser: updateUser(User),
-    findByEmail: findByEmail(User)
+    findByEmail: findByEmail(User),
+    getId: getId(User)
   };
 };
