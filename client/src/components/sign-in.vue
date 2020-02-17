@@ -42,11 +42,12 @@ export default {
           const { isAuthenticated, user } = this.$auth;
           const token = await this.$auth.getTokenSilently();
           this.$store.commit("auth/SET_TOKEN", token);
-          const appUser = await this.$store.dispatch("user/fetchUser", {
+          return this.$store.dispatch("user/fetchUser", {
             token,
             email: user.email
           });
-          this.$store.commit("user/SET_USER", appUser.data);
+        })
+        .then(() => {
           this.$store.commit("auth/SET_STATUS", true);
           this.$router.push({ name: "home" });
         })

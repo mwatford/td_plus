@@ -11,6 +11,8 @@ export const actions = requestModule => {
         data: {
           email
         }
+      }).then(response => {
+        return commit("SET_USER", response.data);
       });
     },
     resetState({ commit }) {
