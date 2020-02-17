@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <project v-for="project in user.projects" :key="project.id" :project="project"></project>
     <div class="create" @click="create">
       <div>+</div>
     </div>
