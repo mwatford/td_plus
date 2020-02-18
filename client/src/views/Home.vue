@@ -1,6 +1,12 @@
 <template>
   <div class="home">
-    <project v-for="project in user.projects" :key="project.id" :project="project"></project>
+    <router-link
+      v-for="project in projects"
+      :key="project._id"
+      :to="{ path: `/project/${project._id}` }"
+    >
+      <project :project="project"></project>
+    </router-link>
     <div class="create" @click="create">
       <div>+</div>
     </div>
@@ -19,14 +25,37 @@ export default {
     return {};
   },
   computed: {
-    ...mapState({ user: state => state.user })
+    ...mapState({
+      user: state => state.user,
+      projects: state => state.projects.data,
+      token: state => state.auth.token
+    })
   },
   methods: {
     create() {
       this.$router.push("/create");
+    },
+    fetchProjects() {
+      this.$store.dispatch("projects/fetchProjects", {
+        token: this.token,
+        id: this.user._id
+      });
+    },
+    fetchFriends() {
+      this.$http({
+        method: "get",
+        url: `/api/users/${this.user._id}/friends`,
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          "Content-Type": "application/json"
+        }
+      });
     }
   },
-  mounted() {}
+  mounted() {
+    this.fetchProjects();
+    this.fetchFriends();
+  }
 };
 </script>
 
