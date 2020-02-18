@@ -68,6 +68,9 @@ body {
   display: flex;
   flex-direction: column;
 }
+a {
+  text-decoration: none;
+}
 @keyframes Gradient {
   0% {
     background-position: 50% 10%;
