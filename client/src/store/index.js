@@ -4,6 +4,7 @@ import user from "./user/index";
 import app from "./app/index";
 import alerts from "./alerts/index";
 import auth from "./auth/index";
+import projects from "./projects/index";
 
 Vue.use(Vuex);
 
@@ -21,6 +22,7 @@ export default new Vuex.Store({
     user,
     app,
     alerts,
-    auth
+    auth,
+    projects
   }
 });
