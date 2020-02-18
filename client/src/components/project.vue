@@ -1,18 +1,26 @@
 <template>
   <div class="project">
     <h3 class="project__name">
-      {{ snippet("iasuhddhiaushd") }}
+      {{ snippet(project.name) || "not set" }}
     </h3>
   </div>
 </template>
 
 <script>
 export default {
-  props: {},
+  props: {
+    project: {
+      required: true,
+      type: Object
+    }
+  },
+  data() {
+    return {};
+  },
   methods: {
     snippet(text) {
       if (text.length > 16) {
-        text = text.slice(0, 15) + '...'
+        text = text.slice(0, 15) + "...";
       }
       return text;
     }
@@ -44,6 +52,7 @@ export default {
     width: 80%;
     padding-bottom: 5px;
     border-bottom: 1px solid #cccccc;
+    color: #000;
   }
 }
 </style>
