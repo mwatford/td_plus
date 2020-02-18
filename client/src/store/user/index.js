@@ -1,4 +1,3 @@
-import requestModule from "../../modules/mockedRequestModule";
 import { actions } from "./actions";
 import { getters } from "./getters";
 import { state } from "./state";
