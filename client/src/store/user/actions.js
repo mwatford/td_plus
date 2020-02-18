@@ -12,7 +12,7 @@ export const actions = requestModule => {
           email
         }
       }).then(response => {
-        return commit("SET_USER", response.data);
+        commit("SET_USER", response.data);
       });
     },
     resetState({ commit }) {
