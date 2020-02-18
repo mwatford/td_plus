@@ -71,6 +71,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+* {
+  font-family: Orbitron;
+}
 .navigation {
   display: flex;
   height: 100vh;
