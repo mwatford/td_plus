@@ -2,6 +2,7 @@ import Vue from "vue";
 import App from "./App.vue";
 import store from "./store/index";
 import router from "./router/index";
+import axios from "axios";
 
 import { domain, clientId, audience } from "../../auth_config.json";
 
@@ -17,6 +18,8 @@ Vue.use(Auth0Plugin, {
     router.push({ name: "home" });
   }
 });
+
+Vue.prototype.$http = axios;
 
 Vue.config.productionTip = false;
 
