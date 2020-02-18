@@ -1,6 +1,7 @@
 import store from "../store/index";
 import Home from "../views/Home.vue";
 import Profile from "../views/Profile.vue";
+import Project from "../views/Project.vue";
 import Start from "../views/Start.vue";
 import Create from "../views/Create.vue";
 
@@ -25,6 +26,15 @@ export default [
     name: "profile",
     path: "/profile",
     component: Profile,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    name: "project",
+    path: "/project/:id",
+    params: true,
+    component: Project,
     meta: {
       requiresAuth: true
     }
