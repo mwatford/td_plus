@@ -3,7 +3,6 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const path = require("path");
-// const history = require("express-history-api-fallback");
 
 const app = express();
 
