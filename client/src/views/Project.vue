@@ -20,7 +20,7 @@ export default {
   },
   methods: {
     fetchData() {
-      return axios({
+      axios({
         method: "get",
         url: `/api/projects/${this.$route.params.id}`,
         headers: {
