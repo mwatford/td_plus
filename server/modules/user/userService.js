@@ -38,6 +38,16 @@ const getId = User => email => {
   return User.findOne({ email }, "_id");
 };
 
+const getAllFriends = User => async userId => {
+  const user = await User.findById(userId);
+  const friends = await User.find({})
+    .where("_id")
+    .in(user.friends)
+    .exec();
+
+  return friends;
+};
+
 module.exports = User => {
   return {
     createUser: createUser(User),
@@ -46,6 +56,7 @@ module.exports = User => {
     getAll: getAll(User),
     updateUser: updateUser(User),
     findByEmail: findByEmail(User),
-    getId: getId(User)
+    getId: getId(User),
+    getAllFriends: getAllFriends(User)
   };
 };
