@@ -25,9 +25,9 @@ router.post("/projects/create", authenticate, async (req, res) => {
 });
 
 router.get("/projects/all/:id", authenticate, async (req, res) => {
-  const id = req.params.id;
+  const { sub } = req.user;
 
-  const user = await userService.findById(id);
+  const user = await userService.find(sub);
   const projectIDs = user.projects;
 
   const projects = await projectService.findMany(projectIDs);
@@ -35,7 +35,7 @@ router.get("/projects/all/:id", authenticate, async (req, res) => {
   res.send(projects);
 });
 
-router.get("/projects/:id/:userId", authenticate, async (req, res) => {
+router.get("/projects/:id", authenticate, async (req, res) => {
   const project = await projectService.find(req.params.id);
 
   const isAuthenticated = await projectService.authenticate(
