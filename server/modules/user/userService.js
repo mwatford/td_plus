@@ -10,8 +10,8 @@ const createUser = User => profile => {
   return user.save();
 };
 
-const find = User => (id, loginStrategy) => {
-  return User.findOne({ id, loginStrategy });
+const find = User => sub => {
+  return User.findOne({ sub }, "-sub");
 };
 
 const findByEmail = User => email => {
@@ -26,8 +26,8 @@ const getAll = User => () => {
   return User.find({});
 };
 
-const updateUser = User => async (email, changes) => {
-  const user = await User.findOne({ email });
+const updateUser = User => async (sub, changes) => {
+  const user = await User.findOne({ sub });
 
   Object.assign(user, changes);
 
@@ -38,9 +38,9 @@ const getId = User => email => {
   return User.findOne({ email }, "_id");
 };
 
-const getAllFriends = User => async userId => {
-  const user = await User.findById(userId);
-  const friends = await User.find({})
+const getAllFriends = User => async sub => {
+  const user = await User.find({ sub });
+  const friends = await User.find({}, "name email _id")
     .where("_id")
     .in(user.friends)
     .exec();
