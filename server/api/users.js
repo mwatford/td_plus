@@ -4,17 +4,21 @@ const userService = require("../modules/user/index");
 const authenticate = require("../utils/authentication");
 
 router.post("/users/current", authenticate, async (req, res) => {
-  let user;
-  if (await userService.findByEmail(req.body.email)) {
-    user = await userService.findByEmail(req.body.email);
-  } else {
-    const profile = {
-      email: req.body.email
-    };
-    user = await userService.createUser(profile);
-  }
+  try {
+    const user = await userService.findByEmail(req.body.email);
 
-  res.send(user);
+    if (user) {
+      return res.send(user);
+    } else {
+      const profile = {
+        email: req.body.email
+      };
+      const newUser = await userService.createUser(profile);
+      return res.send(newUser);
+    }
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 router.put("/users/current/update", authenticate, async (req, res) => {
@@ -32,6 +36,13 @@ router.put("/users/current/update", authenticate, async (req, res) => {
       type: "error"
     });
   }
+});
+
+router.get("/users/:userId/friends", authenticate, async (req, res) => {
+  const { userId } = req.params;
+  const friendList = await userService.getAllFriends(userId);
+
+  console.log({ friendList });
 });
 
 module.exports = router;
