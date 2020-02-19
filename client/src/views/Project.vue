@@ -22,7 +22,7 @@ export default {
     fetchData() {
       return axios({
         method: "get",
-        url: `/api/projects/${this.$route.params.id}/${this.user._id}`,
+        url: `/api/projects/${this.$route.params.id}`,
         headers: {
           Authorization: `Bearer ${this.token}`,
           "Content-Type": "application/json"
