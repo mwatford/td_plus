@@ -24,7 +24,7 @@ const authenticate = (project, userId) => {
     throw new Error("argument was not passed: project");
   }
 
-  return Boolean(project.members.find(el => el === userId));
+  return Boolean(project.members.find(el => el == userId));
 };
 
 const addMember = (project, adminId, userId) => {
@@ -36,11 +36,21 @@ const addMember = (project, adminId, userId) => {
   }
 };
 
+const findMany = Project => async projects => {
+  records = await Project.find({}, 'name members')
+    .where("_id")
+    .in(projects)
+    .exec();
+
+  return records;
+};
+
 module.exports = Project => {
   return {
     createProject: createProject(Project),
     find: find(Project),
     authenticate: authenticate,
-    addMember: addMember
+    addMember: addMember,
+    findMany: findMany(Project)
   };
 };
