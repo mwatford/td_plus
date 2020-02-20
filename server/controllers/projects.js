@@ -14,8 +14,10 @@ router.post("/create", authenticate, async (req, res) => {
         name: req.body.project.name
       });
 
-      admin.projects.push(project._id);
-      admin.save();
+      userService.notifyUsers(project.members, user => {
+        user.projects.push(project._id);
+        user.save();
+      });
 
       res.send(project);
     }
@@ -64,8 +66,7 @@ router.delete("/:id", authenticate, async (req, res) => {
 
     if (isAdmin) {
       await projectService.deleteProject(projectId, (err, { members }) => {
-        members.forEach(async id => {
-          const user = await userService.findById(id);
+        userService.notifyUsers(members, user => {
           const index = user.projects.indexOf(projectId);
           if (index !== -1) {
             user.projects.splice(index, 1);
