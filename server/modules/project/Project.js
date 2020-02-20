@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const ProjectSchema = new Schema({
   name: { type: String, required: true, default: "" },
-  admin: String,
+  admin: { type: mongoose.ObjectId, required: true },
   members: [],
   toDo: [],
   inProgress: [],
