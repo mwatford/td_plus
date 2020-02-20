@@ -16,28 +16,28 @@ const find = Project => id => {
   return Project.findById(id);
 };
 
-const authenticate = (project, userId) => {
-  if (!userId) {
-    throw new Error("argument was not passed: userId");
-  }
-  if (!project) {
-    throw new Error("argument was not passed: project");
+const isMember = (project, userId) => {
+  if (!userId || !project) {
+    throw new Error("Missing function argument(s)!");
   }
 
-  return Boolean(project.members.find(el => el == userId));
+  return project.members.find(el => userId.equals(el));
 };
 
-const addMember = (project, adminId, userId) => {
-  if (project.admin === adminId) {
-    project.members.push(userId);
-    return project.save();
-  } else {
-    throw new Error("Unauthorized");
+const isAdmin = (project, userId) => {
+  if (!project || !userId) {
+    throw new Error("Missing function argument(s)!");
   }
+  return project.admin.equals(userId);
+};
+
+const addMember = (project, userId) => {
+  project.members.push(userId);
+  return project.save();
 };
 
 const findMany = Project => async projects => {
-  records = await Project.find({}, 'name members')
+  records = await Project.find({}, "name members")
     .where("_id")
     .in(projects)
     .exec();
@@ -45,12 +45,21 @@ const findMany = Project => async projects => {
   return records;
 };
 
+const deleteProject = Project => async (projectId, cb) => {
+  if (!projectId) {
+    throw new Error("Missing argument!");
+  }
+  return Project.findByIdAndRemove(projectId, cb);
+};
+
 module.exports = Project => {
   return {
     createProject: createProject(Project),
     find: find(Project),
-    authenticate: authenticate,
+    isMember: isMember,
+    isAdmin: isAdmin,
     addMember: addMember,
-    findMany: findMany(Project)
+    findMany: findMany(Project),
+    deleteProject: deleteProject(Project)
   };
 };
