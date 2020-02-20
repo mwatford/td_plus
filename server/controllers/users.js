@@ -1,9 +1,9 @@
 const router = require("express").Router();
 const userService = require("../modules/user/index");
 
-const authenticate = require("../utils/authentication");
+const authenticate = require("../middleware/authentication");
 
-router.post("/users/current", authenticate, async (req, res) => {
+router.post("/current", authenticate, async (req, res) => {
   const { sub } = req.user;
   try {
     const user = await userService.find(sub);
@@ -23,7 +23,7 @@ router.post("/users/current", authenticate, async (req, res) => {
   }
 });
 
-router.put("/users/current/update", authenticate, async (req, res) => {
+router.put("/current/update", authenticate, async (req, res) => {
   const { changes } = req.body;
   const { sub } = req.user;
 
@@ -42,7 +42,7 @@ router.put("/users/current/update", authenticate, async (req, res) => {
   }
 });
 
-router.get("/users/:userId/friends", authenticate, async (req, res) => {
+router.get("/:userId/friends", authenticate, async (req, res) => {
   const { sub } = req.user;
   const friendList = await userService.getAllFriends(sub);
 
