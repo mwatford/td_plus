@@ -66,10 +66,10 @@ describe("userService test", () => {
 
       const userService = UserService(MockModel);
 
-      userService.getAll();
+      userService.get({});
 
       expect(find).toHaveBeenCalledTimes(1);
-      expect(find).toHaveBeenCalledWith({});
+      expect(find).toHaveBeenCalledWith({}, '');
     });
   });
 
@@ -92,7 +92,7 @@ describe("userService test", () => {
       };
       const userService = UserService(MockModel);
 
-      await userService.updateUser("123", userChanges);
+      await userService.updateUser(user, userChanges);
 
       expect(save).toHaveBeenCalledTimes(1);
       expect(user.name).toEqual("Mark");

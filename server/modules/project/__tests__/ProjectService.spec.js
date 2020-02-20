@@ -5,6 +5,10 @@ describe("projectService test", () => {
     expect(ProjectService).toBeDefined();
   });
 
+  String.prototype.equals = function(x) {
+    return this === x;
+  };
+
   describe("createProject test", () => {
     const save = jest.fn();
     let admin;
@@ -60,61 +64,103 @@ describe("projectService test", () => {
     });
   });
 
-  describe("authenticate", () => {
+  describe("isMember", () => {
     const projectService = ProjectService({});
+
     const mockProject = {
       members: ["1234", "1445", "1355"]
     };
 
     test("should return true if members list contains the user", () => {
-      const response = projectService.authenticate(mockProject, "1234");
+      const response = projectService.isMember(mockProject, "1234");
 
       expect(response).toEqual(true);
     });
 
     test("returns false when user is not in member list", () => {
-      const response = projectService.authenticate(mockProject, "3333");
+      const response = projectService.isMember(mockProject, "3333");
 
       expect(response).toEqual(false);
     });
 
     test("throws an error when parameters are not passed", () => {
       expect(() => {
-        projectService.authenticate(mockProject);
-      }).toThrow("argument was not passed: userId");
+        projectService.isMember(mockProject);
+      }).toThrow("Missing function argument(s)!");
 
       expect(() => {
-        projectService.authenticate(null, "1234");
-      }).toThrow("argument was not passed: project");
+        projectService.isMember(null, "1234");
+      }).toThrow("Missing function argument(s)!");
+    });
+  });
+
+  describe("isAdmin", () => {
+    const projectService = ProjectService({});
+
+    test("throws an error when arguments are missing", () => {
+      expect(() => {
+        projectService.isAdmin(null, "1234");
+      }).toThrow("Missing function argument(s)!");
+    });
+
+    test("returns bolean", () => {
+      const mockProject = {
+        admin: "123"
+      };
+      const response = projectService.isAdmin(mockProject, "123");
+      const fail = projectService.isAdmin(mockProject, "1234");
+
+      expect(response).toBeTruthy();
+      expect(fail).toBeFalsy();
     });
   });
 
   describe("addMember test", () => {
     const projectService = ProjectService({});
+    const save = jest.fn();
     const mockProject = {
       members: [],
-      admin: "1234",
       save: function() {
+        save();
         return this;
       }
     };
 
-    test("adds member if user is an admin", () => {
-      const updatedProject = projectService.addMember(
-        mockProject,
-        "1234",
-        "44335"
-      );
+    test("adds member to a project", () => {
+      const updatedProject = projectService.addMember(mockProject, "44335");
 
       const expected = updatedProject.members.find(el => el === "44335");
 
+      expect(save).toHaveBeenCalled();
       expect(expected).toBeTruthy();
     });
+  });
 
-    test("throws error if user is not project admin", () => {
-      expect(() => {
-        projectService.addMember(mockProject, "1333", "3324");
-      }).toThrow("Unauthorized");
+  describe("deleteProject", () => {
+    const findByIdAndRemove = jest.fn((id, cb) => {
+      cb();
+    });
+
+    const MockModel = {
+      findByIdAndRemove
+    };
+
+    const projectService = ProjectService(MockModel);
+
+    test("throws error when arguments are missing", async () => {
+      await expect(projectService.deleteProject()).rejects.toThrow(
+        "Missing argument!"
+      );
+    });
+
+    test("deletes a project", async () => {
+      const cb = jest.fn();
+
+      await projectService.deleteProject("1234", cb);
+
+      expect(findByIdAndRemove).toHaveBeenCalledTimes(1);
+      expect(cb).toHaveBeenCalledTimes(1);
+      expect(findByIdAndRemove).toHaveBeenCalledWith("1234", cb);
     });
   });
 });
