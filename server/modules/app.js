@@ -22,7 +22,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const api = require("../api/index");
+const api = require("../controllers/index");
 
 app.use("/api", api);
 
@@ -32,7 +32,7 @@ let mongoPath;
 
 if (process.env.NODE_ENV !== "prod") {
   mongoPath = "mongodb://localhost/db";
-  mongoose.set("debug", true);
+  // mongoose.set("debug", true);
 } else {
   mongoPath = { mongodb } = require("../config/keys");
 }
@@ -41,7 +41,8 @@ mongoose.connect(
   mongoPath,
   {
     useUnifiedTopology: true,
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useFindAndModify: false
   },
   () => {
     console.log("connected to DB", mongoPath);
