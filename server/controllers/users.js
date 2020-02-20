@@ -45,8 +45,14 @@ router.put("/current/update", authenticate, async (req, res) => {
 router.get("/:userId/friends", authenticate, async (req, res) => {
   const { sub } = req.user;
   const friendList = await userService.getAllFriends(sub);
+});
 
-  console.log({ friendList });
+router.get("/search/:email", authenticate, async (req, res) => {
+  const email = req.params.email;
+  const regexp = new RegExp(email, "g");
+  const users = await userService.get({ email: regexp }, "_id email name");
+
+  res.send(users);
 });
 
 module.exports = router;
