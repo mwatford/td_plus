@@ -3,6 +3,9 @@ import App from "./App.vue";
 import store from "./store/index";
 import router from "./router/index";
 import axios from "axios";
+import loading from "./components/loading.vue";
+
+Vue.component("loading", loading);
 
 import { domain, clientId, audience } from "../../auth_config.json";
 
