@@ -22,13 +22,11 @@ const findById = User => id => {
   return User.findById(id);
 };
 
-const getAll = User => () => {
-  return User.find({});
+const get = User => (query, projection = "") => {
+  return User.find(query, projection);
 };
 
-const updateUser = User => async (sub, changes) => {
-  const user = await User.findOne({ sub });
-
+const updateUser = async (user, changes) => {
   Object.assign(user, changes);
 
   return user.save();
@@ -48,15 +46,23 @@ const getAllFriends = User => async sub => {
   return friends;
 };
 
+const notifyUsers = User => (users, cb) => {
+  users.forEach(async id => {
+    const user = await findById(User)(id);
+    cb(user);
+  });
+};
+
 module.exports = User => {
   return {
     createUser: createUser(User),
     find: find(User),
     findById: findById(User),
-    getAll: getAll(User),
-    updateUser: updateUser(User),
+    get: get(User),
+    updateUser,
     findByEmail: findByEmail(User),
     getId: getId(User),
-    getAllFriends: getAllFriends(User)
+    getAllFriends: getAllFriends(User),
+    notifyUsers: notifyUsers(User)
   };
 };
