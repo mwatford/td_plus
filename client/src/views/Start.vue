@@ -1,20 +1,60 @@
 <template>
   <div class="start row">
-    <Login></Login>
+    <form class="box" @submit.prevent="login">
+      <h2 class="header">Sign in</h2>
+      <loading
+        :size="60"
+        :state="state"
+        class="m-auto"
+        v-if="state !== 'start'"
+        @click="state === 'failed' ? login : null"
+      ></loading>
+      <button name="submit" class="m-auto button" v-else>
+        Sign in
+      </button>
+    </form>
   </div>
 </template>
 
 <script>
-import Login from "../components/sign-in.vue";
-import Register from "../components/register.vue";
+import boxAnimations from "../mixins/boxAnimations";
 
 export default {
+  mixins: [boxAnimations],
   data() {
-    return {};
+    return {
+      state: "start"
+    };
   },
-  components: {
-    Login,
-    Register
+  methods: {
+    login() {
+      this.state = "loading";
+      this.$auth
+        .loginWithPopup()
+        .then(async () => {
+          const { isAuthenticated, user } = this.$auth;
+          const token = await this.$auth.getTokenSilently();
+          this.$store.commit("auth/SET_TOKEN", token);
+          return this.$store.dispatch("user/fetchUser", {
+            token,
+            email: user.email
+          });
+        })
+        .then(() => {
+          this.state = "success";
+          this.$router.push({ name: "home" });
+        })
+        .catch(err => {
+          this.state = "failed";
+        });
+    }
+  },
+  mounted() {
+    this.boxEnterAnimation(400, 0, false);
+  },
+  beforeRouteLeave(to, from, next) {
+    this.state = "done";
+    this.boxExitAnimation(300, 0, false).then(next);
   }
 };
 </script>
@@ -32,9 +72,9 @@ export default {
   align-items: center;
   justify-content: center;
 }
-.form {
-  min-width: 350px;
-  height: 400px;
+.box {
+  width: 350px;
+  height: 250px;
   display: flex;
   flex-direction: column;
   background: #000000cc;
@@ -90,8 +130,8 @@ section {
   padding: 0 20px;
   font-size: 18px;
   font-family: Ubuntu;
-  margin: 10px auto 0 auto;
-  height: 40px;
+  min-height: 40px;
+  max-height: 40px;
   border-radius: 20px;
   border: 2px solid #fff;
   background-color: transparent;
