@@ -1,14 +1,14 @@
 <template>
   <div class="create row">
-    <form action="" class="form" @submit.prevent>
-      <ul class="col form members" v-if="memberList.length">
-        <h3>Members</h3>
+    <form action="" class="box" @submit.prevent>
+      <ul class="col box suggestions" v-if="suggestions.length">
+        <h3>Invite</h3>
         <li
-          v-for="suggestion in memberList"
+          v-for="suggestion in suggestions"
           :key="suggestion._id"
-          @click="removeUser(suggestion)"
-          class="form__user col"
-          title="Remove"
+          @click="addUser(suggestion)"
+          class="box__user col"
+          title="Invite"
         >
           <h4>{{ suggestion.name }}</h4>
           <h5>
@@ -16,14 +16,14 @@
           </h5>
         </li>
       </ul>
-      <ul class="col form suggestions" v-if="suggestions.length">
-        <h3>Invite</h3>
+      <ul class="col box members" v-if="memberList.length">
+        <h3>Members</h3>
         <li
-          v-for="suggestion in suggestions"
+          v-for="suggestion in memberList"
           :key="suggestion._id"
-          @click="addUser(suggestion)"
-          class="form__user col"
-          title="Invite"
+          @click="removeUser(suggestion)"
+          class="box__user col"
+          title="Remove"
         >
           <h4>{{ suggestion.name }}</h4>
           <h5>
@@ -50,8 +50,8 @@
         </div>
       </div>
       <div class="row">
-        <button class="button" @click="create">Create</button>
-        <button class="button" @click="cancel">Back</button>
+        <button class="button m-auto" @click="create">Create</button>
+        <button class="button m-auto" @click="cancel">Back</button>
       </div>
     </form>
   </div>
@@ -60,8 +60,10 @@
 <script>
 import axios from "axios";
 import { mapState } from "vuex";
+import boxAnimations from "../mixins/boxAnimations";
 
 export default {
+  mixins: [boxAnimations],
   data() {
     return {
       member: "",
@@ -139,6 +141,12 @@ export default {
       });
     }
   },
+  mounted() {
+    this.boxEnterAnimation(300, 0, false);
+  },
+  beforeRouteLeave(to, from, next) {
+    this.boxExitAnimation(300, 0, false).then(next);
+  },
   watch: {
     member(n) {
       if (this.member.length > 3) {
@@ -155,8 +163,9 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.form {
+.box {
   position: relative;
+  min-height: 400px;
 
   h2 {
     margin-bottom: 2px;
@@ -171,7 +180,6 @@ export default {
     transition: all 0.2s ease;
 
     &:hover {
-      box-shadow: 0 0 6px 0px #fff;
       background: #000000a2;
     }
   }
