@@ -4,6 +4,7 @@ import store from "./store/index";
 import router from "./router/index";
 import axios from "axios";
 import loading from "./components/loading.vue";
+import anime from "animejs";
 
 Vue.component("loading", loading);
 
@@ -23,6 +24,7 @@ Vue.use(Auth0Plugin, {
 });
 
 Vue.prototype.$http = axios;
+Vue.prototype.$anime = anime;
 
 Vue.config.productionTip = false;
 
