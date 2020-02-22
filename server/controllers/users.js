@@ -4,8 +4,8 @@ const userService = require("../modules/user/index");
 const authenticate = require("../middleware/authentication");
 
 router.post("/current", authenticate, async (req, res) => {
-  const { sub } = req.user;
   try {
+    const { sub } = req.user;
     const user = await userService.find(sub);
 
     if (user) {
