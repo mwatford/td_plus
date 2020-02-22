@@ -31,7 +31,6 @@ export default {
   left: 100%;
   margin: 20px;
   background: #000000;
-  box-shadow: 0 0 15px 2px #0000006e;
   padding: 20px 0 0 20px;
 }
 </style>
