@@ -71,6 +71,9 @@ body {
 a {
   text-decoration: none;
 }
+.m-auto {
+  margin: auto;
+}
 @keyframes Gradient {
   0% {
     background-position: 50% 10%;
