@@ -1,5 +1,5 @@
 <template>
-  <div class="project">
+  <div class="box project">
     <h3 class="project__name">
       {{ snippet(project.name) || "not set" }}
     </h3>
@@ -19,8 +19,8 @@ export default {
   },
   methods: {
     snippet(text) {
-      if (text.length > 16) {
-        text = text.slice(0, 15) + "...";
+      if (text.length > 17) {
+        text = text.slice(0, 16) + "...";
       }
       return text;
     }
@@ -29,30 +29,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.project {
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.box {
   cursor: pointer;
-  background: #ffffff;
   width: 250px;
   height: 250px;
-  border-radius: 16px;
-  transition: all 0.3s ease;
-  border: 2px solid #888888;
-  box-shadow: 0 0 15px 2px #0000006e;
-  display: flex;
   flex-direction: column;
+  padding-top: 10px;
+  justify-content: flex-start;
+  transition: background-color 0.3s ease;
 
   &:hover {
-    border: 2px solid #71c441;
-    box-shadow: 0 0 15px 4px #000000b0;
+    background-color: #000;
   }
+}
 
+.project {
   &__name {
     display: flex;
     margin: 10px auto;
     width: 80%;
     padding-bottom: 5px;
     border-bottom: 1px solid #cccccc;
-    color: #000;
   }
 }
 </style>
