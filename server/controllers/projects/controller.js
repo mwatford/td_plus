@@ -1,10 +1,6 @@
-const router = require("express").Router();
-const userService = require("../modules/user/index");
-const projectService = require("../modules/project/index");
-const authenticate = require("../middleware/authentication");
-
-router.post("/create", authenticate, async (req, res) => {
+const create = services => async (req, res) => {
   try {
+    const { userService, projectService } = services;
     const admin = await userService.find(req.user.sub);
 
     if (admin) {
@@ -24,9 +20,10 @@ router.post("/create", authenticate, async (req, res) => {
   } catch (e) {
     console.log(e);
   }
-});
+};
 
-router.get("/all/:id", authenticate, async (req, res) => {
+const getUserProjects = services => async (req, res) => {
+  const { userService, projectService } = services;
   const { sub } = req.user;
 
   const user = await userService.find(sub);
@@ -35,10 +32,11 @@ router.get("/all/:id", authenticate, async (req, res) => {
   const projects = await projectService.findMany(projectIDs);
 
   res.send(projects);
-});
+};
 
-router.get("/:id", authenticate, async (req, res) => {
+const getProject = services => async (req, res) => {
   try {
+    const { userService, projectService } = services;
     const { sub } = req.user;
     const project = await projectService.find(req.params.id);
     const { _id } = await userService.find(sub);
@@ -53,10 +51,11 @@ router.get("/:id", authenticate, async (req, res) => {
   } catch (e) {
     console.log(e);
   }
-});
+};
 
-router.delete("/:id", authenticate, async (req, res) => {
+const deleteProject = services => async (req, res) => {
   try {
+    const { userService, projectService } = services;
     const projectId = req.params.id;
     const { sub } = req.user;
     const { _id } = await userService.find(sub);
@@ -81,6 +80,12 @@ router.delete("/:id", authenticate, async (req, res) => {
   } catch (e) {
     console.log({ e });
   }
-});
-
-module.exports = router;
+};
+module.exports = services => {
+  return {
+    create: create(services),
+    getUserProjects: getUserProjects(services),
+    getProject: getProject(services),
+    deleteProject: deleteProject(services)
+  };
+};

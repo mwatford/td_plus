@@ -18,7 +18,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const api = require("../controllers/index");
+const api = require("../api/index");
 
 app.use("/api", api);
 
