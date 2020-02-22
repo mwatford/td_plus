@@ -23,15 +23,19 @@ const create = services => async (req, res) => {
 };
 
 const getUserProjects = services => async (req, res) => {
-  const { userService, projectService } = services;
-  const { sub } = req.user;
+  try {
+    const { userService, projectService } = services;
+    const { sub } = req.user;
 
-  const user = await userService.find(sub);
-  const projectIDs = user.projects;
+    const user = await userService.find(sub);
+    const projectIDs = user.projects;
 
-  const projects = await projectService.findMany(projectIDs);
+    const projects = await projectService.findMany(projectIDs);
 
-  res.send(projects);
+    res.send(projects);
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 const getProject = services => async (req, res) => {
