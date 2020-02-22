@@ -1,25 +1,8 @@
 <template>
   <form class="form" @submit.prevent="login">
     <h2 class="header">Sign in</h2>
-    <!-- <div class="col">
-      <input
-        type="text"
-        placeholder="email"
-        class="input"
-        name="email"
-        v-model="email"
-        required
-      />
-      <input
-        placeholder="password"
-        type="password"
-        class="input"
-        name="password"
-        v-model="password"
-        required
-      />
-    </div> -->
-    <button name="submit" :class="['button']">
+    <loading :size="60" :state="state" class="m-auto" v-if="loading"></loading>
+    <button name="submit" class="m-auto button" v-else>
       Sign in
     </button>
   </form>
@@ -30,15 +13,20 @@ export default {
   data() {
     return {
       email: "",
-      password: ""
+      password: "",
+      loading: false,
+      state: "failed"
     };
   },
   computed: {},
   methods: {
     login() {
+      this.loading = true;
+      this.state = "loading";
       this.$auth
         .loginWithPopup()
         .then(async () => {
+          this.state = "success";
           const { isAuthenticated, user } = this.$auth;
           const token = await this.$auth.getTokenSilently();
           this.$store.commit("auth/SET_TOKEN", token);
@@ -48,10 +36,12 @@ export default {
           });
         })
         .then(() => {
+          this.loading = false;
           this.$store.commit("auth/SET_STATUS", true);
           this.$router.push({ name: "home" });
         })
         .catch(err => {
+          this.state = "failed";
           console.log(err);
         });
     }
@@ -59,3 +49,5 @@ export default {
   mounted() {}
 };
 </script>
+
+<style lang="scss" scoped></style>
