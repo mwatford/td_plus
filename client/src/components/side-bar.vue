@@ -1,15 +1,31 @@
 <template>
   <nav class="navigation">
     <div
-      class="navigation__button"
       title="Profile"
       @mouseenter="displayUser = true"
       @mouseleave="displayUser = false"
-      @click="profile"
+      @click="navigate('profile')"
     >
-      <h4>P</h4>
+      <button
+        :class="[
+          'navigation__button',
+          { 'navigation__button--active': $route.name === 'profile' }
+        ]"
+      >
+        P
+      </button>
       <user-details :user="user" v-if="displayUser"></user-details>
     </div>
+    <button
+      :class="[
+        `navigation__button`,
+        { 'navigation__button--active': $route.name === 'home' }
+      ]"
+      title="Home"
+      @click="navigate('home')"
+    >
+      H
+    </button>
     <button
       :class="[
         `navigation__button`,
@@ -38,8 +54,10 @@
 <script>
 import { mapState } from "vuex";
 import userDetails from "../components/user-details.vue";
+import navigate from "../mixins/navigate";
 
 export default {
+  mixins: [navigate],
   components: {
     "user-details": userDetails
   },
@@ -58,9 +76,6 @@ export default {
     toggle(component) {
       this.$store.commit(`app/TOGGLE_${component}`);
     },
-    profile() {
-      this.$router.push({ name: "profile" });
-    },
     logout() {
       this.$auth.logout({
         returnTo: window.location.origin
@@ -78,11 +93,8 @@ export default {
   display: flex;
   height: 100vh;
   min-width: 45px;
-  border-right: 1px solid #fff;
-  // background: linear-gradient(90deg, #000, #181818);
-  background: #000;
+  background: #000000;
   flex-direction: column;
-  box-shadow: 0 0 20px 2px #000;
   z-index: 1;
 
   &__button {
