@@ -1,45 +1,55 @@
 <template>
   <div class="home">
+    <div class="create" @click="create">
+      <div>+</div>
+    </div>
     <router-link
       v-for="project in projects"
       :key="project._id"
       :to="{ path: `/project/${project._id}` }"
     >
-      <project :project="project"></project>
+      <project :project="project" v-if="display"></project>
     </router-link>
-    <div class="create" @click="create">
-      <div>+</div>
-    </div>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
 import project from "../components/project.vue";
+import boxAnimations from "../mixins/boxAnimations";
+import navigate from "../mixins/navigate";
 
 export default {
+  mixins: [boxAnimations, navigate],
   components: {
     project
   },
   data() {
-    return {};
+    return {
+      display: false
+    };
   },
   computed: {
     ...mapState({
       user: state => state.user,
       projects: state => state.projects.data,
       token: state => state.auth.token
-    })
+    }),
+    animate() {
+      return this.$refs["animate"];
+    }
   },
   methods: {
     create() {
       this.$router.push("/create");
     },
     fetchProjects() {
-      this.$store.dispatch("projects/fetchProjects", {
-        token: this.token,
-        id: this.user._id
-      });
+      return this.$store
+        .dispatch("projects/fetchProjects", {
+          token: this.token,
+          id: this.user._id
+        })
+        .catch(e => e);
     },
     fetchFriends() {
       this.$http({
@@ -52,9 +62,18 @@ export default {
       });
     }
   },
+  beforeUpdate() {
+    this.display = true;
+  },
   mounted() {
-    this.fetchProjects();
+    this.$store.commit("auth/SET_STATUS", true);
+    this.fetchProjects().then(() => {
+      this.boxEnterAnimation(200, 50, true);
+    });
     this.fetchFriends();
+  },
+  beforeRouteLeave(to, from, next) {
+    this.boxExitAnimation(500, 20, true).then(next);
   }
 };
 </script>
