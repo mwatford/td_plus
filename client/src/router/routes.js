@@ -1,4 +1,3 @@
-import store from "../store/index";
 import Home from "../views/Home.vue";
 import Profile from "../views/Profile.vue";
 import Project from "../views/Project.vue";
