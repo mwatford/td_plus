@@ -1,6 +1,6 @@
 <template>
   <div class="profile">
-    <form @submit.prevent class="form">
+    <form @submit.prevent class="box">
       <div class="col">
         <label for="name">Change name</label>
         <div class="row">
@@ -25,7 +25,7 @@
         <button class="button" @click="save" type="submit" :disabled="!valid">
           Save
         </button>
-        <button class="button" @click="cancel">Back</button>
+        <button class="button" @click="back">Back</button>
       </div>
     </form>
   </div>
@@ -33,8 +33,11 @@
 
 <script>
 import { mapState } from "vuex";
+import boxAnimations from "../mixins/boxAnimations";
+import navigate from "../mixins/navigate";
 
 export default {
+  mixins: [boxAnimations, navigate],
   data() {
     return {
       name: "",
@@ -78,11 +81,16 @@ export default {
         this.$store.commit("user/SET_USER", this.changes);
       }
     },
-    cancel() {
+    back() {
       this.$router.go(-1);
     }
   },
-  mounted() {}
+  mounted() {
+    this.boxEnterAnimation(300, 0, false);
+  },
+  beforeRouteLeave(to, from, next) {
+    this.boxExitAnimation(500, 0, false).then(next);
+  }
 };
 </script>
 
@@ -98,10 +106,12 @@ export default {
   align-items: center;
   justify-content: center;
 }
+.box {
+  width: auto;
+}
 .button {
   width: 100px;
-  // height: 30px;
-  // margin: 20px;
+  margin: auto;
 }
 input[type="text"] {
   margin: 10px 5px 10px 0;
