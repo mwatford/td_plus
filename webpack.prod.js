@@ -6,6 +6,14 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+  .BundleAnalyzerPlugin;
+
+const plugins = [];
+
+if (process.env.NODE_ENV === "optimize" || process.env.NODE_ENV === "prod") {
+  plugins.push(new BundleAnalyzerPlugin());
+}
 
 module.exports = merge(common, {
   mode: "production",
@@ -21,11 +29,10 @@ module.exports = merge(common, {
       }
     ]
   },
-  plugins: [
-    new MiniCssExtractPlugin({ filename: "[name].[contentHash].css" }),
-    new CleanWebpackPlugin()
-  ],
   optimization: {
+    splitChunks: {
+      chunks: "all"
+    },
     minimizer: [
       new OptimizeCssAssetsPlugin(),
       new TerserPlugin(),
@@ -38,5 +45,10 @@ module.exports = merge(common, {
         }
       })
     ]
-  }
+  },
+  plugins: [
+    new MiniCssExtractPlugin({ filename: "[name].[contentHash].css" }),
+    new CleanWebpackPlugin(),
+    ...plugins
+  ]
 });
