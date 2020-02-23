@@ -1,4 +1,7 @@
 node_modules/
 dist/
 db/
+auth_config.json
+authentication.js
+keys.js
 request.rest
