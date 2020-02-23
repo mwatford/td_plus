@@ -12,9 +12,10 @@
           { 'navigation__button--active': $route.name === 'profile' }
         ]"
       >
-        P
+        <h3 :style="{ backgroundColor: (user.color || 'green') }" class="m-auto">
+          {{ user.name.slice(0, 1).toUpperCase() }}
+        </h3>
       </button>
-      <user-details :user="user" v-if="displayUser"></user-details>
     </div>
     <button
       :class="[
@@ -46,8 +47,9 @@
     >
       C
     </button>
-    <button class="navigation__button" @click="logout">L</button>
-    <!-- <button @click="$store.commit('user/RESET_STATE')">as</button> -->
+    <button class="navigation__button" @click="logout" title="Sign out">
+      S
+    </button>
   </nav>
 </template>
 
@@ -87,7 +89,10 @@ export default {
 
 <style lang="scss" scoped>
 * {
-  font-family: Orbitron;
+  font-family: monospace;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 .navigation {
   display: flex;
@@ -115,6 +120,16 @@ export default {
     &:hover,
     &--active {
       background: #ffffff22;
+    }
+
+    h3 {
+      display: flex;
+      border-radius: 50%;
+      width: 70%;
+      height: 70%;
+      border: 1px solid #9c9c9c;
+      justify-content: center;
+      align-items: center;
     }
   }
 }
