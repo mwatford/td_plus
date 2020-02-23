@@ -3,9 +3,7 @@ const createUser = User => profile => {
     throw new Error(`Profile: ${profile} loginStrategy: ${loginStrategy}`);
   }
 
-  const user = new User({
-    email: profile.email
-  });
+  const user = new User(profile);
 
   return user.save();
 };
