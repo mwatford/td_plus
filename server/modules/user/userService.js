@@ -1,4 +1,5 @@
 const createUser = User => profile => {
+  console.log(profile);
   if (!profile) {
     throw new Error(`Profile: ${profile} loginStrategy: ${loginStrategy}`);
   }
