@@ -13,4 +13,6 @@ router.get("/:id", controller.getProject);
 
 router.delete("/:id", controller.deleteProject);
 
+router.get("/:id/admin", controller.isAdmin);
+
 module.exports = router;

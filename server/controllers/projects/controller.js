@@ -85,11 +85,31 @@ const deleteProject = services => async (req, res) => {
     console.log({ e });
   }
 };
+
+const isAdmin = services => async (req, res) => {
+  try {
+    const { userService, projectService } = services;
+    const { sub } = req.user;
+    const { id } = req.params;
+
+    const project = await projectService.find(id);
+    const { _id } = await userService.find(sub);
+    const isAdmin = projectService.isAdmin(project, _id);
+
+    if (isAdmin) {
+      res.sendStatus(200);
+    } else {
+      return res.status(403).send(`You don't have permission to view that!`);
+    }
+  } catch (e) {}
+};
+
 module.exports = services => {
   return {
     create: create(services),
     getUserProjects: getUserProjects(services),
     getProject: getProject(services),
-    deleteProject: deleteProject(services)
+    deleteProject: deleteProject(services),
+    isAdmin: isAdmin(services)
   };
 };
