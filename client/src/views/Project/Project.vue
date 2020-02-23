@@ -1,16 +1,24 @@
 <template>
   <loading v-if="state !== 'start'" :size="60" :state="state"></loading>
-  <div class="project" v-else-if="project">
+  <div class="project col" v-else-if="project">
     <ul class="col">
       <h3>To Do</h3>
       <li v-for="task in project.toDo" :key="task._id"></li>
     </ul>
+    <router-link
+      v-if="user._id === project.admin"
+      :to="{
+        name: 'manage',
+        props: { id: this.$route.params.id }
+      }"
+      >manage</router-link
+    >
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import navigate from "../mixins/navigate";
+import navigate from "../../mixins/navigate";
 
 export default {
   data() {
