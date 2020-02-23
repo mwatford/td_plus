@@ -30,7 +30,7 @@ if (process.env.NODE_ENV !== "production") {
   mongoPath = "mongodb://localhost/db";
   // mongoose.set("debug", true);
 } else {
-  mongoPath = { mongodb } = require("../config/keys");
+  mongoPath = require("../config/keys").mongodb;
 }
 
 mongoose.connect(
