@@ -14,5 +14,5 @@ module.exports = {
   jwt:
     "e5edb99172ab0ab09aba17e9e903a140adaa6ea468fce510af61552610125ceec290aa4c57103ad81598d8b92eb4130cec6df3d970b1e45121ad5eecb95e00ab",
   mongodb:
-    "mongodb+srv://client:8774gpPNMhw4jHB@cluster0-clbgz.mongodb.net/test?retryWrites=true&w=majority"
+    "mongodb+srv://client:QIVHRu5qk6pCc7mq@cluster0-clbgz.mongodb.net/test?retryWrites=true&w=majority"
 };
