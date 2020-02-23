@@ -1,6 +1,8 @@
 import Home from "../views/Home.vue";
 import Profile from "../views/Profile.vue";
-import Project from "../views/Project.vue";
+import Project from "../views/Project/Project.vue";
+import View from "../views/Project/View.vue";
+import ProjectManage from "../views/Project/ProjectManage.vue";
 import Start from "../views/Start.vue";
 import Create from "../views/Create.vue";
 
@@ -30,14 +32,28 @@ export default [
     }
   },
   {
-    name: "project",
     path: "/project/:id",
-    params: true,
-    component: Project,
-    meta: {
-      requiresAuth: true
-    }
+    component: View,
+    children: [
+      {
+        path: "",
+        component: Project,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: "manage",
+        name: "manage",
+        props: true,
+        component: ProjectManage,
+        meta: {
+          requiresAuth: true
+        }
+      }
+    ]
   },
+
   {
     name: "start",
     path: "/start",
