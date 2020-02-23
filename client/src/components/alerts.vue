@@ -40,21 +40,21 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 8px;
   z-index: 5;
+  padding: 0 10px;
 
   p {
     text-align: center;
   }
 
   &--error {
-    background: red;
+    background: #ff00008a;
   }
   &--success {
-    background: green;
+    background: #0080008a;
   }
   &--warning {
-    background: orange;
+    background: #ffa6008a;
   }
 }
 </style>
