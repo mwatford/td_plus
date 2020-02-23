@@ -1,13 +1,15 @@
 <template>
   <div class="box project">
     <h3 class="project__name">
-      {{ snippet(project.name) || "not set" }}
+      {{ snippet(project.name, 16) || "not set" }}
     </h3>
   </div>
 </template>
 
 <script>
+import snippet from "../mixins/snippet";
 export default {
+  mixins: [snippet],
   props: {
     project: {
       required: true,
@@ -16,14 +18,6 @@ export default {
   },
   data() {
     return {};
-  },
-  methods: {
-    snippet(text) {
-      if (text.length > 17) {
-        text = text.slice(0, 16) + "...";
-      }
-      return text;
-    }
   }
 };
 </script>
@@ -39,6 +33,7 @@ export default {
   width: 250px;
   height: 250px;
   flex-direction: column;
+  padding: 0;
   padding-top: 10px;
   justify-content: flex-start;
   transition: background-color 0.3s ease;
