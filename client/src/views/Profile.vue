@@ -25,7 +25,7 @@
         <button class="button" @click="save" type="submit" :disabled="!valid">
           Save
         </button>
-        <button class="button" @click="back">Back</button>
+        <button class="button" @click="navigate(-1)">Back</button>
       </div>
     </form>
   </div>
@@ -81,9 +81,6 @@ export default {
         this.$store.commit("user/SET_USER", this.changes);
       }
     },
-    back() {
-      this.$router.go(-1);
-    }
   },
   mounted() {
     this.boxEnterAnimation(300, 0, false);
