@@ -26,7 +26,7 @@ mongoose.Promise = global.Promise;
 
 let mongoPath;
 
-if (process.env.NODE_ENV !== "prod") {
+if (process.env.NODE_ENV !== "production") {
   mongoPath = "mongodb://localhost/db";
   // mongoose.set("debug", true);
 } else {
