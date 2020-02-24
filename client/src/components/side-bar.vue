@@ -12,7 +12,7 @@
           { 'navigation__button--active': $route.name === 'profile' }
         ]"
       >
-        <h3 :style="{ backgroundColor: (user.color || 'green') }" class="m-auto">
+        <h3 :style="{ backgroundColor: user.color || 'green' }" class="m-auto">
           {{ user.name.slice(0, 1).toUpperCase() }}
         </h3>
       </button>
@@ -55,14 +55,10 @@
 
 <script>
 import { mapState } from "vuex";
-import userDetails from "../components/user-details.vue";
 import navigate from "../mixins/navigate";
 
 export default {
   mixins: [navigate],
-  components: {
-    "user-details": userDetails
-  },
   data() {
     return {
       displayUser: false
