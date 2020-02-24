@@ -12,10 +12,11 @@ const currentUser = services => async (req, res) => {
         sub
       };
       const newUser = await userService.createUser(profile);
+      delete newUser.sub;
       return res.send(newUser);
     }
   } catch (e) {
-    console.log(e);
+    res.sendStatus(500);
   }
 };
 
@@ -40,7 +41,7 @@ const userUpdate = services => async (req, res) => {
       });
     }
   } catch (e) {
-    console.log(e);
+    res.sendStatus(500);
   }
 };
 
