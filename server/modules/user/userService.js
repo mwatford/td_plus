@@ -1,5 +1,4 @@
 const createUser = User => profile => {
-  console.log(profile);
   if (!profile) {
     throw new Error(`Profile: ${profile} loginStrategy: ${loginStrategy}`);
   }
@@ -21,8 +20,8 @@ const findById = User => id => {
   return User.findById(id);
 };
 
-const get = User => (query, projection = "") => {
-  return User.find(query, projection);
+const get = User => (query, projection = "-sub") => {
+  return User.find(query, projection + "-sub");
 };
 
 const updateUser = async (user, changes) => {
