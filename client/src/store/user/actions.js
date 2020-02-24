@@ -21,7 +21,7 @@ export const actions = requestModule => {
     logout({ commit }) {
       commit("RESET_STATE");
     },
-    save({ commit }, { email, changes, token }) {
+    save({ commit }, { changes, token }) {
       return requestModule({
         method: "put",
         url: "/api/users/current/update",
@@ -30,8 +30,7 @@ export const actions = requestModule => {
           "Content-Type": "application/json"
         },
         data: {
-          changes,
-          email
+          changes
         }
       });
     }
