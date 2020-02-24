@@ -25,6 +25,7 @@ Vue.use(Auth0Plugin, {
 
 Vue.prototype.$http = axios;
 Vue.prototype.$anime = anime;
+Vue.prototype.$eventBus = new Vue();
 
 Vue.config.productionTip = false;
 
