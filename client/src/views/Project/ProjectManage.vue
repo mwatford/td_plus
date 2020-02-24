@@ -1,7 +1,7 @@
 <template>
   <loading v-if="loading !== 'start'" :state="loading" :size="60"></loading>
   <div v-else>
-    <button @click="deleteProject">delete</button>
+    <button @click="deleteProject" class="button">delete</button>
   </div>
 </template>
 
