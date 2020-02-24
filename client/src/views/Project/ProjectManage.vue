@@ -1,6 +1,8 @@
 <template>
   <loading v-if="loading !== 'start'" :state="loading" :size="60"></loading>
-  <div v-else>manage project</div>
+  <div v-else>
+    <button @click="deleteProject">delete</button>
+  </div>
 </template>
 
 <script>
@@ -39,6 +41,16 @@ export default {
           });
           this.$router.go(-1);
         });
+    },
+    deleteProject() {
+      this.$http({
+        method: "delete",
+        url: `/api/projects/${this.$route.params.id}`,
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          "Content-Type": "application/json"
+        }
+      });
     }
   },
   mounted() {
