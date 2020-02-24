@@ -1,48 +1,69 @@
 <template>
-  <div class="start row">
-    <form class="box" @submit.prevent="login">
-      <h2 class="header">Sign in</h2>
-      <loading
-        :size="60"
-        :state="state"
-        class="m-auto"
-        v-if="state !== 'start'"
-        @click="state === 'failed' ? login : null"
-      ></loading>
-      <button name="submit" class="m-auto button" v-else>
-        Sign in
-      </button>
-    </form>
+  <div class="start col">
+    <div class="box">
+      <transition
+        @leave="leaveAnimation"
+        @enter="enterAnimation"
+        mode="out-in"
+        :css="false"
+      >
+        <component :is="component" :state="state" :size="60"></component>
+      </transition>
+    </div>
   </div>
 </template>
 
 <script>
 import boxAnimations from "../mixins/boxAnimations";
+import signIn from "../components/sign-in.vue";
+import loader from "../components/loading.vue";
+import username from "../components/username.vue";
+import animations from "../mixins/animations";
 
 export default {
-  mixins: [boxAnimations],
+  mixins: [boxAnimations, animations],
   data() {
     return {
-      state: "start"
+      state: "loading",
+      component: signIn
     };
+  },
+  computed: {
+    enterAnimation() {
+      return this.component === loader
+        ? this.popUp(200, 0, "spring")
+        : this.fadeIn(200, 0, "linear");
+    },
+    leaveAnimation() {
+      return this.component !== loader
+        ? this.scaleDown(200, 0, "linear")
+        : this.fadeOut(200, 0, "linear");
+    }
   },
   methods: {
     login() {
-      this.state = "loading";
+      this.component = loader;
       this.$auth
         .loginWithPopup()
         .then(async () => {
           const { isAuthenticated, user } = this.$auth;
           const token = await this.$auth.getTokenSilently();
+
           this.$store.commit("auth/SET_TOKEN", token);
+
           return this.$store.dispatch("user/fetchUser", {
             token,
             email: user.email
           });
         })
         .then(() => {
-          this.state = "success";
-          this.$router.push({ name: "home" });
+          this.state = "done";
+
+          if (!this.$store.state.user.name) {
+            this.component = username;
+          } else {
+            this.$router.push({ name: "home" });
+          }
         })
         .catch(err => {
           this.state = "failed";
@@ -50,10 +71,15 @@ export default {
     }
   },
   mounted() {
+    this.$eventBus.$on("signIn", () => {
+      this.login();
+    });
+    this.$eventBus.$on("name chosen", () => {
+      this.$router.push({ name: "home" });
+    });
     this.boxEnterAnimation(400, 0, false);
   },
   beforeRouteLeave(to, from, next) {
-    this.state = "done";
     this.boxExitAnimation(300, 0, false).then(next);
   }
 };
