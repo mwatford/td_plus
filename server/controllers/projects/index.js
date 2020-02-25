@@ -1,8 +1,8 @@
 const Controller = require("./controller");
 
 const services = {
-  userService: require("../../modules/user/index"),
-  projectService: require("../../modules/project/index")
+  userService: require("../../services/user/index"),
+  projectService: require("../../services/project/index")
 };
 
 module.exports = Controller(services);

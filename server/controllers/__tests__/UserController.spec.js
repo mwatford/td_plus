@@ -7,6 +7,7 @@ const services = {
 };
 
 const controller = Controller(services);
+
 describe("user controller", () => {
   test("has a module", () => {
     expect(Controller).toBeDefined();

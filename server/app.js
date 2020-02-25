@@ -10,7 +10,7 @@ const app = async () => {
   app.use(express.json());
 
   app.get("/", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../../dist/index.html"));
+    res.sendFile(path.resolve(__dirname, "../dist/index.html"));
   });
 
   app.use(express.static("dist"));
@@ -19,7 +19,7 @@ const app = async () => {
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
 
-  const api = require("../api/index");
+  const api = require("./api/index");
 
   app.use("/api", api);
 
@@ -31,7 +31,7 @@ const app = async () => {
     mongoPath = "mongodb://localhost/db";
     mongoose.set("debug", true);
   } else {
-    mongoPath = require("../config/keys").mongodb;
+    mongoPath = require("./config/keys").mongodb;
   }
 
   await mongoose.connect(

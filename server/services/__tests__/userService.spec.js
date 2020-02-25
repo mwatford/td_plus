@@ -1,4 +1,4 @@
-const UserService = require("../userService");
+const UserService = require("../user/userService");
 
 describe("userService test", () => {
   test("has a module", () => {

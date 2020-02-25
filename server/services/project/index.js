@@ -1,4 +1,4 @@
 const ProjectService = require("./ProjectService");
-const Project = require("./Project");
+const Project = require("../../models/Project");
 
 module.exports = ProjectService(Project);

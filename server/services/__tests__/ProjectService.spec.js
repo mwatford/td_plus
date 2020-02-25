@@ -1,4 +1,4 @@
-const ProjectService = require("../ProjectService");
+const ProjectService = require("../project/ProjectService");
 
 describe("projectService test", () => {
   test("has a module", () => {
