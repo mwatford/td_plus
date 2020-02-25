@@ -24,18 +24,16 @@ describe("user model", () => {
   describe("get user", () => {
     test("gets a user", async () => {
       const user = new User({
-        id: "123",
         email: "test@email.com",
-        loginStrategy: "google"
+        sub: "123"
       });
       await user.save();
 
       const foundUser = await User.findOne({
-        id: "123",
-        loginStrategy: "google"
+        sub: "123"
       });
       const expected = "123";
-      const actual = foundUser.id;
+      const actual = foundUser.sub;
 
       expect(actual).toEqual(expected);
     });
@@ -43,25 +41,25 @@ describe("user model", () => {
 
   describe("save a user", () => {
     test("saves a user", async () => {
-      const user = new User({ id: "1234", loginStrategy: "github" });
+      const user = new User({ sub: "1234" });
       const savedUser = await user.save();
 
       const expected = "1234";
-      const actual = savedUser.id;
+      const actual = savedUser.sub;
       expect(actual).toEqual(expected);
     });
   });
 
   describe("update user", () => {
     test("updates a user", async () => {
-      const user = new User({ id: "1355", loginStrategy: "google" });
+      const user = new User({ sub: "1355", name: "Adam" });
       await user.save();
 
-      user.loginStrategy = "github";
+      user.name = "github";
       const updatedUser = await user.save();
 
       const expected = "github";
-      const actual = updatedUser.loginStrategy;
+      const actual = updatedUser.name;
       expect(actual).toEqual(expected);
     });
   });
