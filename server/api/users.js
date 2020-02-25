@@ -11,6 +11,4 @@ router.put("/current/update", controller.userUpdate);
 
 router.get("/search/:email", controller.searchEmail);
 
-router.get("/:userId/friends", controller.userFriends);
-
 module.exports = router;
