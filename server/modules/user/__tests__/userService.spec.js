@@ -57,7 +57,7 @@ describe("userService test", () => {
     });
   });
 
-  describe("getAll test", () => {
+  describe("get test", () => {
     test("gets all users", () => {
       const find = jest.fn();
       const MockModel = {
@@ -69,7 +69,7 @@ describe("userService test", () => {
       userService.get({});
 
       expect(find).toHaveBeenCalledTimes(1);
-      expect(find).toHaveBeenCalledWith({}, '');
+      expect(find).toHaveBeenCalledWith({}, "-sub");
     });
   });
 
