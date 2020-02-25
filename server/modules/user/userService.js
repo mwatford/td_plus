@@ -21,7 +21,7 @@ const findById = User => id => {
 };
 
 const get = User => (query, projection = "-sub") => {
-  return User.find(query, projection + "-sub");
+  return User.find(query, projection);
 };
 
 const updateUser = async (user, changes) => {
