@@ -27,12 +27,13 @@ const userUpdate = services => async (req, res) => {
     const { sub } = req.user;
 
     const user = await userService.find(sub);
-    await userService.updateUser(user, changes);
-    if (user) {
+    const updatedUser = await userService.updateUser(user, changes);
+
+    if (updatedUser) {
       return res.send({
         message: "Your data has been updated",
         type: "success",
-        user
+        updatedUser
       });
     } else {
       return res.send({
@@ -54,17 +55,7 @@ const searchEmail = services => async (req, res) => {
 
     res.send(users);
   } catch (e) {
-    console.log(e);
-  }
-};
-
-const userFriends = services => async (req, res) => {
-  try {
-    const { userService } = services;
-    const { sub } = req.user;
-    const friendList = await userService.getAllFriends(sub);
-  } catch (e) {
-    console.log(e);
+    res.sendStatus(500);
   }
 };
 
@@ -72,7 +63,6 @@ module.exports = services => {
   return {
     currentUser: currentUser(services),
     userUpdate: userUpdate(services),
-    searchEmail: searchEmail(services),
-    userFriends: userFriends(services)
+    searchEmail: searchEmail(services)
   };
 };
