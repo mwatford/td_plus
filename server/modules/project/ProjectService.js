@@ -21,7 +21,7 @@ const isMember = (project, userId) => {
     throw new Error("Missing function argument(s)!");
   }
 
-  return project.members.find(el => userId.equals(el));
+  return Boolean(project.members.find(el => userId.equals(el)));
 };
 
 const isAdmin = (project, userId) => {
