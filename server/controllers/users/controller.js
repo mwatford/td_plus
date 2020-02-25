@@ -3,17 +3,18 @@ const currentUser = services => async ({ sub, email }) => {
 
   const user = await userService.find(sub);
 
-  if (user) {
-    return { data: user, status: 200 };
-  } else {
+  if (!user) {
     const profile = {
       email,
       sub
     };
+
     const newUser = await userService.createUser(profile);
     delete newUser.sub;
+
     return { data: newUser, status: 200 };
   }
+  return { data: user, status: 200 };
 };
 
 const userUpdate = services => async ({ sub, changes }) => {
@@ -22,25 +23,22 @@ const userUpdate = services => async ({ sub, changes }) => {
   const user = await userService.find(sub);
   const updatedUser = await userService.updateUser(user, changes);
 
-  if (updatedUser) {
-    return {
-      status: 200,
-      data: updatedUser
-    };
-  } else {
+  if (!updatedUser) {
     return {
       status: 200
     };
   }
+  return {
+    status: 200,
+    data: updatedUser
+  };
 };
 
 const searchEmail = services => async email => {
   const { userService } = services;
   const regexp = new RegExp(email, "g");
 
-  const users = await userService.get({ email: regexp }, "_id email name");
-
-  return users;
+  return await userService.get({ email: regexp }, "_id email name");
 };
 
 module.exports = services => {
