@@ -5,7 +5,7 @@ describe("user controller", () => {
     expect(Controller).toBeDefined();
   });
 
-  let userService, currentUser, services, find, createUser;
+  let userService, currentUser, services, find, createUser, updateUser, get;
 
   beforeEach(() => {
     currentUser = jest.fn();
@@ -15,11 +15,17 @@ describe("user controller", () => {
     find = jest.fn(sub => {
       if (sub === "1234") return { name: "Adam" };
     });
+    updateUser = jest.fn((user, x) => {
+      return user;
+    });
+    get = jest.fn((x, y) => [{ a: "a" }, { b: "b" }]);
 
     userService = {
       createUser,
       currentUser,
-      find
+      find,
+      updateUser,
+      get
     };
 
     services = {
@@ -28,22 +34,37 @@ describe("user controller", () => {
   });
 
   describe("currentUser test", () => {
-    test("searches for a user", () => {
+    test("searches for a user", async () => {
       const controller = Controller(services);
+      const send = jest.fn();
+      const sendStatus = jest.fn();
+
+      const res = {
+        send,
+        sendStatus
+      };
+
       const req = {
         user: {
           sub: "123"
         }
       };
 
-      controller.currentUser(req, {});
+      await controller.currentUser(req, res);
 
       expect(find).toHaveBeenCalledWith("123");
     });
 
     test("sends user if user was found", async () => {
-      const send = jest.fn();
       const controller = Controller(services);
+      const send = jest.fn();
+      const sendStatus = jest.fn();
+
+      const res = {
+        send,
+        sendStatus
+      };
+
       const mockUser = {
         sub: "1234"
       };
@@ -52,18 +73,20 @@ describe("user controller", () => {
         user: mockUser
       };
 
-      const res = {
-        send
-      };
-
       await controller.currentUser(req, res);
 
       expect(send).toHaveBeenCalledWith({ name: "Adam" });
     });
 
     test("creates a user if user was not found", async () => {
-      const send = jest.fn();
       const controller = Controller(services);
+      const send = jest.fn();
+      const sendStatus = jest.fn();
+
+      const res = {
+        send,
+        sendStatus
+      };
       const mockUser = {
         sub: "123"
       };
@@ -75,16 +98,12 @@ describe("user controller", () => {
         }
       };
 
-      const res = {
-        send
-      };
-
       await controller.currentUser(req, res);
 
       expect(send).toHaveBeenCalledWith({ email: "asd@asd.com" });
     });
 
-    test("sends an response with code 500 if error was found", () => {
+    test("sends a response with code 500 if error was found", () => {
       const sendStatus = jest.fn();
       services = {
         userService: {
@@ -111,6 +130,158 @@ describe("user controller", () => {
       };
 
       controller.currentUser(req, res);
+
+      expect(sendStatus).toHaveBeenCalledWith(500);
+    });
+  });
+
+  describe("userUpdate test", () => {
+    const changes = {
+      name: "Mike"
+    };
+    const req = {
+      user: {
+        sub: "1234"
+      },
+      body: {
+        changes
+      }
+    };
+
+    test("searches for a user", async () => {
+      const controller = Controller(services);
+      const send = jest.fn();
+      const sendStatus = jest.fn();
+
+      const res = {
+        send,
+        sendStatus
+      };
+
+      await controller.userUpdate(req, res);
+
+      expect(find).toHaveBeenCalledWith("1234");
+    });
+
+    test("calls updateUser method", async () => {
+      const controller = Controller(services);
+      const send = jest.fn();
+      const sendStatus = jest.fn();
+
+      const res = {
+        send,
+        sendStatus
+      };
+
+      await controller.userUpdate(req, res);
+
+      expect(updateUser).toHaveBeenCalledWith(
+        { name: "Adam" },
+        req.body.changes
+      );
+    });
+
+    test("sends correct response when user is updated", async () => {
+      const controller = Controller(services);
+      const send = jest.fn();
+      const sendStatus = jest.fn();
+
+      const res = {
+        send,
+        sendStatus
+      };
+
+      await controller.userUpdate(req, res);
+
+      expect(send).toHaveBeenCalledWith({
+        message: "Your data has been updated",
+        type: "success",
+        updatedUser: {
+          name: "Adam"
+        }
+      });
+    });
+
+    test("sends correct response when user is not updated", async () => {
+      const controller = Controller(services);
+      const send = jest.fn();
+      const sendStatus = jest.fn();
+      req.user.sub = "1332";
+
+      const res = {
+        send,
+        sendStatus
+      };
+
+      await controller.userUpdate(req, res);
+
+      expect(send).toHaveBeenCalledWith({
+        message: "Something went wrong, try again later.",
+        type: "error"
+      });
+    });
+
+    test("sends a response with code 500 when error occurs", () => {
+      const sendStatus = jest.fn();
+
+      const controller = Controller(services);
+
+      const res = {
+        sendStatus
+      };
+
+      controller.userUpdate({}, res);
+
+      expect(sendStatus).toHaveBeenCalledWith(500);
+    });
+  });
+
+  describe("searchEmail test", () => {
+    test("finds users friends", async () => {
+      const controller = Controller(services);
+      const req = {
+        params: {
+          email: "asd@asd.com"
+        }
+      };
+      const send = jest.fn();
+      const res = {
+        send
+      };
+
+      await controller.searchEmail(req, res);
+
+      expect(get).toHaveBeenCalledWith(
+        { email: /asd@asd.com/g },
+        "_id email name"
+      );
+    });
+
+    test("sends correct search response", async () => {
+      const controller = Controller(services);
+      const req = {
+        params: {
+          email: "asd@asd.com"
+        }
+      };
+      const send = jest.fn();
+      const res = {
+        send
+      };
+
+      await controller.searchEmail(req, res);
+
+      expect(send).toHaveBeenCalledWith([{ a: "a" }, { b: "b" }]);
+    });
+
+    test("sends 500 response on error", async () => {
+      const controller = Controller(services);
+      const sendStatus = jest.fn();
+      const res = {
+        sendStatus
+      };
+
+      await controller.searchEmail({}, res);
 
       expect(sendStatus).toHaveBeenCalledWith(500);
     });
