@@ -1,6 +1,5 @@
 const Controller = require("../users/controller");
 const userService = require("userService");
-const res = require("response");
 
 const services = {
   userService
@@ -19,131 +18,85 @@ describe("user controller", () => {
 
   describe("currentUser test", () => {
     test("searches for a user", async () => {
-      const req = {
-        user: {
-          sub: "123"
-        }
-      };
-
-      await controller.currentUser(req, res);
+      await controller.currentUser({ sub: "123", email: "asd@asd.com" });
 
       expect(userService.find).toHaveBeenCalledWith("123");
     });
 
     test("sends user if user was found", async () => {
-      const mockUser = {
-        sub: "1234"
-      };
-
-      const req = {
-        user: mockUser
-      };
-
       userService.find.mockImplementationOnce(() =>
         Promise.resolve({ name: "Adam" })
       );
+      const expected = { data: { name: "Adam" }, status: 200 };
 
-      await controller.currentUser(req, res);
+      const response = await controller.currentUser({
+        sub: "1234",
+        email: "asd@asd.com"
+      });
 
-      expect(res.send).toHaveBeenCalledWith({ name: "Adam" });
+      expect(response).toEqual(expected);
     });
 
     test("creates a user if user was not found", async () => {
-      const mockUser = {
-        sub: "123"
+      const expected = { data: { email: "asd@asd.com" }, status: 200 };
+      const user = {
+        sub: "asd",
+        email: "asd@asd.com"
       };
 
-      const req = {
-        user: mockUser,
-        body: {
-          email: "asd@asd.com"
-        }
-      };
+      const response = await controller.currentUser(user);
 
-      await controller.currentUser(req, res);
-
-      expect(userService.createUser).toHaveBeenCalled();
-
-      expect(res.send).toHaveBeenCalledWith({ email: "asd@asd.com" });
-    });
-
-    test("sends a response with code 500 if error was found", async () => {
-      await controller.currentUser({}, res);
-
-      expect(res.sendStatus).toHaveBeenCalledWith(500);
+      expect(response).toEqual(expected);
+      expect(userService.createUser).toHaveBeenCalledWith(user);
     });
   });
 
   describe("userUpdate test", () => {
-    const req = {
-      user: {
-        sub: "1234"
-      },
-      body: {
-        changes: {
-          name: "Mike"
-        }
-      }
-    };
-
+    const args = { sub: "123", changes: { name: "Mark" } };
     test("searches for a user", async () => {
-      await controller.userUpdate(req, res);
+      await controller.userUpdate(args);
 
-      expect(userService.find).toHaveBeenCalledWith("1234");
+      expect(userService.find).toHaveBeenCalledWith("123");
     });
 
     test("calls updateUser method", async () => {
       userService.find.mockImplementationOnce(() =>
         Promise.resolve({ name: "Adam" })
       );
-      await controller.userUpdate(req, res);
+      await controller.userUpdate(args);
 
       expect(userService.updateUser).toHaveBeenCalledWith(
         { name: "Adam" },
-        req.body.changes
+        args.changes
       );
     });
 
     test("sends correct response when user is updated", async () => {
+      const expected = {
+        status: 200,
+        data: {
+          name: "Adam"
+        }
+      };
       userService.find.mockImplementationOnce(() =>
         Promise.resolve({ name: "Adam" })
       );
-      await controller.userUpdate(req, res);
 
-      expect(res.send).toHaveBeenCalledWith({
-        message: "Your data has been updated",
-        type: "success",
-        updatedUser: {
-          name: "Adam"
-        }
-      });
+      const response = await controller.userUpdate(args);
+
+      expect(response).toEqual(expected);
     });
 
     test("sends correct response when user is not updated", async () => {
-      await controller.userUpdate(req, res);
+      const response = await controller.userUpdate(args);
 
-      expect(res.send).toHaveBeenCalledWith({
-        message: "Something went wrong, try again later.",
-        type: "error"
-      });
-    });
-
-    test("sends a response with code 500 when error occurs", () => {
-      controller.userUpdate({}, res);
-
-      expect(res.sendStatus).toHaveBeenCalledWith(500);
+      expect(response).toEqual({ status: 200 });
     });
   });
 
   describe("searchEmail test", () => {
     test("finds users friends", async () => {
-      const req = {
-        params: {
-          email: "asd@asd.com"
-        }
-      };
-
-      await controller.searchEmail(req, res);
+      await controller.searchEmail("asd@asd.com");
 
       expect(userService.get).toHaveBeenCalledWith(
         { email: /asd@asd.com/g },
@@ -152,20 +105,9 @@ describe("user controller", () => {
     });
 
     test("sends correct search response", async () => {
-      const req = {
-        params: {
-          email: "asd@asd.com"
-        }
-      };
-      await controller.searchEmail(req, res);
+      const response = await controller.searchEmail("asd@asd.com");
 
-      expect(res.send).toHaveBeenCalledWith([{ a: "a" }, { b: "b" }]);
-    });
-
-    test("sends 500 response on error", async () => {
-      await controller.searchEmail({}, res);
-
-      expect(res.sendStatus).toHaveBeenCalledWith(500);
+      expect(response).toEqual([{ a: "a" }, { b: "b" }]);
     });
   });
 });
