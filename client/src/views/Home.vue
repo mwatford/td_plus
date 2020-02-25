@@ -50,16 +50,6 @@ export default {
           id: this.user._id
         })
         .catch(e => e);
-    },
-    fetchFriends() {
-      this.$http({
-        method: "get",
-        url: `/api/users/${this.user._id}/friends`,
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-          "Content-Type": "application/json"
-        }
-      });
     }
   },
   beforeUpdate() {
@@ -70,7 +60,6 @@ export default {
     this.fetchProjects().then(() => {
       this.boxEnterAnimation(200, 50, true);
     });
-    this.fetchFriends();
   },
   beforeRouteLeave(to, from, next) {
     this.boxExitAnimation(500, 20, true).then(next);
