@@ -34,11 +34,12 @@ const userUpdate = services => async ({ sub, changes }) => {
   };
 };
 
-const searchEmail = services => async email => {
+const searchEmail = services => async ({ email }) => {
   const { userService } = services;
   const regexp = new RegExp(email, "g");
 
-  return await userService.get({ email: regexp }, "_id email name");
+  const users = await userService.get({ email: regexp }, "_id email name");
+  return { status: 200, data: users };
 };
 
 module.exports = services => {

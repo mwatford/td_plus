@@ -29,7 +29,7 @@ const app = async () => {
 
   if (process.env.NODE_ENV !== "production") {
     mongoPath = "mongodb://localhost/db";
-    mongoose.set("debug", true);
+    // mongoose.set("debug", true);
   } else {
     mongoPath = require("./config/keys").mongodb;
   }

@@ -44,7 +44,7 @@ const getAllFriends = User => async sub => {
   return friends;
 };
 
-const notifyUsers = User => (users, cb) => {
+const updateUsers = User => (users, cb) => {
   users.forEach(async id => {
     const user = await findById(User)(id);
     cb(user);
@@ -61,6 +61,6 @@ module.exports = User => {
     findByEmail: findByEmail(User),
     getId: getId(User),
     getAllFriends: getAllFriends(User),
-    notifyUsers: notifyUsers(User)
+    updateUsers: updateUsers(User)
   };
 };

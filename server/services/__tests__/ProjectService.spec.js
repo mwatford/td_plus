@@ -136,10 +136,8 @@ describe("projectService test", () => {
     });
   });
 
-  describe("deleteProject", () => {
-    const findByIdAndRemove = jest.fn((id, cb) => {
-      cb();
-    });
+  describe("delete test", () => {
+    const findByIdAndRemove = jest.fn((a, cb) => cb());
 
     const MockModel = {
       findByIdAndRemove
@@ -148,7 +146,7 @@ describe("projectService test", () => {
     const projectService = ProjectService(MockModel);
 
     test("throws error when arguments are missing", async () => {
-      await expect(projectService.deleteProject()).rejects.toThrow(
+      await expect(projectService.delete()).rejects.toThrow(
         "Missing argument!"
       );
     });
@@ -156,11 +154,10 @@ describe("projectService test", () => {
     test("deletes a project", async () => {
       const cb = jest.fn();
 
-      await projectService.deleteProject("1234", cb);
+      await projectService.delete("1234", cb);
 
-      expect(findByIdAndRemove).toHaveBeenCalledTimes(1);
-      expect(cb).toHaveBeenCalledTimes(1);
       expect(findByIdAndRemove).toHaveBeenCalledWith("1234", cb);
+      expect(cb).toHaveBeenCalled();
     });
   });
 });

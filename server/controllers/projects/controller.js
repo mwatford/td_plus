@@ -1,107 +1,86 @@
-const create = services => async (req, res) => {
-  try {
-    const { userService, projectService } = services;
-    const admin = await userService.find(req.user.sub);
+const create = services => async ({ sub, project }) => {
+  const { userService, projectService } = services;
+  const admin = await userService.find(sub);
 
-    if (admin) {
-      const project = await projectService.createProject({
-        admin: admin._id,
-        members: [admin._id, ...req.body.project.members],
-        name: req.body.project.name
-      });
+  if (admin) {
+    const newProject = await projectService.createProject({
+      admin: admin._id,
+      members: [admin._id, ...project.members],
+      name: project.name
+    });
 
-      userService.notifyUsers(project.members, user => {
-        user.projects.push(project._id);
-        user.save();
-      });
+    userService.updateUsers(newProject.members, user => {
+      user.projects.push(newProject._id);
+      user.save();
+    });
 
-      res.send(project);
-    }
-  } catch (e) {
-    console.log(e);
+    return { data: newProject, status: 201 };
   }
 };
 
-const getUserProjects = services => async (req, res) => {
-  try {
-    const { userService, projectService } = services;
-    const { sub } = req.user;
+const getUserProjects = services => async ({ sub }) => {
+  const { userService, projectService } = services;
 
-    const user = await userService.find(sub);
-    const projectIDs = user.projects;
+  const user = await userService.find(sub);
 
-    const projects = await projectService.findMany(projectIDs);
+  const projects = await projectService.findMany(user.projects);
 
-    res.send(projects);
-  } catch (e) {
-    console.log(e);
-  }
+  return { data: projects, status: 200 };
 };
 
-const getProject = services => async (req, res) => {
-  try {
-    const { userService, projectService } = services;
-    const { sub } = req.user;
-    const project = await projectService.find(req.params.id);
-    const { _id } = await userService.find(sub);
+const getProject = services => async ({ sub, id }) => {
+  const { userService, projectService } = services;
+  const { _id } = await userService.find(sub);
+  const project = await projectService.find(id);
 
-    const isMember = await projectService.isMember(project, _id);
+  const isMember = await projectService.isMember(project, _id);
 
-    if (isMember) {
-      return res.send(project);
-    } else {
-      res.status(403).send("Sorry! You can't see that.");
-    }
-  } catch (e) {
-    console.log(e);
+  if (isMember) {
+    return {
+      status: 200,
+      data: project
+    };
   }
+  return {
+    status: 403
+  };
 };
 
-const deleteProject = services => async (req, res) => {
-  try {
-    const { userService, projectService } = services;
-    const projectId = req.params.id;
-    const { sub } = req.user;
-    const { _id } = await userService.find(sub);
-    const project = await projectService.find(projectId);
+const isAdmin = services => async ({ id, sub }) => {
+  const { userService, projectService } = services;
 
-    const isAdmin = await projectService.isAdmin(project, _id);
+  const { _id } = await userService.find(sub);
+  const project = await projectService.find(id);
+  const isAdmin = projectService.isAdmin(project, _id);
 
-    if (isAdmin) {
-      await projectService.deleteProject(projectId, (err, { members }) => {
-        userService.notifyUsers(members, user => {
-          const index = user.projects.indexOf(projectId);
-          if (index !== -1) {
-            user.projects.splice(index, 1);
-            user.save();
-          }
-        });
-      });
-      res.sendStatus(200);
-    } else {
-      res.status(403).send(`You don't have permission to do that!`);
-    }
-  } catch (e) {
-    console.log({ e });
+  if (isAdmin) {
+    return { status: 200 };
   }
+  return { status: 403 };
 };
 
-const isAdmin = services => async (req, res) => {
-  try {
-    const { userService, projectService } = services;
-    const { sub } = req.user;
-    const { id } = req.params;
+const deleteProject = services => async ({ sub, id }) => {
+  const { userService, projectService } = services;
+  const { _id } = await userService.find(sub);
+  const project = await projectService.find(id);
 
-    const project = await projectService.find(id);
-    const { _id } = await userService.find(sub);
-    const isAdmin = projectService.isAdmin(project, _id);
+  const isAdmin = await projectService.isAdmin(project, _id);
 
-    if (isAdmin) {
-      res.sendStatus(200);
-    } else {
-      return res.status(403).send(`You don't have permission to view that!`);
-    }
-  } catch (e) {}
+  if (isAdmin) {
+    await projectService.delete(id, (err, { members }) => {
+      userService.updateUsers(members, user => {
+        const index = user.projects.indexOf(id);
+        if (index !== -1) {
+          user.projects.splice(index, 1);
+          user.save();
+        }
+      })
+    })
+
+    return { status: 200 };
+  } else {
+    return { status: 403 };
+  }
 };
 
 module.exports = services => {

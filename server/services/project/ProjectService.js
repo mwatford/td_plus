@@ -49,7 +49,7 @@ const deleteProject = Project => async (projectId, cb) => {
   if (!projectId) {
     throw new Error("Missing argument!");
   }
-  return Project.findByIdAndRemove(projectId, cb);
+  return await Project.findByIdAndRemove(projectId, cb);
 };
 
 module.exports = Project => {
@@ -60,6 +60,6 @@ module.exports = Project => {
     isAdmin: isAdmin,
     addMember: addMember,
     findMany: findMany(Project),
-    deleteProject: deleteProject(Project)
+    delete: deleteProject(Project)
   };
 };
