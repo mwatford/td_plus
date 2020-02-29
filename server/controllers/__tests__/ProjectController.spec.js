@@ -39,12 +39,14 @@ describe("project controller", () => {
     test("creates a project", async () => {
       const project = {
         members: ["111"],
-        name: "asd"
+        name: "asd",
+        password: null
       };
       const expected = {
         members: ["test id", "111"],
         name: "asd",
-        admin: "test id"
+        admin: "test id",
+        password: null
       };
 
       await controller.create({ sub: "123", project });
