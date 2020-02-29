@@ -7,7 +7,10 @@
 
 <script>
 import { mapState } from "vuex";
+import navigate from "../../mixins/navigate";
+
 export default {
+  mixins: [navigate],
   data() {
     return {
       loading: "start"
@@ -39,6 +42,7 @@ export default {
             type: "error",
             message: e.response.data
           });
+
           this.$router.go(-1);
         });
     },
@@ -50,6 +54,12 @@ export default {
           Authorization: `Bearer ${this.token}`,
           "Content-Type": "application/json"
         }
+      }).then(() => {
+        this.$store.dispatch("alerts/display", {
+          message: "Project has been deleted",
+          type: "success"
+        });
+        this.navigate({ name: "home" });
       });
     }
   },
