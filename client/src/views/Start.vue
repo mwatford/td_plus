@@ -163,6 +163,7 @@ section {
   background-color: transparent;
   color: #fff;
   cursor: pointer;
+  margin: 0 auto;
 
   &:hover {
     background-color: #fff;
