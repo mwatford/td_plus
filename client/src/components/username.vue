@@ -8,7 +8,7 @@
       placeholder="Choose your name"
       v-model="name"
     />
-    <button class="m-auto button">OK</button>
+    <button class="m-auto button" name="submit">OK</button>
   </form>
 </template>
 
@@ -37,12 +37,8 @@ export default {
         .then(response => {
           const { message, type } = response.data;
 
-          this.$store.dispatch("alerts/display", { message, type });
-
-          if (type === "success") {
-            this.$store.commit("user/SET_USER", { name: this.name });
-            this.$eventBus.$emit("name chosen");
-          }
+          this.$store.commit("user/SET_USER", { name: this.name });
+          this.$eventBus.$emit("name chosen");
         });
     }
   }
