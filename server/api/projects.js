@@ -3,16 +3,57 @@ const controller = require("../controllers/projects/index");
 
 const authenticate = require("../middleware/authentication");
 
+const handler = require("../utils/handler");
+
 router.use(authenticate);
 
-router.post("/create", controller.create);
+router.post(
+  "/create",
+  handler(controller.create, (req, res, next) => {
+    return {
+      sub: req.user.sub,
+      project: req.body.project
+    };
+  })
+);
 
-router.get("/all/:id", controller.getUserProjects);
+router.get(
+  "/all/:id",
+  handler(controller.getUserProjects, (req, res, next) => {
+    return {
+      sub: req.user.sub
+    };
+  })
+);
 
-router.get("/:id", controller.getProject);
+router.get(
+  "/:id",
+  handler(controller.getProject, (req, res, next) => {
+    return {
+      sub: req.user.sub,
+      id: req.params.id
+    };
+  })
+);
 
-router.delete("/:id", controller.deleteProject);
+router.get(
+  "/:id/admin",
+  handler(controller.isAdmin, (req, res, next) => {
+    return {
+      sub: req.user.sub,
+      id: req.params.id
+    };
+  })
+);
 
-router.get("/:id/admin", controller.isAdmin);
+router.delete(
+  "/:id",
+  handler(controller.deleteProject, (req, res, next) => {
+    return {
+      sub: req.user.sub,
+      id: req.params.id
+    };
+  })
+);
 
 module.exports = router;

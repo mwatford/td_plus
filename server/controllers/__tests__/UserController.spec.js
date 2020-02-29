@@ -95,8 +95,8 @@ describe("user controller", () => {
   });
 
   describe("searchEmail test", () => {
-    test("finds users friends", async () => {
-      await controller.searchEmail("asd@asd.com");
+    test.only("finds users friends", async () => {
+      await controller.searchEmail({ email: "asd@asd.com" });
 
       expect(userService.get).toHaveBeenCalledWith(
         { email: /asd@asd.com/g },
@@ -105,9 +105,9 @@ describe("user controller", () => {
     });
 
     test("sends correct search response", async () => {
-      const response = await controller.searchEmail("asd@asd.com");
+      const response = await controller.searchEmail({ email: "asd@asd.com" });
 
-      expect(response).toEqual([{ a: "a" }, { b: "b" }]);
+      expect(response).toEqual({ status: 200, data: [{ a: "a" }, { b: "b" }] });
     });
   });
 });
