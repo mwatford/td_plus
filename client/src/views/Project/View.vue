@@ -8,6 +8,10 @@
       >
         manage
       </li>
+      <li class="button">
+        Dashboard
+      </li>
+      <li class="button">main</li>
     </ul>
     <Project></Project>
     <!-- <router-view></router-view> -->
