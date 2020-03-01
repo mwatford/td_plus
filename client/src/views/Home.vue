@@ -5,10 +5,15 @@
     </div>
     <router-link
       v-for="project in projects"
+      
       :key="project._id"
       :to="{ path: `/project/${project._id}` }"
     >
-      <project :project="project" v-if="display"></project>
+      <project
+        :project="project"
+        v-if="display"
+        @click.native="setProject(project)"
+      ></project>
     </router-link>
   </div>
 </template>
@@ -50,6 +55,9 @@ export default {
           id: this.user._id
         })
         .catch(e => e);
+    },
+    setProject(project) {
+      this.$store.commit('activeProject/SET_PROJECT', project)
     }
   },
   beforeUpdate() {

@@ -1,69 +1,73 @@
 <template>
-  <loading v-if="state !== 'start'" :size="60" :state="state"></loading>
-  <div class="project col" v-else-if="project">
-    <ul class="col">
-      <h3>To Do</h3>
-      <li v-for="task in project.toDo" :key="task._id"></li>
-    </ul>
-    <router-link
-      v-if="user._id === project.admin"
-      :to="{
-        name: 'manage',
-        props: { id: this.$route.params.id }
-      }"
-      >manage</router-link
-    >
-  </div>
+  <transition
+    @enter="enterAnimation"
+    @leave="leaveAnimation"
+    :css="false"
+    mode="out-in"
+    appear
+  >
+    <component :is="component" :state="state" :size="60"></component>
+  </transition>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import navigate from "../../mixins/navigate";
+import { popUp, scaleDown } from "../../mixins/animations";
+import loader from "../../components/loading.vue";
+import dashboard from "./Dashboard.vue";
+import manage from "./ProjectManage.vue";
+import password from "./password.vue";
 
 export default {
   data() {
     return {
-      project: null,
-      state: "start"
+      state: "start",
+      component: null,
+      views: {
+        manage,
+        password,
+        dashboard
+      }
     };
   },
   computed: {
     ...mapState({
       user: state => state.user,
-      token: state => state.auth.token
+      token: state => state.auth.token,
+      project: state => state.activeProject,
+      enterAnimation() {
+        return this.popUp(300, 0, "spring");
+      },
+      leaveAnimation() {
+        return this.scaleDown(300, 0, "linear");
+      }
     })
   },
   methods: {
-    fetchData() {
-      this.state = "loading";
-      this.$http({
-        method: "get",
-        url: `/api/projects/${this.$route.params.id}`,
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-          "Content-Type": "application/json"
-        }
-      })
-        .then(this.hideLoader)
-        .catch(err => {
-          this.state = "failed";
-          this.$store.dispatch("alerts/display", {
-            message: err.response.data,
-            type: "error"
-          });
-          this.navigate("home");
-        });
-    },
-    hideLoader({ data }) {
+    popUp,
+    scaleDown,
+    hideLoader() {
       this.state = "done";
       setTimeout(() => {
-        this.project = data;
         this.state = "start";
       }, 500);
     }
   },
   mounted() {
-    this.fetchData();
+    if (!this.project.password || this.user._id === this.project.admin) {
+      this.$eventBus.$emit("fetch data");
+      this.component = loader;
+    } else {
+      this.component = password;
+    }
+    this.$eventBus.$on("correct password", () => {
+      this.$eventBus.$emit("fetch data");
+      this.component = this.views.loader;
+    });
+    this.$eventBus.$on("changeView", view => {
+      this.component = this.views[view];
+    });
   }
 };
 </script>

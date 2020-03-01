@@ -6,7 +6,8 @@ const create = services => async ({ sub, project }) => {
     const newProject = await projectService.createProject({
       admin: admin._id,
       members: [admin._id, ...project.members],
-      name: project.name
+      name: project.name,
+      password: project.password
     });
 
     userService.updateUsers(newProject.members, user => {
@@ -74,8 +75,8 @@ const deleteProject = services => async ({ sub, id }) => {
           user.projects.splice(index, 1);
           user.save();
         }
-      })
-    })
+      });
+    });
 
     return { status: 200 };
   } else {

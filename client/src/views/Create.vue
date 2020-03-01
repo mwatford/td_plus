@@ -39,15 +39,20 @@
           v-model="project.name"
           class="input"
         />
-        <div class="row">
-          <input
-            type="text"
-            class="input"
-            name="invite"
-            v-model="member"
-            placeholder="invite people"
-          />
-        </div>
+        <input
+          type="text"
+          class="input"
+          name="invite"
+          v-model="member"
+          placeholder="invite people"
+        />
+        <input
+          type="password"
+          class="input"
+          name="invite"
+          v-model="password"
+          placeholder="password (optional)"
+        />
       </div>
       <div class="row">
         <button class="button m-auto" @click="create">Create</button>
@@ -61,16 +66,19 @@
 import axios from "axios";
 import { mapState } from "vuex";
 import boxAnimations from "../mixins/boxAnimations";
+import { hashPassword } from "../utils/password";
 
 export default {
   mixins: [boxAnimations],
   data() {
     return {
       member: "",
+      password: "",
       responseList: [],
       memberList: [],
       project: {
         name,
+        password: "",
         members: []
       }
     };
@@ -94,6 +102,7 @@ export default {
     }
   },
   methods: {
+    hashPassword,
     addUser(user) {
       this.project.members.push(user._id);
       this.memberList.push(user);
@@ -103,7 +112,32 @@ export default {
       this.project.members.splice(index, 1);
     },
     create() {
-      axios({
+      new Promise(resolve => {
+        if (this.password) {
+          this.hashPassword(this.password).then(hash => {
+            this.project.password = hash;
+            resolve();
+          });
+        } else {
+          resolve();
+        }
+      })
+        .then(this.request)
+        .then(response => {
+          return this.$store.dispatch("user/fetchUser", {
+            token: this.token,
+            email: this.user.email
+          });
+        })
+        .then(() => {
+          this.$router.push({ name: "home" });
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
+    request() {
+      return this.$http({
         method: "post",
         url: "/api/projects/create",
         headers: {
@@ -114,16 +148,7 @@ export default {
           email: this.user.email,
           project: this.project
         }
-      })
-        .then(response => {
-          return this.$store.dispatch("user/fetchUser", {
-            token: this.token,
-            email: this.user.email
-          });
-        })
-        .then(() => {
-          this.$router.push({ name: "home" });
-        });
+      });
     },
     cancel() {
       this.$router.go(-1);
