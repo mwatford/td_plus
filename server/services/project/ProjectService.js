@@ -37,7 +37,7 @@ const addMember = (project, userId) => {
 };
 
 const findMany = Project => async projects => {
-  records = await Project.find({}, "name members")
+  records = await Project.find({}, "name members password admin")
     .where("_id")
     .in(projects)
     .exec();

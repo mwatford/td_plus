@@ -5,6 +5,7 @@ import app from "./app/index";
 import alerts from "./alerts/index";
 import auth from "./auth/index";
 import projects from "./projects/index";
+import activeProject from "./project/index";
 
 Vue.use(Vuex);
 
@@ -23,6 +24,7 @@ export default new Vuex.Store({
     app,
     alerts,
     auth,
-    projects
+    projects,
+    activeProject
   }
 });

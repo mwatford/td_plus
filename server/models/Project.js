@@ -7,7 +7,8 @@ const ProjectSchema = new Schema({
   members: [],
   toDo: [],
   inProgress: [],
-  done: []
+  done: [],
+  password: String
 });
 
 module.exports = mongoose.model("Project", ProjectSchema);

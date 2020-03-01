@@ -33,26 +33,26 @@ export default [
   },
   {
     path: "/project/:id",
+    name: "project",
     component: View,
-    children: [
-      {
-        path: "",
-        component: Project,
-        meta: {
-          requiresAuth: true
-        }
-      },
-      {
-        path: "manage",
-        name: "manage",
-        props: true,
-        component: ProjectManage,
-        meta: {
-          requiresAuth: true
-        }
-      }
-    ]
+    meta: {
+      requiresAuth: true
+    }
   },
+  // children: [
+  //   {
+  //     path: "",
+  //     component: Project,
+  // {
+  //   path: "manage",
+  //   name: "manage",
+  //   props: true,
+  //   component: ProjectManage,
+  //   meta: {
+  //     requiresAuth: true
+  //   }
+  // }
+  // ]
 
   {
     name: "start",
