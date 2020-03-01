@@ -7,6 +7,8 @@
     "start": "cross-env NODE_ENV=production node server/index",
     "test:server": "cross-env NODE_ENV=test jest server/ --watch --config jest-node.config.js",
     "test:client": "jest client/ --watch",
+    "test:components": "jest client/src/components --watch",
+    "test:views": "jest client/src/views --watch",
     "test:vue": "jest /*-vue.spec.js --watch",
     "server": "cross-env NODE_ENV=dev nodemon server/index",
     "db": "mongod --dbpath db",
