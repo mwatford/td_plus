@@ -73,14 +73,13 @@ export default {
         .then(this.handleResponse);
     },
     handleResponse(response) {
-      const { message, type } = response.data;
+      this.$store.dispatch("alerts/display", {
+        message: "Your profile has been updated",
+        type: "success"
+      });
 
-      this.$store.dispatch("alerts/display", { message, type });
-
-      if (type === "success") {
-        this.$store.commit("user/SET_USER", this.changes);
-      }
-    },
+      this.$store.commit("user/SET_USER", this.changes);
+    }
   },
   mounted() {
     this.boxEnterAnimation(300, 0, false);
