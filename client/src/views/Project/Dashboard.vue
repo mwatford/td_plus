@@ -1,10 +1,11 @@
 <template>
-  <div
-    class="m-auto dashboard view"
-    v-if="project"
-    ref="component"
-  >
-    <ul class="col" v-for="list in filteredLists" :key="list.name" ref="list">
+  <div class="m-auto dashboard view row" v-if="project" ref="component">
+    <ul
+      class="col box"
+      v-for="list in filteredLists"
+      :key="list.name"
+      ref="list"
+    >
       <h3>
         {{ list.name }}
       </h3>
@@ -34,6 +35,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+* {
+  box-sizing: border-box;
+}
 .dashboard {
+}
+.box {
+  width: 200px;
+  padding: 20px;
+  margin-right: 4px;
+
+  h3 {
+    border-bottom: 1px solid #fff;
+    padding-bottom: 2px;
+  }
 }
 </style>
