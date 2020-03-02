@@ -1,5 +1,9 @@
 <template>
-  <div class="m-auto" v-if="project" ref="component">
+  <div
+    class="m-auto dashboard view"
+    v-if="project"
+    ref="component"
+  >
     <ul class="col" v-for="list in filteredLists" :key="list.name" ref="list">
       <h3>
         {{ list.name }}
@@ -29,4 +33,7 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.dashboard {
+}
+</style>
