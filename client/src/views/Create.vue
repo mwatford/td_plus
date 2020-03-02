@@ -86,7 +86,11 @@ export default {
         name: "",
         password: "",
         members: [],
-        lists: []
+        lists: [
+          { name: "To Do", data: [] },
+          { name: "In Progress", data: [] },
+          { name: "Done", data: [] }
+        ]
       }
     };
   },
