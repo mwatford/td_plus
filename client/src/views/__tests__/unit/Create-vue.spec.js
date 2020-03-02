@@ -220,10 +220,10 @@ describe("Component", () => {
 
         test("calls $http with correct argument", () => {
           const project = {
-            name: "",
-            password: "",
-            members: [],
-            lists: []
+            name: wrapper.vm.project.name,
+            password: wrapper.vm.project.password,
+            members: wrapper.vm.project.members,
+            lists: wrapper.vm.project.lists
           };
 
           const expected = {
