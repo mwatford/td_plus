@@ -9,5 +9,8 @@ export const mutations = {
   },
   TOGGLE_TIMELINE(state) {
     state.timeline = !state.timeline;
+  },
+  TOGGLE_ANIMATIONS(state) {
+    state.animations = !state.animations;
   }
 };
