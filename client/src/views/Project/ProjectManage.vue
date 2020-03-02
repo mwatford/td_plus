@@ -1,6 +1,6 @@
 <template>
   <loading v-if="loading !== 'start'" :state="loading" :size="60"></loading>
-  <div v-else>
+  <div v-else class="m-auto view">
     <button @click="deleteProject" class="button">delete</button>
   </div>
 </template>
@@ -69,4 +69,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped></style>
