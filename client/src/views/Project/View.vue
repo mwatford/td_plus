@@ -1,19 +1,42 @@
 <template>
   <div class="col wrapper m-auto">
-    <ul class="row controls" v-if="displayControls">
-      <li class="button button--start" @click="changeView('dashboard')">
-        Dashboard
-      </li>
-      <li class="button" @click="changeView('main')">Main</li>
-      <li class="button">Chat</li>
-      <li
-        class="button button--end"
-        @click="changeView('manage')"
-        v-if="project.admin === user._id"
-      >
-        Manage
-      </li>
-    </ul>
+    <div class="row controls" v-if="displayControls">
+      <div class="row">
+        <button
+          :class="[
+            `button button--start`,
+            { 'button--active': currentView === 'dashboard' }
+          ]"
+          @click="changeView('dashboard')"
+        >
+          Dashboard
+        </button>
+        <button
+          :class="[`button`, { 'button--active': currentView === 'main' }]"
+          @click="changeView('main')"
+        >
+          Main
+        </button>
+        <button
+          :class="[`button`, { 'button--active': currentView === 'chat' }]"
+        >
+          Chat
+        </button>
+      </div>
+      <div class="row">
+        <button
+          :class="[
+            `button`,
+            'button--end',
+            { 'button--active': currentView === 'manage' }
+          ]"
+          @click="changeView('manage')"
+          v-if="project.admin === user._id"
+        >
+          Manage
+        </button>
+      </div>
+    </div>
     <Project></Project>
   </div>
 </template>
@@ -31,7 +54,8 @@ export default {
   data() {
     return {
       displayControls: false,
-      data: null
+      data: null,
+      currentView: ""
     };
   },
   computed: {
@@ -65,6 +89,7 @@ export default {
     },
     changeView(view) {
       this.$eventBus.$emit("changeView", view);
+      this.currentView = view;
     },
     showButtons() {
       this.displayControls = true;
@@ -91,6 +116,7 @@ export default {
 .controls {
   width: 100%;
   margin-bottom: 20px;
+  justify-content: space-between;
 }
 .button {
   margin: 0 2px;
@@ -103,10 +129,11 @@ export default {
   }
 
   &--end {
-    margin-left: auto;
+    margin-right: 0;
   }
 
-  &:hover {
+  &:hover,
+  &--active {
     background: #000000d2;
     color: #fff;
   }
