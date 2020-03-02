@@ -19,9 +19,10 @@ import signIn from "../components/sign-in.vue";
 import loader from "../components/loading.vue";
 import username from "../components/username.vue";
 import animations from "../mixins/animations";
+import navigate from "../mixins/navigate";
 
 export default {
-  mixins: [boxAnimations, animations],
+  mixins: [boxAnimations, animations, navigate],
   data() {
     return {
       state: "loading",
@@ -75,7 +76,7 @@ export default {
       this.login();
     });
     this.$eventBus.$on("name chosen", () => {
-      this.$router.push({ name: "home" });
+      this.navigate({ name: "home" });
     });
     this.boxEnterAnimation(400, 0, false);
   },
