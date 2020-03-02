@@ -1,20 +1,20 @@
 <template>
-  <div class="col">
-    <ul class="row">
+  <div class="col wrapper m-auto">
+    <ul class="row controls" v-if="displayControls">
+      <li class="button button--start" @click="changeView('dashboard')">
+        Dashboard
+      </li>
+      <li class="button" @click="changeView('main')">Main</li>
+      <li class="button">Chat</li>
       <li
-        class="button"
+        class="button button--end"
         @click="changeView('manage')"
         v-if="project.admin === user._id"
       >
-        manage
+        Manage
       </li>
-      <li class="button">
-        Dashboard
-      </li>
-      <li class="button">main</li>
     </ul>
     <Project></Project>
-    <!-- <router-view></router-view> -->
   </div>
 </template>
 
@@ -30,7 +30,7 @@ export default {
   mixins: [navigate],
   data() {
     return {
-      displayControls: !false,
+      displayControls: false,
       data: null
     };
   },
@@ -52,6 +52,7 @@ export default {
           this.$store.commit("activeProject/RESET_STATE");
           this.$store.commit("activeProject/SET_PROJECT", data);
 
+          this.showButtons();
           this.changeView("dashboard");
         })
         .catch(err => {
@@ -64,9 +65,13 @@ export default {
     },
     changeView(view) {
       this.$eventBus.$emit("changeView", view);
+    },
+    showButtons() {
+      this.displayControls = true;
     }
   },
-  mounted() {
+  created() {
+    this.$eventBus.$on("correct password", this.showButtons());
     this.$eventBus.$on("fetch data", () => {
       this.fetchData();
     });
@@ -78,4 +83,32 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.wrapper {
+  width: 90%;
+  padding: 20px;
+}
+.controls {
+  width: 100%;
+  margin-bottom: 20px;
+}
+.button {
+  margin: 0 2px;
+  border: none;
+  background: #000000a2;
+  border-radius: 2px;
+
+  &--start {
+    margin-left: 0;
+  }
+
+  &--end {
+    margin-left: auto;
+  }
+
+  &:hover {
+    background: #000000d2;
+    color: #fff;
+  }
+}
+</style>
