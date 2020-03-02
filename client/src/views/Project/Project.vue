@@ -37,7 +37,7 @@ export default {
       token: state => state.auth.token,
       project: state => state.activeProject,
       enterAnimation() {
-        return this.popUp(300, 0, "spring");
+        return this.popUp(300, 0, "easeInSine");
       },
       leaveAnimation() {
         return this.scaleDown(300, 0, "linear");
@@ -72,4 +72,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.view {
+  width: 100%;
+  height: 100%;
+  border: 1px solid black;
+}</style>
