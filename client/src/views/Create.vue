@@ -1,7 +1,39 @@
 <template>
   <div class="create row">
-    <form action="" class="box" @submit.prevent>
-      <ul class="col box suggestions" v-if="suggestions.length">
+    <form action="" class="box" @submit.prevent="create">
+      <div class="col">
+        <input
+          type="text"
+          name="name"
+          placeholder="project name"
+          v-model="project.name"
+          class="input"
+        />
+        <input
+          type="text"
+          class="input"
+          name="invite"
+          v-model="search"
+          data-search
+          placeholder="invite people"
+        />
+        <input
+          type="password"
+          class="input"
+          name="invite"
+          v-model="password"
+          placeholder="password (optional)"
+        />
+      </div>
+      <div class="row">
+        <input type="submit" class="button m-auto" value="Create" />
+        <button class="button m-auto" @click="navigate(-1)">Back</button>
+      </div>
+      <ul
+        class="col box suggestions"
+        v-if="suggestions.length"
+        ref="suggestions"
+      >
         <h3>Invite</h3>
         <li
           v-for="suggestion in suggestions"
@@ -16,48 +48,21 @@
           </h5>
         </li>
       </ul>
-      <ul class="col box members" v-if="memberList.length">
+      <ul class="col box members" v-if="memberList.length" ref="members">
         <h3>Members</h3>
         <li
-          v-for="suggestion in memberList"
-          :key="suggestion._id"
-          @click="removeUser(suggestion)"
+          v-for="(member, index) in memberList"
+          :key="member._id"
+          @click="removeUser(index)"
           class="box__user col"
           title="Remove"
         >
-          <h4>{{ suggestion.name }}</h4>
+          <h4>{{ member.name }}</h4>
           <h5>
-            {{ suggestion.email }}
+            {{ member.email }}
           </h5>
         </li>
       </ul>
-      <div class="col">
-        <input
-          type="text"
-          name="name"
-          placeholder="project name"
-          v-model="project.name"
-          class="input"
-        />
-        <input
-          type="text"
-          class="input"
-          name="invite"
-          v-model="member"
-          placeholder="invite people"
-        />
-        <input
-          type="password"
-          class="input"
-          name="invite"
-          v-model="password"
-          placeholder="password (optional)"
-        />
-      </div>
-      <div class="row">
-        <button class="button m-auto" @click="create">Create</button>
-        <button class="button m-auto" @click="cancel">Back</button>
-      </div>
     </form>
   </div>
 </template>
@@ -67,19 +72,21 @@ import axios from "axios";
 import { mapState } from "vuex";
 import boxAnimations from "../mixins/boxAnimations";
 import { hashPassword } from "../utils/password";
+import navigate from "../mixins/navigate";
 
 export default {
-  mixins: [boxAnimations],
+  mixins: [boxAnimations, navigate],
   data() {
     return {
-      member: "",
+      search: "",
       password: "",
       responseList: [],
       memberList: [],
       project: {
-        name,
+        name: "",
         password: "",
-        members: []
+        members: [],
+        lists: []
       }
     };
   },
@@ -88,6 +95,7 @@ export default {
       user: state => state.user,
       token: state => state.auth.token
     }),
+    //test
     suggestions() {
       const suggestions = this.responseList.filter(
         el => el._id !== this.user._id
@@ -108,11 +116,20 @@ export default {
       this.memberList.push(user);
     },
     removeUser(index) {
-      this.memberList.splice(index, 1);
       this.project.members.splice(index, 1);
+      this.memberList.splice(index, 1);
     },
     create() {
-      new Promise(resolve => {
+      return this.createPassword()
+        .then(this.request)
+        .then(this.updateUser)
+        .then(this.navigate({ name: "home" }))
+        .catch(e => {
+          console.log(e);
+        });
+    },
+    createPassword() {
+      return new Promise(resolve => {
         if (this.password) {
           this.hashPassword(this.password).then(hash => {
             this.project.password = hash;
@@ -121,20 +138,13 @@ export default {
         } else {
           resolve();
         }
-      })
-        .then(this.request)
-        .then(response => {
-          return this.$store.dispatch("user/fetchUser", {
-            token: this.token,
-            email: this.user.email
-          });
-        })
-        .then(() => {
-          this.$router.push({ name: "home" });
-        })
-        .catch(e => {
-          console.log(e);
-        });
+      });
+    },
+    updateUser() {
+      return this.$store.dispatch("user/fetchUser", {
+        token: this.token,
+        email: this.user.email
+      });
     },
     request() {
       return this.$http({
@@ -149,9 +159,6 @@ export default {
           project: this.project
         }
       });
-    },
-    cancel() {
-      this.$router.go(-1);
     },
     fetchUsers(search) {
       this.$http({
@@ -173,8 +180,8 @@ export default {
     this.boxExitAnimation(300, 0, false).then(next);
   },
   watch: {
-    member(n) {
-      if (this.member.length > 3) {
+    search(n) {
+      if (n.length > 3) {
         this.fetchUsers(n);
       }
     }
