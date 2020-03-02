@@ -22,6 +22,18 @@
         </div>
       </div>
       <div class="row">
+        <label for="animations">
+          Animations
+        </label>
+        <input
+          type="checkbox"
+          name=""
+          id=""
+          @click="$store.commit('app/TOGGLE_ANIMATIONS')"
+          :checked="$store.state.app.animations"
+        />
+      </div>
+      <div class="row buttons">
         <button class="button" @click="save" type="submit" :disabled="!valid">
           Save
         </button>
@@ -96,6 +108,9 @@ export default {
   margin: 0;
   padding: 0;
 }
+.row {
+  align-items: center;
+}
 .profile {
   display: flex;
   flex-direction: column;
@@ -104,14 +119,21 @@ export default {
 }
 .box {
   width: auto;
+  height: auto;
 }
 .button {
   width: 100px;
   margin: auto;
 }
+.buttons {
+  margin-top: 20px;
+}
 input[type="text"] {
   margin: 10px 5px 10px 0;
   height: 20px;
   width: 200px;
+}
+input[type="checkbox"] {
+  margin: 10px 5px 10px auto;
 }
 </style>
