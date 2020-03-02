@@ -5,9 +5,7 @@ const ProjectSchema = new Schema({
   name: { type: String, required: true, default: "" },
   admin: { type: mongoose.ObjectId, required: true },
   members: [],
-  toDo: [],
-  inProgress: [],
-  done: [],
+  lists: [{ name: String, data: [{ name: String, member: String }] }],
   password: String
 });
 
