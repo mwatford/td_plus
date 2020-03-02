@@ -7,7 +7,8 @@ const create = services => async ({ sub, project }) => {
       admin: admin._id,
       members: [admin._id, ...project.members],
       name: project.name,
-      password: project.password
+      password: project.password,
+      lists: project.lists
     });
 
     userService.updateUsers(newProject.members, user => {
