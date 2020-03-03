@@ -69,6 +69,8 @@
     "jwks-rsa": "^1.7.0",
     "mongodb": "^3.5.3",
     "mongoose": "^5.9.2",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
     "vue": "^2.6.11",
     "vue-router": "^3.1.5",
     "vuex": "^3.1.2"
