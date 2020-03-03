@@ -45,6 +45,7 @@
 import { mapState } from "vuex";
 import navigate from "../../mixins/navigate";
 import Project from "./Project.vue";
+import io from "socket.io-client";
 
 export default {
   components: {
@@ -55,7 +56,8 @@ export default {
     return {
       displayControls: false,
       data: null,
-      currentView: ""
+      currentView: "",
+      socket: io("localhost:8000")
     };
   },
   computed: {
@@ -93,13 +95,17 @@ export default {
     },
     showButtons() {
       this.displayControls = true;
-    }
+    },
   },
   created() {
     this.$eventBus.$on("correct password", this.showButtons());
     this.$eventBus.$on("fetch data", () => {
       this.fetchData();
     });
+  },
+  beforeDestroy() {
+    this.socket.close();
+    console.log("dc");
   },
   beforeRouteLeave(from, to, next) {
     this.$store.commit("activeProject/RESET_STATE");
