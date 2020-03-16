@@ -13,13 +13,20 @@ export default {
   mixins: [navigate],
   data() {
     return {
-      loading: "start"
+      loading: "start",
+      task: ""
     };
   },
   computed: {
-    ...mapState({ token: state => state.auth.token })
+    ...mapState({
+      token: state => state.auth.token
+    })
   },
   methods: {
+    addTask() {
+      this.$socket.emit("addTask", this.task);
+      this.task = "";
+    },
     auth() {
       this.loading = "loading";
       this.$http({
