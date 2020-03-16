@@ -5,6 +5,8 @@ import router from "./router/index";
 import axios from "axios";
 import loading from "./components/loading.vue";
 import anime from "animejs";
+import io from "socket.io-client";
+import VueChatScroll from "vue-chat-scroll";
 
 Vue.component("loading", loading);
 
@@ -12,6 +14,7 @@ import { domain, clientId, audience } from "../../auth_config.json";
 
 // Import the plugin here
 import { Auth0Plugin } from "./auth/index.js";
+import VueSocket from "./modules/Socket";
 
 // Install the authentication plugin here
 Vue.use(Auth0Plugin, {
@@ -23,6 +26,9 @@ Vue.use(Auth0Plugin, {
   }
 });
 
+Vue.use(VueChatScroll);
+
+Vue.prototype.$socket = new VueSocket(io);
 Vue.prototype.$http = axios;
 Vue.prototype.$anime = anime;
 Vue.prototype.$eventBus = new Vue();
