@@ -5,16 +5,22 @@ const create = services => async ({ sub, project }) => {
   if (admin) {
     const newProject = await projectService.createProject({
       admin: admin._id,
-      members: [admin._id, ...project.members],
+      members: [
+        { id: admin._id, type: "admin", permissions: [] },
+        ...project.members
+      ],
       name: project.name,
       password: project.password,
       lists: project.lists
     });
 
-    userService.updateUsers(newProject.members, user => {
-      user.projects.push(newProject._id);
-      user.save();
-    });
+    userService.updateUsers(
+      newProject.members.map(el => el.id),
+      user => {
+        user.projects.push(newProject._id);
+        user.save();
+      }
+    );
 
     return { data: newProject, status: 201 };
   }
@@ -70,13 +76,16 @@ const deleteProject = services => async ({ sub, id }) => {
 
   if (isAdmin) {
     await projectService.delete(id, (err, { members }) => {
-      userService.updateUsers(members, user => {
-        const index = user.projects.indexOf(id);
-        if (index !== -1) {
-          user.projects.splice(index, 1);
-          user.save();
+      userService.updateUsers(
+        members.map(el => el.id),
+        user => {
+          const index = user.projects.indexOf(id);
+          if (index !== -1) {
+            user.projects.splice(index, 1);
+            user.save();
+          }
         }
-      });
+      );
     });
 
     return { status: 200 };
@@ -85,12 +94,10 @@ const deleteProject = services => async ({ sub, id }) => {
   }
 };
 
-module.exports = services => {
-  return {
-    create: create(services),
-    getUserProjects: getUserProjects(services),
-    getProject: getProject(services),
-    deleteProject: deleteProject(services),
-    isAdmin: isAdmin(services)
-  };
-};
+module.exports = services => ({
+  create: create(services),
+  getUserProjects: getUserProjects(services),
+  getProject: getProject(services),
+  deleteProject: deleteProject(services),
+  isAdmin: isAdmin(services)
+});
