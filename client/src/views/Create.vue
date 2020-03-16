@@ -116,7 +116,11 @@ export default {
   methods: {
     hashPassword,
     addUser(user) {
-      this.project.members.push(user._id);
+      this.project.members.push({
+        id: user._id,
+        type: "basic",
+        permissions: []
+      });
       this.memberList.push(user);
     },
     removeUser(index) {
