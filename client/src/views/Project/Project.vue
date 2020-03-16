@@ -1,13 +1,6 @@
 <template>
-  <transition
-    @enter="enterAnimation"
-    @leave="leaveAnimation"
-    :css="false"
-    mode="out-in"
-    appear
-  >
-    <component :is="component" :state="state" :size="60"></component>
-  </transition>
+
+  <component :is="component" :state="state" :size="60"></component>
 </template>
 
 <script>
@@ -18,6 +11,7 @@ import loader from "../../components/loading.vue";
 import dashboard from "./Dashboard.vue";
 import manage from "./ProjectManage.vue";
 import password from "./password.vue";
+import chat from "./Chat.vue";
 
 export default {
   data() {
@@ -27,7 +21,8 @@ export default {
       views: {
         manage,
         password,
-        dashboard
+        dashboard,
+        chat
       }
     };
   },
