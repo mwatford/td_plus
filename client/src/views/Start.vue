@@ -108,6 +108,7 @@ export default {
   color: #fff;
   justify-content: space-between;
   padding: 50px 50px;
+  border-radius: 2px;
 
   &--inverted {
     background: #fff;
