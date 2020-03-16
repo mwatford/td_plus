@@ -11,7 +11,6 @@ import loader from "../../components/loading.vue";
 import dashboard from "./Dashboard.vue";
 import manage from "./ProjectManage.vue";
 import password from "./password.vue";
-import chat from "./Chat.vue";
 
 export default {
   data() {
@@ -22,7 +21,6 @@ export default {
         manage,
         password,
         dashboard,
-        chat
       }
     };
   },
