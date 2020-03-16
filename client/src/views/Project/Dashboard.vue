@@ -41,7 +41,7 @@ export default {
 .dashboard {
 }
 .box {
-  width: 200px;
+  width: 240px;
   padding: 20px;
   margin-right: 4px;
 
