@@ -5,3 +5,4 @@ auth_config.*
 authentication.js
 keys.js
 request.rest
+/coverage

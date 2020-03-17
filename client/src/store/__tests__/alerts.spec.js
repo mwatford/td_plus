@@ -55,12 +55,15 @@ describe("alerts", () => {
 
   describe("actions", () => {
     describe("display", () => {
-      test("should call ADD and REMOVE methods", () => {
+      test("should call ADD and REMOVE methods", done => {
         const alert = {
           message: "alert test message",
           type: "error"
         };
-        store.dispatch("alerts/display", alert);
+        store.dispatch("alerts/display", alert).then(() => {
+          expect(store.state.alerts.content.length).toEqual(0);
+          done();
+        });
         expect(store.state.alerts.content[0]).toBe(alert);
       });
     });
