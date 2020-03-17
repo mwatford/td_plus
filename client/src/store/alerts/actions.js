@@ -2,8 +2,12 @@ export const actions = {
   display({ commit }, alert) {
     commit("ADD", alert);
 
-    setTimeout(() => {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve();
+      }, 2500);
+    }).then(() => {
       commit("REMOVE", alert);
-    }, 2500);
+    });
   }
 };
