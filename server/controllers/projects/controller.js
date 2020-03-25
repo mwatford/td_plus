@@ -1,29 +1,33 @@
 const create = services => async ({ sub, project }) => {
-  const { userService, projectService } = services;
+  const { userService } = services;
   const admin = await userService.find(sub);
 
   if (admin) {
-    const newProject = await projectService.createProject({
-      admin: admin._id,
-      members: [
-        { id: admin._id, type: "admin", permissions: [] },
-        ...project.members
-      ],
-      name: project.name,
-      password: project.password,
-      lists: project.lists
-    });
-
-    userService.updateUsers(
-      newProject.members.map(el => el.id),
-      user => {
-        user.projects.push(newProject._id);
-        user.save();
-      }
-    );
-
+    const newProject = await saveProject(services, project, admin);
     return { data: newProject, status: 201 };
   }
+};
+
+const saveProject = async ({ projectService, userService }, project, admin) => {
+  const newProject = await projectService.createProject({
+    admin: admin._id,
+    members: [
+      { id: admin._id, type: "admin", permissions: [] },
+      ...project.members
+    ],
+    name: project.name,
+    password: project.password,
+    lists: project.lists
+  });
+
+  userService.updateUsers(
+    newProject.members.map(el => el.id),
+    user => {
+      user.projects.push(newProject._id);
+      user.save();
+    }
+  );
+  return newProject;
 };
 
 const getUserProjects = services => async ({ sub }) => {
@@ -94,10 +98,29 @@ const deleteProject = services => async ({ sub, id }) => {
   }
 };
 
+const importProjects = services => async ({ sub, projects }) => {
+  const { userService, projectService } = services;
+
+  let admin = await userService.find(sub);
+
+  if (admin) {
+    await Promise.all(
+      projects.map(project => saveProject(services, project, admin))
+    );
+  }
+
+  admin = await userService.find(sub);
+
+  const userProjects = await projectService.findMany(admin.projects);
+
+  return { status: 200, data: userProjects };
+};
+
 module.exports = services => ({
   create: create(services),
   getUserProjects: getUserProjects(services),
   getProject: getProject(services),
   deleteProject: deleteProject(services),
-  isAdmin: isAdmin(services)
+  isAdmin: isAdmin(services),
+  import: importProjects(services)
 });
