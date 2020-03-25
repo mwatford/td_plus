@@ -1,5 +1,4 @@
 <template>
-
   <component :is="component" :state="state" :size="60"></component>
 </template>
 
@@ -20,7 +19,7 @@ export default {
       views: {
         manage,
         password,
-        dashboard,
+        dashboard
       }
     };
   },
@@ -45,22 +44,28 @@ export default {
       setTimeout(() => {
         this.state = "start";
       }, 500);
+    },
+    changeView(view) {
+      this.component = this.views[view];
+    },
+    grantAccess() {
+      this.$eventBus.$emit("fetch data");
+      this.component = this.views.loader;
     }
   },
   mounted() {
+    this.$eventBus.$on("changeView", this.changeView);
+    this.$eventBus.$on("correct password", this.grantAccess);
     if (!this.project.password || this.user._id === this.project.admin) {
-      this.$eventBus.$emit("fetch data");
       this.component = loader;
+      this.$eventBus.$emit("fetch data");
     } else {
       this.component = password;
     }
-    this.$eventBus.$on("correct password", () => {
-      this.$eventBus.$emit("fetch data");
-      this.component = this.views.loader;
-    });
-    this.$eventBus.$on("changeView", view => {
-      this.component = this.views[view];
-    });
+  },
+  beforeDestroy() {
+    this.$eventBus.$off('changeView', this.changeView)
+    this.$eventBus.$off("correct password", this.grantAccess);
   }
 };
 </script>
