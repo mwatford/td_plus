@@ -15,15 +15,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     return authGuard(to, from, next);
-  } else if (to.matched.some(record => record.meta.guest)) {
-    if (store.state.auth.status) {
-      next({ name: "home" });
-    } else {
-      next();
-    }
-  } else {
-    next({ name: "start" });
-  }
+  } else next();
 });
 
 export default router;
