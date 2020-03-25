@@ -6,5 +6,11 @@ export const mutations = {
   },
   RESET_STATE(state) {
     Object.assign(state, defaultState());
+  },
+  FILTER(state) {
+    state.filter = !state.filter;
+  },
+  UPDATE(state, data) {
+    state.lists = data;
   }
 };
