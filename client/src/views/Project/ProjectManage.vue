@@ -14,7 +14,7 @@ export default {
   data() {
     return {
       loading: "start",
-      task: ""
+      task: this.createEmptyTask()
     };
   },
   computed: {
@@ -23,9 +23,15 @@ export default {
     })
   },
   methods: {
+    createEmptyTask() {
+      return {
+        name: "",
+        member: ""
+      };
+    },
     addTask() {
       this.$socket.emit("addTask", this.task);
-      this.task = "";
+      this.task = this.createEmptyTask();
     },
     auth() {
       this.loading = "loading";
