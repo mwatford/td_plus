@@ -12,7 +12,7 @@ export default [
     path: "/",
     component: Home,
     meta: {
-      requiresAuth: true
+      requiresAuth: false
     }
   },
   {
@@ -20,7 +20,7 @@ export default [
     path: "/create",
     component: Create,
     meta: {
-      requiresAuth: true
+      requiresAuth: false
     }
   },
   {
@@ -36,7 +36,7 @@ export default [
     name: "project",
     component: View,
     meta: {
-      requiresAuth: true
+      requiresAuth: false
     }
   },
   // children: [
