@@ -1,33 +1,36 @@
 <template>
   <div class="m-auto dashboard view row" v-if="project" ref="component">
-    <ul
-      class="col box"
-      v-for="list in filteredLists"
-      :key="list.name"
-      ref="list"
-    >
+    <ul class="col box" v-for="list in lists" :key="list.name" ref="list">
       <h3>
         {{ list.name }}
       </h3>
-      <li v-for="task in list.data" :key="task._id">{{ task.name }}</li>
+      <li v-for="task in list.data" :key="task._id">
+        {{ task.name }}
+      </li>
     </ul>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import cloneDeep from "../../utils/cloneDeep";
 
 export default {
   computed: {
     ...mapState({
       project: state => state.activeProject,
-      user: state => state.user
+      user: state => state.user,
+      unfilteredLists: state => state.activeProject.lists,
+      filter: state => state.activeProject.filter
     }),
     filteredLists() {
-      return this.project.lists.map(el => {
-        el.data = el.data.filter(task => task.member === this.user._id);
-        return el;
+      return cloneDeep(this.project.lists).map(list => {
+        list.data = list.data.filter(task => task.member === this.user._id);
+        return list;
       });
+    },
+    lists() {
+      return this.filter ? this.filteredLists : this.unfilteredLists;
     }
   },
   methods: {}
@@ -37,8 +40,6 @@ export default {
 <style lang="scss" scoped>
 * {
   box-sizing: border-box;
-}
-.dashboard {
 }
 .box {
   width: 240px;
