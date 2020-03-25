@@ -2,7 +2,8 @@ export const defaultState = () => {
   return {
     name: "",
     admin: "",
-    password: ""
+    password: "",
+    filter: false
   };
 };
 
