@@ -14,10 +14,10 @@
         </button>
         <button
           :disabled="!buttonsActive"
-          :class="[`button`, { 'button--active': currentView === 'main' }]"
-          @click="changeView('main')"
+          :class="[`button`, { 'button--active': filter }]"
+          @click="toggleFilter"
         >
-          Main
+          Filter
         </button>
         <button
           :disabled="!buttonsActive"
@@ -72,8 +72,12 @@ export default {
     ...mapState({
       user: state => state.user,
       token: state => state.auth.token,
-      project: state => state.activeProject
+      project: state => state.activeProject,
+      auth: state => state.auth.status
     }),
+    filter() {
+      return this.project.filter;
+    },
     permissions() {
       return this.project.members.find(el => el.id == this.user._id)
         .permissions;
@@ -83,7 +87,7 @@ export default {
     fetchData() {
       this.$store
         .dispatch("activeProject/fetchProject", {
-          project: this.project,
+          id: this.project._id,
           token: this.token
         })
         .then(({ data }) => {
@@ -119,19 +123,33 @@ export default {
           project: this.project._id
         }
       });
+    },
+    toggleFilter() {
+      this.$store.commit("activeProject/FILTER");
+    },
+    async fetchDataHandler() {
+      if (this.auth) {
+        await this.fetchData();
+
+        await this.connect();
+
+        this.$socket.on("update", data => {
+          this.updateProject(data);
+        });
+      } else {
+        this.activateButtons();
+        this.changeView("dashboard");
+      }
+    },
+    updateProject(data) {
+      this.$store.commit("activeProject/UPDATE", data);
     }
   },
   created() {
-    // this.$eventBus.$on("correct password", this.activateButtons);
-    this.$eventBus.$on("fetch data", async () => {
-      await this.fetchData();
-
-      await this.connect();
-    });
+    this.$eventBus.$on("fetch data", this.fetchDataHandler);
   },
   beforeDestroy() {
     this.$socket.close();
-    console.log("dc");
   },
   beforeRouteLeave(from, to, next) {
     this.$store.commit("activeProject/RESET_STATE");
