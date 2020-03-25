@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <div class="create" @click="create">
+    <div class="create" @click="navigate('create')">
       <div>+</div>
     </div>
     <router-link
@@ -11,14 +11,14 @@
       <project
         :project="project"
         v-if="display"
-        @click.native="setProject(project)"
+        @click.native="setActiveProject(project)"
       ></project>
     </router-link>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 import project from "../components/project.vue";
 import boxAnimations from "../mixins/boxAnimations";
 import navigate from "../mixins/navigate";
@@ -37,15 +37,23 @@ export default {
     ...mapState({
       user: state => state.user,
       projects: state => state.projects.data,
-      token: state => state.auth.token
+      token: state => state.auth.token,
+      auth: state => state.auth.status
     }),
     animate() {
       return this.$refs["animate"];
     }
   },
   methods: {
-    create() {
-      this.$router.push("/create");
+    getProjects() {
+      return new Promise(resolve => {
+        if (this.auth) {
+          this.fetchProjects().then(resolve);
+        } else {
+          this.getLocalProjects();
+          resolve();
+        }
+      });
     },
     fetchProjects() {
       return this.$store
@@ -55,18 +63,23 @@ export default {
         })
         .catch(e => e);
     },
-    setProject(project) {
-      this.$store.commit('activeProject/SET_PROJECT', project)
+    getLocalProjects() {
+      let projects = window.localStorage.getItem("projects");
+
+      if (projects) {
+        projects = JSON.parse(projects);
+        this.$store.commit("projects/SET_PROJECTS", projects);
+      }
+    },
+    setActiveProject(project) {
+      this.$store.commit("activeProject/SET_PROJECT", project);
     }
   },
   beforeUpdate() {
     this.display = true;
   },
   mounted() {
-    this.$store.commit("auth/SET_STATUS", true);
-    this.fetchProjects().then(() => {
-      this.boxEnterAnimation(200, 50, true);
-    });
+    this.getProjects().then(() => this.boxEnterAnimation(200, 50, true));
   },
   beforeRouteLeave(to, from, next) {
     this.boxExitAnimation(500, 20, true).then(next);
