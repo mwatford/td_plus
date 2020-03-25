@@ -51,6 +51,7 @@ export default {
           const token = await this.$auth.getTokenSilently();
 
           this.$store.commit("auth/SET_TOKEN", token);
+          this.$store.commit("auth/SET_STATUS", true);
 
           return this.$store.dispatch("user/fetchUser", {
             token,
@@ -114,7 +115,7 @@ export default {
     background: #fff;
     color: #000;
 
-    & .input {
+    &__input {
       color: #000;
       background: #fff;
       border-color: #000;
