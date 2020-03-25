@@ -56,4 +56,14 @@ router.delete(
   })
 );
 
+router.post(
+  "/import",
+  handler(controller.import, (req, res, next) => {
+    return {
+      sub: req.user.sub,
+      projects: req.body.projects
+    };
+  })
+);
+
 module.exports = router;
