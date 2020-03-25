@@ -1,6 +1,6 @@
 <template>
   <div class="create row">
-    <form action="" class="box" @submit.prevent="create">
+    <form action="" class="box">
       <div class="col">
         <input
           type="text"
@@ -10,6 +10,7 @@
           class="input"
         />
         <input
+          v-if="auth"
           type="text"
           class="input"
           name="invite"
@@ -18,6 +19,7 @@
           placeholder="invite people"
         />
         <input
+          v-if="auth"
           type="password"
           class="input"
           name="invite"
@@ -26,8 +28,15 @@
         />
       </div>
       <div class="row">
-        <input type="submit" class="button m-auto" value="Create" />
-        <button class="button m-auto" @click="navigate(-1)">Back</button>
+        <input
+          type="submit"
+          class="button m-auto"
+          @click.prevent="create"
+          value="Create"
+        />
+        <button class="button m-auto" @click.prevent="navigate(-1)">
+          Back
+        </button>
       </div>
       <ul
         class="col box suggestions"
@@ -97,7 +106,8 @@ export default {
   computed: {
     ...mapState({
       user: state => state.user,
-      token: state => state.auth.token
+      token: state => state.auth.token,
+      auth: state => state.auth.status
     }),
     //test
     suggestions() {
@@ -129,7 +139,7 @@ export default {
     },
     create() {
       return this.createPassword()
-        .then(this.request)
+        .then(this.saveProject)
         .then(this.updateUser)
         .then(this.navigate({ name: "home" }))
         .catch(e => {
@@ -148,25 +158,46 @@ export default {
         }
       });
     },
-    updateUser() {
-      return this.$store.dispatch("user/fetchUser", {
-        token: this.token,
-        email: this.user.email
-      });
+    saveProject() {
+      if (this.auth) {
+        return this.request();
+      } else return this.saveLocally();
     },
     request() {
-      return this.$http({
-        method: "post",
-        url: "/api/projects/create",
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-          "Content-Type": "application/json"
-        },
-        data: {
-          email: this.user.email,
-          project: this.project
-        }
-      });
+      if (this.auth) {
+        return this.$http({
+          method: "post",
+          url: "/api/projects/create",
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+            "Content-Type": "application/json"
+          },
+          data: {
+            email: this.user.email,
+            project: this.project
+          }
+        });
+      } else return;
+    },
+    saveLocally() {
+      let projects = window.localStorage.getItem("projects");
+
+      if (projects) {
+        projects = JSON.parse(projects);
+      } else {
+        projects = [];
+      }
+      projects.push(this.project);
+      projects = JSON.stringify(projects);
+      window.localStorage.setItem("projects", projects);
+    },
+    updateUser() {
+      if (this.auth) {
+        return this.$store.dispatch("user/fetchUser", {
+          token: this.token,
+          email: this.user.email
+        });
+      } else return;
     },
     fetchUsers(search) {
       this.$http({
