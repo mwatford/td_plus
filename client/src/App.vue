@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <side-bar v-if="isAuthenticated"></side-bar>
+    <side-bar></side-bar>
     <alerts></alerts>
     <transition mode="out-in" name="slide">
       <timeline v-if="app.timeline"></timeline>
