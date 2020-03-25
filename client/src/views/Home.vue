@@ -47,12 +47,11 @@ export default {
   methods: {
     getProjects() {
       return new Promise(resolve => {
-        if (this.auth) {
-          this.fetchProjects().then(resolve);
-        } else {
-          this.getLocalProjects();
-          resolve();
-        }
+        this.getLocalProjects()
+          .then(resolve)
+          .catch(() => {
+            this.fetchProjects().then(resolve);
+          });
       });
     },
     fetchProjects() {
@@ -65,14 +64,51 @@ export default {
     },
     getLocalProjects() {
       let projects = window.localStorage.getItem("projects");
+      projects = JSON.parse(projects);
 
-      if (projects) {
-        projects = JSON.parse(projects);
-        this.$store.commit("projects/SET_PROJECTS", projects);
+      if (!projects) {
+        return this.auth ? Promise.reject() : Promise.resolve();
       }
+
+      if (!this.auth) {
+        this.$store.commit("projects/SET_PROJECTS", projects);
+        return Promise.resolve();
+      }
+
+      return this.importLocalProjects(projects);
     },
     setActiveProject(project) {
       this.$store.commit("activeProject/SET_PROJECT", project);
+    },
+    importLocalProjects(projects) {
+      return new Promise((resolve, reject) => {
+        const importProjects = confirm(
+          "We have found local tasks, do you want to import them?"
+        );
+
+        if (importProjects) {
+          this.sendProjects(projects).then(({ data }) => {
+            this.$store.commit("projects/SET_PROJECTS", data);
+            localStorage.removeItem("projects");
+            resolve();
+          });
+        } else {
+          reject();
+        }
+      });
+    },
+    sendProjects(projects) {
+      return this.$http({
+        method: "post",
+        url: "/api/projects/import",
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          "Content-Type": "application/json"
+        },
+        data: {
+          projects
+        }
+      });
     }
   },
   beforeUpdate() {
