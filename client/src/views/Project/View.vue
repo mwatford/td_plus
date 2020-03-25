@@ -149,6 +149,7 @@ export default {
     this.$eventBus.$on("fetch data", this.fetchDataHandler);
   },
   beforeDestroy() {
+    this.$eventBus.$off("fetch data", this.fetchDataHandler);
     this.$socket.close();
   },
   beforeRouteLeave(from, to, next) {
