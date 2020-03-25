@@ -4,7 +4,10 @@
       <li
         v-for="(message, index) in messages"
         :key="index"
-        :class="['message col', { 'message--right': message.user === user._id }]"
+        :class="[
+          'message col',
+          { 'message--right': message.user === user._id }
+        ]"
       >
         <h4>{{ message.user }}</h4>
         <p>{{ message.text }}</p>
@@ -94,9 +97,9 @@ export default {
 .message {
   word-wrap: break-word;
   width: 70%;
-  align-items: flex-end;
 
   &--right {
+    align-items: flex-end;
     margin-left: auto;
   }
 }
