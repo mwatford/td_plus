@@ -5,6 +5,7 @@
       @mouseenter="displayUser = true"
       @mouseleave="displayUser = false"
       @click="navigate('profile')"
+      v-if="user.name"
     >
       <button
         :class="[
@@ -38,16 +39,10 @@
       T
     </button>
     <button
-      :class="[
-        `navigation__button`,
-        { 'navigation__button--active': app.projects }
-      ]"
-      title="Projects"
-      @click="toggle('PROJECTS')"
+      class="navigation__button"
+      @click="auth ? logout() : navigate({ name: 'start' })"
+      :title="auth ? 'Sign Out' : 'Sign In'"
     >
-      C
-    </button>
-    <button class="navigation__button" @click="logout" title="Sign out">
       S
     </button>
   </nav>
@@ -67,7 +62,8 @@ export default {
   computed: {
     ...mapState({
       app: state => state.app,
-      user: state => state.user
+      user: state => state.user,
+      auth: state => state.auth.status
     })
   },
   methods: {
