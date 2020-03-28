@@ -44,11 +44,13 @@ const getAllFriends = User => async sub => {
   return friends;
 };
 
-const updateUsers = User => (users, cb) => {
-  users.forEach(async id => {
-    const user = await findById(User)(id);
-    cb(user);
-  });
+const updateUsers = User => async (users, cb) => {
+  return await Promise.all(
+    users.map(async id => {
+      const user = await findById(User)(id);
+      return cb(user);
+    })
+  );
 };
 
 module.exports = User => {
