@@ -61,7 +61,17 @@ export default {
         });
     },
     deleteProject() {
-      this.$http({
+      if (this.openDialog()) {
+        return this.auth ? this.deleteFromDB() : this.deleteLocal();
+      }
+    },
+    openDialog() {
+      return confirm(
+        `Are you absolutely sure you want to delete ${this.project.name}?`
+      );
+    },
+    deleteFromDB() {
+      return this.$http({
         method: "delete",
         url: `/api/projects/${this.project._id}`,
         headers: {
@@ -76,11 +86,7 @@ export default {
         this.navigate({ name: "home" });
       });
     },
-    openDialog() {
-      return confirm(
-        `Are you absolutely sure you want to delete ${this.project.name}?`
-      );
-    }
+    deleteLocal() {}
   },
   mounted() {
     this.auth();
