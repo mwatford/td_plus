@@ -36,7 +36,7 @@
           ]"
           :disabled="!buttonsActive"
           @click="changeView('manage')"
-          v-if="project.admin === user._id"
+          v-if="project.admin === user._id || !this.auth"
         >
           Manage
         </button>
