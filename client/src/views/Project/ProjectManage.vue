@@ -75,6 +75,11 @@ export default {
         });
         this.navigate({ name: "home" });
       });
+    },
+    openDialog() {
+      return confirm(
+        `Are you absolutely sure you want to delete ${this.project.name}?`
+      );
     }
   },
   mounted() {
