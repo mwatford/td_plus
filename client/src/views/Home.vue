@@ -6,7 +6,7 @@
     <router-link
       v-for="project in projects"
       :key="project._id"
-      :to="{ path: `/project/${project._id}` }"
+      :to="{ path: `/project/${project.name}` }"
     >
       <project
         :project="project"
