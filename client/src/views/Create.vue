@@ -146,7 +146,7 @@ export default {
         .then(this.updateUser)
         .then(this.navigate({ name: "home" }))
         .catch(e => {
-          console.log(e);
+          this.navigate({ name: "home" });
         });
     },
     createPassword() {
@@ -190,6 +190,15 @@ export default {
       } else {
         projects = [];
       }
+
+      if (projects.find(el => el.name === this.project.name)) {
+        this.project.name = prompt(
+          `You already have a project with given name,
+           please provide a different name: `
+        );
+        return this.project.name ? this.saveLocally() : Promise.reject();
+      }
+
       projects.push(this.project);
       projects = JSON.stringify(projects);
       window.localStorage.setItem("projects", projects);
