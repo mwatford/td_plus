@@ -20,7 +20,8 @@ export default {
   computed: {
     ...mapState({
       project: state => state.activeProject,
-      token: state => state.auth.token
+      token: state => state.auth.token,
+      auth: state => state.auth.status
     })
   },
   methods: {
