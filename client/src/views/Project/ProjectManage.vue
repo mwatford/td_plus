@@ -86,7 +86,21 @@ export default {
         this.navigate({ name: "home" });
       });
     },
-    deleteLocal() {}
+    deleteLocal() {
+      const project = this.$store.state.projects.data.find(
+        el => el.name === this.project.name
+      );
+      const index = this.$store.state.projects.data.indexOf(project);
+
+      if (index > -1) {
+        this.$store.commit("projects/REMOVE", index);
+        localStorage.setItem(
+          "projects",
+          JSON.stringify(this.$store.state.projects.data)
+        );
+        this.navigate({ name: "home" });
+      }
+    }
   },
   mounted() {
     if (this.auth) this.authenticate();
