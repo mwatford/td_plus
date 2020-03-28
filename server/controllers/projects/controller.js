@@ -20,11 +20,11 @@ const saveProject = async ({ projectService, userService }, project, admin) => {
     lists: project.lists
   });
 
-  userService.updateUsers(
+  await userService.updateUsers(
     newProject.members.map(el => el.id),
     user => {
       user.projects.push(newProject._id);
-      user.save();
+      return user.save();
     }
   );
   return newProject;
