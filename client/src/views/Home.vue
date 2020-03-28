@@ -66,7 +66,7 @@ export default {
       let projects = window.localStorage.getItem("projects");
       projects = JSON.parse(projects);
 
-      if (!projects) {
+      if (!projects.length) {
         return this.auth ? Promise.reject() : Promise.resolve();
       }
 
