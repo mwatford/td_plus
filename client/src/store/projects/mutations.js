@@ -6,5 +6,8 @@ export const mutations = {
   },
   RESET_STATE(state) {
     Object.assign(state, defaultState());
+  },
+  REMOVE(state, index) {
+    state.data.splice(index, 1);
   }
 };
