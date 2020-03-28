@@ -91,16 +91,7 @@ export default {
       password: "",
       responseList: [],
       memberList: [],
-      project: {
-        name: "",
-        password: "",
-        members: [],
-        lists: [
-          { name: "To Do", data: [] },
-          { name: "In Progress", data: [] },
-          { name: "Done", data: [] }
-        ]
-      }
+      project: this.createEmptyProject()
     };
   },
   computed: {
@@ -125,6 +116,18 @@ export default {
   },
   methods: {
     hashPassword,
+    createEmptyProject() {
+      return {
+        name: "",
+        password: "",
+        members: [],
+        lists: [
+          { name: "To Do", data: [] },
+          { name: "In Progress", data: [] },
+          { name: "Done", data: [] }
+        ]
+      };
+    },
     addUser(user) {
       this.project.members.push({
         id: user._id,
