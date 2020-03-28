@@ -19,6 +19,7 @@ export default {
   },
   computed: {
     ...mapState({
+      project: state => state.activeProject,
       token: state => state.auth.token
     })
   },
@@ -37,7 +38,7 @@ export default {
       this.loading = "loading";
       this.$http({
         method: "get",
-        url: `/api/projects/${this.$route.params.id}/admin`,
+        url: `/api/projects/${this.project._id}/admin`,
         headers: {
           Authorization: `Bearer ${this.token}`,
           "Content-Type": "application/json"
@@ -62,7 +63,7 @@ export default {
     deleteProject() {
       this.$http({
         method: "delete",
-        url: `/api/projects/${this.$route.params.id}`,
+        url: `/api/projects/${this.project._id}`,
         headers: {
           Authorization: `Bearer ${this.token}`,
           "Content-Type": "application/json"
