@@ -34,7 +34,7 @@ export default {
       this.$socket.emit("addTask", this.task);
       this.task = this.createEmptyTask();
     },
-    auth() {
+    authenticate() {
       this.loading = "loading";
       this.$http({
         method: "get",
@@ -89,7 +89,7 @@ export default {
     deleteLocal() {}
   },
   mounted() {
-    this.auth();
+    if (this.auth) this.authenticate();
   }
 };
 </script>
