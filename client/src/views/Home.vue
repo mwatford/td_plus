@@ -64,6 +64,11 @@ export default {
     },
     getLocalProjects() {
       let projects = window.localStorage.getItem("projects");
+
+      if (!projects) {
+        return Promise.reject();
+      }
+
       projects = JSON.parse(projects);
 
       if (!projects.length) {
