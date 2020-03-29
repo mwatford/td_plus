@@ -9,7 +9,7 @@
           { 'message--right': message.user === user._id }
         ]"
       >
-        <h4>{{ message.user }}</h4>
+        <h4>{{ username(message.user) || message.user }}</h4>
         <p>{{ message.text }}</p>
       </li>
     </ul>
@@ -31,7 +31,8 @@ export default {
   },
   computed: {
     ...mapState({
-      user: state => state.user
+      user: state => state.user,
+      members: state => state.activeProject.members
     })
   },
   methods: {
@@ -48,6 +49,9 @@ export default {
         }
       });
       this.$socket.emit("load messages");
+    },
+    username(value) {
+      return this.members.find(el => el.id === value).name
     }
   },
   mounted() {
