@@ -116,11 +116,29 @@ const importProjects = services => async ({ sub, projects }) => {
   return { status: 200, data: userProjects };
 };
 
+const activeProject = services => async ({ id }) => {
+  const { userService, projectService } = services;
+
+  let project = await projectService.find(id);
+
+  const members = await Promise.all(
+    project.members.map(member => userService.findById(member.id, "name email"))
+  );
+
+  for (let i = 0; i < project.members.length; i++) {
+    const { name, email } = members[i];
+    Object.assign(project.members[i], { name, email });
+  }
+
+  return { status: 200, data: project };
+};
+
 module.exports = services => ({
   create: create(services),
   getUserProjects: getUserProjects(services),
   getProject: getProject(services),
   deleteProject: deleteProject(services),
   isAdmin: isAdmin(services),
-  import: importProjects(services)
+  import: importProjects(services),
+  activeProject: activeProject(services)
 });
