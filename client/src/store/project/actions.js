@@ -3,7 +3,7 @@ export const actions = requestModule => {
     fetchProject({ commit }, { id, token }) {
       return requestModule({
         method: "get",
-        url: `/api/projects/${id}`,
+        url: `/api/projects/active/${id}`,
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
