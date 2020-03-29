@@ -1,6 +1,19 @@
 <template>
   <loading v-if="loading !== 'start'" :state="loading" :size="60"></loading>
   <div v-else class="m-auto view">
+    <form action="" class="box col">
+      <h3>Add task</h3>
+      <input type="text" class="input" placeholder="name" />
+      <textarea class="input" placeholder="description" />
+      <select name="" id="" v-model="task.member">
+        <option
+          v-for="(member, index) in members"
+          :key="index"
+          :value="member.id"
+          >{{ member.name }}</option
+        >
+      </select>
+    </form>
     <button @click="deleteProject" class="button">delete</button>
   </div>
 </template>
@@ -22,7 +35,10 @@ export default {
       project: state => state.activeProject,
       token: state => state.auth.token,
       auth: state => state.auth.status
-    })
+    }),
+    members() {
+      return this.project.members;
+    }
   },
   methods: {
     createEmptyTask() {
@@ -109,4 +125,14 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+form {
+  height: auto;
+  width: fit-content;
+}
+textarea {
+  max-width: 100%;
+  border: 1px dashed #fff;
+  border-bottom: 2px solid #fff;
+}
+</style>
