@@ -16,8 +16,8 @@ const findByEmail = User => email => {
   return User.findOne({ email: email });
 };
 
-const findById = User => id => {
-  return User.findById(id);
+const findById = User => (id, projection = "-sub") => {
+  return User.findById(id, projection);
 };
 
 const get = User => (query, projection = "-sub") => {
