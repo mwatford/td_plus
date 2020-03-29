@@ -66,4 +66,13 @@ router.post(
   })
 );
 
+router.get(
+  "/active/:id",
+  handler(controller.activeProject, (req, res, next) => {
+    return {
+      id: req.params.id
+    };
+  })
+);
+
 module.exports = router;
