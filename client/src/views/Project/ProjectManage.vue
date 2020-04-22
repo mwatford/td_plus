@@ -19,61 +19,57 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import navigate from "../../mixins/navigate";
+import { mapState } from 'vuex';
+import navigate from '../../mixins/navigate';
 
 export default {
   mixins: [navigate],
   data() {
     return {
-      loading: "start",
-      task: this.createEmptyTask()
+      loading: 'start',
+      task: this.createEmptyTask(),
     };
   },
   computed: {
     ...mapState({
       project: state => state.activeProject,
       token: state => state.auth.token,
-      auth: state => state.auth.status
+      auth: state => state.auth.status,
     }),
     members() {
       return this.project.members;
-    }
+    },
   },
   methods: {
     createEmptyTask() {
       return {
-        name: "",
-        member: ""
+        name: '',
+        member: '',
       };
     },
     addTask() {
-      this.$socket.emit("addTask", this.task);
+      this.$socket.emit('addTask', this.task);
       this.task = this.createEmptyTask();
     },
     authenticate() {
-      this.loading = "loading";
+      this.loading = 'loading';
       this.$http({
-        method: "get",
+        method: 'get',
         url: `/api/projects/${this.project._id}/admin`,
         headers: {
           Authorization: `Bearer ${this.token}`,
-          "Content-Type": "application/json"
-        }
+          'Content-Type': 'application/json',
+        },
       })
         .then(() => {
-          this.loading = "done";
+          this.loading = 'done';
           setTimeout(() => {
-            this.loading = "start";
+            this.loading = 'start';
           }, 500);
         })
         .catch(e => {
-          this.loading = "failed";
-          this.$store.dispatch("alerts/display", {
-            type: "error",
-            message: e.response.data
-          });
-
+          this.loading = 'failed';
+          this.alert('error', e.response.data);
           this.$router.go(-1);
         });
     },
@@ -89,18 +85,15 @@ export default {
     },
     deleteFromDB() {
       return this.$http({
-        method: "delete",
+        method: 'delete',
         url: `/api/projects/${this.project._id}`,
         headers: {
           Authorization: `Bearer ${this.token}`,
-          "Content-Type": "application/json"
-        }
+          'Content-Type': 'application/json',
+        },
       }).then(() => {
-        this.$store.dispatch("alerts/display", {
-          message: "Project has been deleted",
-          type: "success"
-        });
-        this.navigate({ name: "home" });
+        this.alert('success', 'Project has been deleted');
+        this.navigate({ name: 'home' });
       });
     },
     deleteLocal() {
@@ -110,18 +103,18 @@ export default {
       const index = this.$store.state.projects.data.indexOf(project);
 
       if (index > -1) {
-        this.$store.commit("projects/REMOVE", index);
+        this.$store.commit('projects/REMOVE', index);
         localStorage.setItem(
-          "projects",
+          'projects',
           JSON.stringify(this.$store.state.projects.data)
         );
-        this.navigate({ name: "home" });
+        this.navigate({ name: 'home' });
       }
-    }
+    },
   },
   mounted() {
     if (this.auth) this.authenticate();
-  }
+  },
 };
 </script>
 
