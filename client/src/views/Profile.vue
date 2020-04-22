@@ -21,18 +21,6 @@
           />
         </div>
       </div>
-      <div class="row">
-        <label for="animations">
-          Animations
-        </label>
-        <input
-          type="checkbox"
-          name=""
-          id=""
-          @click="$store.commit('app/TOGGLE_ANIMATIONS')"
-          :checked="$store.state.app.animations"
-        />
-      </div>
       <div class="row buttons">
         <button class="button" @click="save" type="submit" :disabled="!valid">
           Save
