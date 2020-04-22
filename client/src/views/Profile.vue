@@ -44,22 +44,22 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import boxAnimations from "../mixins/boxAnimations";
-import navigate from "../mixins/navigate";
+import { mapState } from 'vuex';
+import boxAnimations from '../mixins/boxAnimations';
+import navigate from '../mixins/navigate';
 
 export default {
   mixins: [boxAnimations, navigate],
   data() {
     return {
-      name: "",
-      changes: {}
+      name: '',
+      changes: {},
     };
   },
   computed: {
     ...mapState({
       user: state => state.user,
-      token: state => state.auth.token
+      token: state => state.auth.token,
     }),
     valid() {
       return this.testName;
@@ -72,33 +72,29 @@ export default {
         delete this.changes.name;
         return false;
       }
-    }
+    },
   },
   methods: {
     save() {
       this.$store
-        .dispatch("user/save", {
+        .dispatch('user/save', {
           email: this.user.email,
           changes: this.changes,
-          token: this.token
+          token: this.token,
         })
         .then(this.handleResponse);
     },
     handleResponse(response) {
-      this.$store.dispatch("alerts/display", {
-        message: "Your profile has been updated",
-        type: "success"
-      });
-
-      this.$store.commit("user/SET_USER", this.changes);
-    }
+      this.alert('success', 'Your profile has been upated');
+      this.$store.commit('user/SET_USER', this.changes);
+    },
   },
   mounted() {
     this.boxEnterAnimation(300, 0, false);
   },
   beforeRouteLeave(to, from, next) {
     this.boxExitAnimation(500, 0, false).then(next);
-  }
+  },
 };
 </script>
 
@@ -128,12 +124,12 @@ export default {
 .buttons {
   margin-top: 20px;
 }
-input[type="text"] {
+input[type='text'] {
   margin: 10px 5px 10px 0;
   height: 20px;
   width: 200px;
 }
-input[type="checkbox"] {
+input[type='checkbox'] {
   margin: 10px 5px 10px auto;
 }
 </style>

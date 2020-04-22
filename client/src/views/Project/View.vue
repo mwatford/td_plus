@@ -5,7 +5,7 @@
         <button
           :class="[
             `button button--start`,
-            { 'button--active': currentView === 'dashboard' }
+            { 'button--active': currentView === 'dashboard' },
           ]"
           :disabled="!buttonsActive"
           @click="changeView('dashboard')"
@@ -32,7 +32,7 @@
           :class="[
             `button`,
             'button--end',
-            { 'button--active': currentView === 'manage' }
+            { 'button--active': currentView === 'manage' },
           ]"
           :disabled="!buttonsActive"
           @click="changeView('manage')"
@@ -50,22 +50,22 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import navigate from "../../mixins/navigate";
-import Project from "./Project.vue";
-import Chat from "./Chat.vue";
+import { mapState } from 'vuex';
+import navigate from '../../mixins/navigate';
+import Project from './Project.vue';
+import Chat from './Chat.vue';
 
 export default {
   components: {
     Project,
-    Chat
+    Chat,
   },
   mixins: [navigate],
   data() {
     return {
       buttonsActive: false,
-      currentView: "",
-      chat: false
+      currentView: '',
+      chat: false,
     };
   },
   computed: {
@@ -73,7 +73,7 @@ export default {
       user: state => state.user,
       token: state => state.auth.token,
       project: state => state.activeProject,
-      auth: state => state.auth.status
+      auth: state => state.auth.status,
     }),
     filter() {
       return this.project.filter;
@@ -81,36 +81,33 @@ export default {
     permissions() {
       return this.project.members.find(el => el.id == this.user._id)
         .permissions;
-    }
+    },
   },
   methods: {
     fetchData() {
       this.$store
-        .dispatch("activeProject/fetchProject", {
+        .dispatch('activeProject/fetchProject', {
           id: this.project._id,
-          token: this.token
+          token: this.token,
         })
         .then(({ data }) => {
-          this.$store.commit("activeProject/RESET_STATE");
-          this.$store.commit("activeProject/SET_PROJECT", data);
+          this.$store.commit('activeProject/RESET_STATE');
+          this.$store.commit('activeProject/SET_PROJECT', data);
 
           this.activateButtons();
           this.toggleChat();
-          this.changeView("dashboard");
+          this.changeView('dashboard');
         })
         .catch(err => {
-          this.$store.dispatch("alerts/display", {
-            message: err.response.data,
-            type: "error"
-          });
-          this.navigate("home");
+          this.alert('error', err.response.data);
+          this.navigate('home');
         });
     },
     toggleChat() {
       this.chat = !this.chat;
     },
     changeView(view) {
-      this.$eventBus.$emit("changeView", view);
+      this.$eventBus.$emit('changeView', view);
       this.currentView = view;
     },
     activateButtons() {
@@ -120,12 +117,12 @@ export default {
       return this.$socket.connect({
         query: {
           user: this.user._id,
-          project: this.project._id
-        }
+          project: this.project._id,
+        },
       });
     },
     toggleFilter() {
-      this.$store.commit("activeProject/FILTER");
+      this.$store.commit('activeProject/FILTER');
     },
     async fetchDataHandler() {
       if (this.auth) {
@@ -133,29 +130,29 @@ export default {
 
         await this.connect();
 
-        this.$socket.on("update", data => {
+        this.$socket.on('update', data => {
           this.updateProject(data);
         });
       } else {
         this.activateButtons();
-        this.changeView("dashboard");
+        this.changeView('dashboard');
       }
     },
     updateProject(data) {
-      this.$store.commit("activeProject/UPDATE", data);
-    }
+      this.$store.commit('activeProject/UPDATE', data);
+    },
   },
   created() {
-    this.$eventBus.$on("fetch data", this.fetchDataHandler);
+    this.$eventBus.$on('fetch data', this.fetchDataHandler);
   },
   beforeDestroy() {
-    this.$eventBus.$off("fetch data", this.fetchDataHandler);
+    this.$eventBus.$off('fetch data', this.fetchDataHandler);
     this.$socket.close();
   },
   beforeRouteLeave(from, to, next) {
-    this.$store.commit("activeProject/RESET_STATE");
+    this.$store.commit('activeProject/RESET_STATE');
     next();
-  }
+  },
 };
 </script>
 
