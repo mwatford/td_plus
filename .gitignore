@@ -6,3 +6,4 @@ authentication.js
 keys.js
 request.rest
 /coverage
+.prettierrc
