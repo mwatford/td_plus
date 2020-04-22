@@ -76,6 +76,15 @@ export default {
       this.alert('success', 'Your profile has been upated');
       this.$store.commit('user/SET_USER', this.changes);
     },
+    deleteAccount() {
+      this.$http({
+        method: 'delete',
+        url: `/api/users/current`,
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+      });
+    },
   },
   mounted() {
     this.boxEnterAnimation(300, 0, false);
