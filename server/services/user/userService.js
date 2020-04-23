@@ -9,18 +9,18 @@ const createUser = User => profile => {
 };
 
 const find = User => sub => {
-  return User.findOne({ sub }, "-sub");
+  return User.findOne({ sub }, '-sub');
 };
 
 const findByEmail = User => email => {
   return User.findOne({ email: email });
 };
 
-const findById = User => (id, projection = "-sub") => {
+const findById = User => (id, projection = '-sub') => {
   return User.findById(id, projection);
 };
 
-const get = User => (query, projection = "-sub") => {
+const get = User => (query, projection = '-sub') => {
   return User.find(query, projection);
 };
 
@@ -31,13 +31,13 @@ const updateUser = async (user, changes) => {
 };
 
 const getId = User => email => {
-  return User.findOne({ email }, "_id");
+  return User.findOne({ email }, '_id');
 };
 
 const getAllFriends = User => async sub => {
   const user = await User.find({ sub });
-  const friends = await User.find({}, "name email _id")
-    .where("_id")
+  const friends = await User.find({}, 'name email _id')
+    .where('_id')
     .in(user.friends)
     .exec();
 
@@ -53,6 +53,10 @@ const updateUsers = User => async (users, cb) => {
   );
 };
 
+const deleteUser = User => async (sub, cb) => {
+  return await User.findOneAndRemove({ sub }, cb);
+};
+
 module.exports = User => {
   return {
     createUser: createUser(User),
@@ -63,6 +67,7 @@ module.exports = User => {
     findByEmail: findByEmail(User),
     getId: getId(User),
     getAllFriends: getAllFriends(User),
-    updateUsers: updateUsers(User)
+    updateUsers: updateUsers(User),
+    delete: deleteUser(User),
   };
 };
