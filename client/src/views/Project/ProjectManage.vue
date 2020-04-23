@@ -220,12 +220,17 @@ ul {
   list-style-type: none;
 
   li {
+    cursor: pointer;
     background: #000000cc;
     border-radius: 2px;
     color: #fff;
     margin-bottom: 10px;
     width: 250px;
     padding: 12px;
+
+    &:hover {
+      background: #000000da;
+    }
   }
 }
 </style>
