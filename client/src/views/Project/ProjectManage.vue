@@ -4,7 +4,11 @@
     <form action="" class="box col">
       <h3>Add task</h3>
       <input type="text" class="input" placeholder="name" />
-      <textarea class="input" placeholder="description" />
+      <textarea
+        class="input"
+        placeholder="description"
+        v-model="task.description"
+      />
       <label>
         Select member
       </label>
@@ -48,6 +52,7 @@ export default {
       return {
         name: '',
         member: '',
+        description: '',
       };
     },
     addTask() {
