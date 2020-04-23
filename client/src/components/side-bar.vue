@@ -7,64 +7,54 @@
       @click="navigate('profile')"
       v-if="user.name"
     >
-      <button
+      <router-link
+        :to="{ name: 'profile' }"
         :class="[
           'navigation__button',
-          { 'navigation__button--active': $route.name === 'profile' }
+          { 'navigation__button--active': $route.name === 'profile' },
         ]"
       >
-        <h3 :style="{ backgroundColor: user.color || 'green' }" class="m-auto">
-          {{ user.name.slice(0, 1).toUpperCase() }}
-        </h3>
-      </button>
+        <app-icon type="user"></app-icon>
+      </router-link>
     </div>
-    <button
+    <router-link
+      :to="{ name: 'home' }"
       :class="[
         `navigation__button`,
-        { 'navigation__button--active': $route.name === 'home' }
+        { 'navigation__button--active': $route.name === 'home' },
       ]"
       title="Home"
       @click="navigate('home')"
     >
-      H
-    </button>
-    <button
-      :class="[
-        `navigation__button`,
-        { 'navigation__button--active': app.timeline }
-      ]"
-      title="Toggle timeline"
-      @click="toggle('TIMELINE')"
-    >
-      T
-    </button>
+      <app-icon type="home"></app-icon>
+    </router-link>
     <button
       class="navigation__button"
       @click="auth ? logout() : navigate({ name: 'start' })"
       :title="auth ? 'Sign Out' : 'Sign In'"
     >
-      S
+      <app-icon :type="!auth ? 'sign-in' : 'power'"></app-icon>
     </button>
   </nav>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import navigate from "../mixins/navigate";
+import { mapState } from 'vuex';
+import navigate from '../mixins/navigate';
 
 export default {
   mixins: [navigate],
   data() {
     return {
-      displayUser: false
+      displayUser: false,
     };
   },
   computed: {
     ...mapState({
       app: state => state.app,
       user: state => state.user,
-      auth: state => state.auth.status
-    })
+      auth: state => state.auth.status,
+    }),
   },
   methods: {
     toggle(component) {
@@ -72,10 +62,10 @@ export default {
     },
     logout() {
       this.$auth.logout({
-        returnTo: window.location.origin
+        returnTo: window.location.origin,
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
