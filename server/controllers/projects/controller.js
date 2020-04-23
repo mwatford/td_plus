@@ -12,12 +12,12 @@ const saveProject = async ({ projectService, userService }, project, admin) => {
   const newProject = await projectService.createProject({
     admin: admin._id,
     members: [
-      { id: admin._id, type: "admin", permissions: [] },
-      ...project.members
+      { id: admin._id, type: 'admin', permissions: [] },
+      ...project.members,
     ],
     name: project.name,
     password: project.password,
-    lists: project.lists
+    lists: project.lists,
   });
 
   await userService.updateUsers(
@@ -50,11 +50,11 @@ const getProject = services => async ({ sub, id }) => {
   if (isMember) {
     return {
       status: 200,
-      data: project
+      data: project,
     };
   }
   return {
-    status: 403
+    status: 403,
   };
 };
 
@@ -122,7 +122,7 @@ const activeProject = services => async ({ id }) => {
   let project = await projectService.find(id);
 
   const members = await Promise.all(
-    project.members.map(member => userService.findById(member.id, "name email"))
+    project.members.map(member => userService.findById(member.id, 'name email'))
   );
 
   for (let i = 0; i < project.members.length; i++) {
@@ -133,6 +133,18 @@ const activeProject = services => async ({ id }) => {
   return { status: 200, data: project };
 };
 
+const update = services => async ({ project, id }) => {
+  const { projectService } = services;
+
+  const projectToOverwrite = await projectService.find(id);
+
+  Object.assign(projectToOverwrite, project);
+
+  await projectToOverwrite.save();
+
+  return { status: 200, data: projectToOverwrite };
+};
+
 module.exports = services => ({
   create: create(services),
   getUserProjects: getUserProjects(services),
@@ -140,5 +152,6 @@ module.exports = services => ({
   deleteProject: deleteProject(services),
   isAdmin: isAdmin(services),
   import: importProjects(services),
-  activeProject: activeProject(services)
+  activeProject: activeProject(services),
+  update: update(services),
 });
