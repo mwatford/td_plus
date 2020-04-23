@@ -1,8 +1,8 @@
-import { defaultState } from "./state";
+import { defaultState } from './state';
 
 export const mutations = {
   SET_PROJECT(state, project) {
-    Object.assign(state, project);
+    state.data = project;
   },
   RESET_STATE(state) {
     Object.assign(state, defaultState());
@@ -10,7 +10,10 @@ export const mutations = {
   FILTER(state) {
     state.filter = !state.filter;
   },
-  UPDATE(state, data) {
-    state.lists = data;
-  }
+  UPDATE_LIST_NAME(state, { index, name }) {
+    state.data.lists[index].name = name;
+  },
+  ADD_LIST(state, list) {
+    state.data.lists.push(list);
+  },
 };
