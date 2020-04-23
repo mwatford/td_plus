@@ -1,34 +1,43 @@
-const router = require("express").Router();
-const controller = require("../controllers/users/index");
+const router = require('express').Router();
+const controller = require('../controllers/users/index');
 
-const authenticate = require("../middleware/authentication");
+const authenticate = require('../middleware/authentication');
 
-const handler = require("../utils/handler");
+const handler = require('../utils/handler');
 
 router.use(authenticate);
 
 router.post(
-  "/current",
+  '/current',
   handler(controller.currentUser, (req, res, next) => {
     return { sub: req.user.sub, email: req.body.email };
   })
 );
 
 router.put(
-  "/current/update",
+  '/current/update',
   handler(controller.userUpdate, (req, res, next) => {
     return {
       sub: req.user.sub,
-      changes: req.body.changes
+      changes: req.body.changes,
     };
   })
 );
 
 router.get(
-  "/search/:email",
+  '/search/:email',
   handler(controller.searchEmail, (req, res, next) => {
     return {
-      email: req.params.email
+      email: req.params.email,
+    };
+  })
+);
+
+router.delete(
+  '/current',
+  handler(controller.delete, (req, res, next) => {
+    return {
+      sub: req.user.sub,
     };
   })
 );
