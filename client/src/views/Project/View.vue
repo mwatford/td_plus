@@ -13,6 +13,7 @@
           Dashboard
         </button>
         <button
+          v-if="auth"
           :disabled="!buttonsActive"
           :class="[`button`, { 'button--active': filter }]"
           @click="toggleFilter"
@@ -20,6 +21,7 @@
           Filter
         </button>
         <button
+          v-if="auth"
           :disabled="!buttonsActive"
           :class="[`button`, { 'button--active': chat }]"
           @click="toggleChat"
