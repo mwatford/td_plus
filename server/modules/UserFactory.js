@@ -1,14 +1,14 @@
 const write = user => ({
   write: (data, room) => {
     room.addMessage({ user: user.id, text: data });
-    console.log("message added");
-  }
+    console.log('message added');
+  },
 });
 
 const removeUser = user => ({
   removeUser: () => {
     console.log(`${user.name} can remove users.`);
-  }
+  },
 });
 
 const factory = user => {
@@ -16,12 +16,12 @@ const factory = user => {
   const custom = () =>
     Object.assign(user, ...user.permissions.map(el => eval(el)(user)));
 
-  const basic = () => ({});
+  const basic = () => Object.assign(user, write(user));
 
   try {
     return eval(user.type)(user);
   } catch (e) {
-    return "error when creating user";
+    return 'error when creating user';
   }
 };
 
