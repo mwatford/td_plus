@@ -7,3 +7,4 @@ keys.js
 request.rest
 /coverage
 .prettierrc
+assets/
