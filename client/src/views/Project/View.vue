@@ -74,7 +74,7 @@ export default {
     ...mapState({
       user: state => state.user,
       token: state => state.auth.token,
-      project: state => state.activeProject,
+      project: state => state.activeProject.data,
       auth: state => state.auth.status,
     }),
     filter() {
