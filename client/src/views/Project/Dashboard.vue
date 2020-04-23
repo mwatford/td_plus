@@ -12,16 +12,16 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import cloneDeep from "../../utils/cloneDeep";
+import { mapState } from 'vuex';
+import cloneDeep from '../../utils/cloneDeep';
 
 export default {
   computed: {
     ...mapState({
-      project: state => state.activeProject,
+      project: state => state.activeProject.data,
       user: state => state.user,
-      unfilteredLists: state => state.activeProject.lists,
-      filter: state => state.activeProject.filter
+      unfilteredLists: state => state.activeProject.data.lists,
+      filter: state => state.activeProject.filter,
     }),
     filteredLists() {
       return cloneDeep(this.project.lists).map(list => {
@@ -31,9 +31,9 @@ export default {
     },
     lists() {
       return this.filter ? this.filteredLists : this.unfilteredLists;
-    }
+    },
   },
-  methods: {}
+  methods: {},
 };
 </script>
 

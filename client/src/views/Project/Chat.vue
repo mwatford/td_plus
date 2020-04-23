@@ -32,7 +32,7 @@ export default {
   computed: {
     ...mapState({
       user: state => state.user,
-      members: state => state.activeProject.members
+      members: state => state.activeProject.data.members
     })
   },
   methods: {
