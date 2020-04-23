@@ -1,6 +1,6 @@
 const createProject = Project => data => {
   if (!data) {
-    throw new Error("Data was not passed!");
+    throw new Error('Data was not passed!');
   }
 
   const project = new Project(data);
@@ -10,7 +10,7 @@ const createProject = Project => data => {
 
 const find = Project => id => {
   if (!id) {
-    throw new Error("Id was not provided!");
+    throw new Error('Id was not provided!');
   }
 
   return Project.findById(id);
@@ -18,7 +18,7 @@ const find = Project => id => {
 
 const isMember = (project, userId) => {
   if (!userId || !project) {
-    throw new Error("Missing function argument(s)!");
+    throw new Error('Missing function argument(s)!');
   }
 
   return Boolean(
@@ -28,7 +28,7 @@ const isMember = (project, userId) => {
 
 const isAdmin = (project, userId) => {
   if (!project || !userId) {
-    throw new Error("Missing function argument(s)!");
+    throw new Error('Missing function argument(s)!');
   }
   return project.admin == userId;
 };
@@ -39,8 +39,8 @@ const addMember = (project, userId) => {
 };
 
 const findMany = Project => async projects => {
-  records = await Project.find({}, "name members password admin")
-    .where("_id")
+  records = await Project.find({}, 'name members password admin')
+    .where('_id')
     .in(projects)
     .exec();
 
@@ -49,7 +49,7 @@ const findMany = Project => async projects => {
 
 const deleteProject = Project => async (projectId, cb) => {
   if (!projectId) {
-    throw new Error("Missing argument!");
+    throw new Error('Missing argument!');
   }
   return await Project.findByIdAndRemove(projectId, cb);
 };
@@ -62,6 +62,6 @@ module.exports = Project => {
     isAdmin: isAdmin,
     addMember: addMember,
     findMany: findMany(Project),
-    delete: deleteProject(Project)
+    delete: deleteProject(Project),
   };
 };
