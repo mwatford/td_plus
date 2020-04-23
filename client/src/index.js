@@ -9,7 +9,7 @@ import io from 'socket.io-client';
 import VueChatScroll from 'vue-chat-scroll';
 import alert from './mixins/alert';
 
-Vue.mixin(alert)
+Vue.mixin(alert);
 
 Vue.component('loading', loading);
 
