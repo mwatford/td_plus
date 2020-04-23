@@ -27,11 +27,14 @@
       <li
         v-for="(list, index) in project.lists"
         :key="index"
-        @dblclick="changeListName(index)"
+        @click="changeListName(index)"
       >
         <h4>
           {{ list.name }}
         </h4>
+      </li>
+      <li class="row">
+        <app-icon class="m-auto" type="plus"></app-icon>
       </li>
     </ul>
     <button @click="deleteProject" class="button">delete</button>
