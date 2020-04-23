@@ -18,19 +18,19 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import project from "../components/project.vue";
-import boxAnimations from "../mixins/boxAnimations";
-import navigate from "../mixins/navigate";
+import { mapState } from 'vuex';
+import project from '../components/project.vue';
+import boxAnimations from '../mixins/boxAnimations';
+import navigate from '../mixins/navigate';
 
 export default {
   mixins: [boxAnimations, navigate],
   components: {
-    project
+    project,
   },
   data() {
     return {
-      display: false
+      display: false,
     };
   },
   computed: {
@@ -38,11 +38,11 @@ export default {
       user: state => state.user,
       projects: state => state.projects.data,
       token: state => state.auth.token,
-      auth: state => state.auth.status
+      auth: state => state.auth.status,
     }),
     animate() {
-      return this.$refs["animate"];
-    }
+      return this.$refs['animate'];
+    },
   },
   methods: {
     getProjects() {
@@ -56,14 +56,18 @@ export default {
     },
     fetchProjects() {
       return this.$store
-        .dispatch("projects/fetchProjects", {
+        .dispatch('projects/fetchProjects', {
           token: this.token,
-          id: this.user._id
+          id: this.user._id,
         })
         .catch(e => e);
     },
     getLocalProjects() {
-      let projects = window.localStorage.getItem("projects");
+      let projects = window.localStorage.getItem('projects');
+
+      if (!projects && !this.auth) {
+        return Promise.resolve();
+      }
 
       if (!projects) {
         return Promise.reject();
@@ -76,25 +80,25 @@ export default {
       }
 
       if (!this.auth) {
-        this.$store.commit("projects/SET_PROJECTS", projects);
+        this.$store.commit('projects/SET_PROJECTS', projects);
         return Promise.resolve();
       }
 
       return this.importLocalProjects(projects);
     },
     setActiveProject(project) {
-      this.$store.commit("activeProject/SET_PROJECT", project);
+      this.$store.commit('activeProject/SET_PROJECT', project);
     },
     importLocalProjects(projects) {
       return new Promise((resolve, reject) => {
         const importProjects = confirm(
-          "We have found local tasks, do you want to import them?"
+          'We have found local tasks, do you want to import them?'
         );
 
         if (importProjects) {
           this.sendProjects(projects).then(({ data }) => {
-            this.$store.commit("projects/SET_PROJECTS", data);
-            localStorage.removeItem("projects");
+            this.$store.commit('projects/SET_PROJECTS', data);
+            localStorage.removeItem('projects');
             resolve();
           });
         } else {
@@ -104,17 +108,17 @@ export default {
     },
     sendProjects(projects) {
       return this.$http({
-        method: "post",
-        url: "/api/projects/import",
+        method: 'post',
+        url: '/api/projects/import',
         headers: {
           Authorization: `Bearer ${this.token}`,
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json',
         },
         data: {
-          projects
-        }
+          projects,
+        },
       });
-    }
+    },
   },
   beforeUpdate() {
     this.display = true;
@@ -124,7 +128,7 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     this.boxExitAnimation(500, 20, true).then(next);
-  }
+  },
 };
 </script>
 
