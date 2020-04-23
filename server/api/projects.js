@@ -1,76 +1,86 @@
-const router = require("express").Router();
-const controller = require("../controllers/projects/index");
+const router = require('express').Router();
+const controller = require('../controllers/projects/index');
 
-const authenticate = require("../middleware/authentication");
+const authenticate = require('../middleware/authentication');
 
-const handler = require("../utils/handler");
+const handler = require('../utils/handler');
 
 router.use(authenticate);
 
 router.post(
-  "/create",
+  '/create',
   handler(controller.create, (req, res, next) => {
     return {
       sub: req.user.sub,
-      project: req.body.project
+      project: req.body.project,
     };
   })
 );
 
 router.get(
-  "/all/:id",
+  '/all/:id',
   handler(controller.getUserProjects, (req, res, next) => {
     return {
-      sub: req.user.sub
+      sub: req.user.sub,
     };
   })
 );
 
 router.get(
-  "/:id",
+  '/:id',
   handler(controller.getProject, (req, res, next) => {
     return {
       sub: req.user.sub,
-      id: req.params.id
+      id: req.params.id,
     };
   })
 );
 
 router.get(
-  "/:id/admin",
+  '/:id/admin',
   handler(controller.isAdmin, (req, res, next) => {
     return {
       sub: req.user.sub,
-      id: req.params.id
+      id: req.params.id,
     };
   })
 );
 
 router.delete(
-  "/:id",
+  '/:id',
   handler(controller.deleteProject, (req, res, next) => {
     return {
       sub: req.user.sub,
-      id: req.params.id
+      id: req.params.id,
     };
   })
 );
 
 router.post(
-  "/import",
+  '/import',
   handler(controller.import, (req, res, next) => {
     return {
       sub: req.user.sub,
-      projects: req.body.projects
+      projects: req.body.projects,
     };
   })
 );
 
 router.get(
-  "/active/:id",
+  '/active/:id',
   handler(controller.activeProject, (req, res, next) => {
     return {
-      id: req.params.id
+      id: req.params.id,
+    };
+  })
+);
+
+router.put(
+  '/:id',
+  handler(controller.update, (req, res, next) => {
+    return {
+      project: req.body.project,
+      id: req.params.id,
     };
   })
 );
