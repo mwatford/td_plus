@@ -27,7 +27,7 @@ export default {
     ...mapState({
       user: state => state.user,
       token: state => state.auth.token,
-      project: state => state.activeProject,
+      project: state => state.activeProject.data,
       enterAnimation() {
         return this.popUp(300, 0, "easeInSine");
       },
