@@ -5,7 +5,7 @@
       <h3>Add task</h3>
       <input type="text" class="input" placeholder="name" />
       <textarea class="input" placeholder="description" />
-      <select name="" id="" v-model="task.member">
+      <select v-model="task.member">
         <option
           v-for="(member, index) in members"
           :key="index"
@@ -123,8 +123,13 @@ form {
   height: auto;
   width: fit-content;
 }
+label {
+  margin: 5px 0;
+}
 textarea {
   max-width: 100%;
+  min-width: 100%;
+  max-height: 100%;
   border: 1px dashed #fff;
   border-bottom: 2px solid #fff;
 }
