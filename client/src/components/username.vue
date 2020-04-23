@@ -51,4 +51,7 @@ form {
   flex-direction: column;
   height: 100%;
 }
+.button {
+  margin-top: 30px;
+}
 </style>
