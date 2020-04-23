@@ -115,7 +115,7 @@ export default {
   height: auto;
 }
 .button {
-  width: 100px;
+  min-width: 100px;
   margin: auto;
 }
 .buttons {
