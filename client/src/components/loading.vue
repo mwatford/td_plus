@@ -2,7 +2,7 @@
   <div class="m-auto">
     <div :class="['loading', pulse]">
       <div :class="['circle', rotate]" :style="style">
-        <p v-if="state === 'failed'" class="scale">insert reload icon</p>
+        <p v-if="state === 'failed'" class="scale" ><app-icon type="reload" size="22"></app-icon></p>
       </div>
     </div>
   </div>
