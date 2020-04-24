@@ -3,7 +3,13 @@
   <div v-else class="m-auto row view">
     <form action="" class="box col">
       <h3>Add task</h3>
-      <input type="text" class="input" placeholder="name" v-model="task.name" />
+      <input
+        type="text"
+        class="input"
+        placeholder="name"
+        v-model="task.name"
+        required
+      />
       <textarea
         class="input"
         placeholder="description"
@@ -13,7 +19,7 @@
         <label>
           Select member
         </label>
-        <select v-model="task.member">
+        <select v-model="task.member" required>
           <option
             v-for="(member, index) in members"
             :key="index"
@@ -25,16 +31,17 @@
       <button class="button" @click="addTask">ADD</button>
     </form>
     <ul>
-      <li
-        v-for="(list, index) in project.lists"
-        :key="index"
-        @click="changeListName(index)"
-      >
-        <h4>
-          {{ list.name }}
-        </h4>
+      <li v-for="(list, index) in project.lists" :key="index" class="row">
+        <div class="row change-name" @click="changeListName(index)" title="change name">
+          <h4>
+            {{ list.name }}
+          </h4>
+        </div>
+        <div class="icon" @click="deleteList">
+          <app-icon type="cross" size="14" class="m-auto"></app-icon>
+        </div>
       </li>
-      <li class="row" @click="addList">
+      <li class="row add" @click="addList" title="add new list">
         <app-icon class="m-auto" type="plus" size="19"></app-icon>
       </li>
     </ul>
@@ -242,8 +249,24 @@ ul {
     color: #fff;
     margin-bottom: 3px;
     width: 250px;
-    padding: 12px;
+    height: 43px;
 
+    .icon {
+      height: 100%;
+      width: 43px;
+      display: flex;
+    }
+    .change-name {
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 12px;
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .change-name,
+  .icon,
+  li.add {
     &:hover {
       background: #000000da;
     }
