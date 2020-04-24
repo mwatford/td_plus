@@ -6,7 +6,6 @@ export const actions = requestModule => {
         url: `/api/projects/active/${id}`,
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
         },
       });
     },
@@ -21,7 +20,7 @@ export const actions = requestModule => {
         data: {
           project,
         },
-      });
+      }).then(({ data }) => commit('SET_PROJECT', data));
     },
   };
 };
