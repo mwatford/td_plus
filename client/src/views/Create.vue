@@ -77,28 +77,28 @@
 </template>
 
 <script>
-import axios from "axios";
-import { mapState } from "vuex";
-import boxAnimations from "../mixins/boxAnimations";
-import { hashPassword } from "../utils/password";
-import navigate from "../mixins/navigate";
+import axios from 'axios';
+import { mapState } from 'vuex';
+import boxAnimations from '../mixins/boxAnimations';
+import { hashPassword } from '../utils/password';
+import navigate from '../mixins/navigate';
 
 export default {
   mixins: [boxAnimations, navigate],
   data() {
     return {
-      search: "",
-      password: "",
+      search: '',
+      password: '',
       responseList: [],
       memberList: [],
-      project: this.createEmptyProject()
+      project: this.createEmptyProject(),
     };
   },
   computed: {
     ...mapState({
       user: state => state.user,
       token: state => state.auth.token,
-      auth: state => state.auth.status
+      auth: state => state.auth.status,
     }),
     //test
     suggestions() {
@@ -112,27 +112,27 @@ export default {
         suggestions.splice(index, 1);
       });
       return suggestions;
-    }
+    },
   },
   methods: {
     hashPassword,
     createEmptyProject() {
       return {
-        name: "",
-        password: "",
+        name: '',
+        password: '',
         members: [],
         lists: [
-          { name: "To Do", data: [] },
-          { name: "In Progress", data: [] },
-          { name: "Done", data: [] }
-        ]
+          { name: 'To Do', data: [] },
+          { name: 'In Progress', data: [] },
+          { name: 'Done', data: [] },
+        ],
       };
     },
     addUser(user) {
       this.project.members.push({
         id: user._id,
-        type: "basic",
-        permissions: []
+        type: 'basic',
+        permissions: [],
       });
       this.memberList.push(user);
     },
@@ -144,9 +144,9 @@ export default {
       return this.createPassword()
         .then(this.saveProject)
         .then(this.updateUser)
-        .then(this.navigate({ name: "home" }))
+        .then(this.navigate({ name: 'home' }))
         .catch(e => {
-          this.navigate({ name: "home" });
+          this.navigate({ name: 'home' });
         });
     },
     createPassword() {
@@ -169,21 +169,21 @@ export default {
     request() {
       if (this.auth) {
         return this.$http({
-          method: "post",
-          url: "/api/projects/create",
+          method: 'post',
+          url: '/api/projects/create',
           headers: {
             Authorization: `Bearer ${this.token}`,
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json',
           },
           data: {
             email: this.user.email,
-            project: this.project
-          }
+            project: this.project,
+          },
         });
       } else return;
     },
     saveLocally() {
-      let projects = window.localStorage.getItem("projects");
+      let projects = window.localStorage.getItem('projects');
 
       if (projects) {
         projects = JSON.parse(projects);
@@ -201,28 +201,27 @@ export default {
 
       projects.push(this.project);
       projects = JSON.stringify(projects);
-      window.localStorage.setItem("projects", projects);
+      window.localStorage.setItem('projects', projects);
     },
     updateUser() {
       if (this.auth) {
-        return this.$store.dispatch("user/fetchUser", {
+        return this.$store.dispatch('user/fetchUser', {
           token: this.token,
-          email: this.user.email
+          email: this.user.email,
         });
       } else return;
     },
     fetchUsers(search) {
       this.$http({
-        method: "get",
+        method: 'get',
         url: `/api/users/search/${search}`,
         headers: {
           Authorization: `Bearer ${this.token}`,
-          "Content-Type": "application/json"
-        }
+        },
       }).then(response => {
         this.responseList = response.data;
       });
-    }
+    },
   },
   mounted() {
     this.boxEnterAnimation(300, 0, false);
@@ -235,8 +234,8 @@ export default {
       if (n.length > 3) {
         this.fetchUsers(n);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -249,6 +248,7 @@ export default {
 .box {
   position: relative;
   min-height: 400px;
+  justify-content: space-between;
 
   h2 {
     margin-bottom: 2px;
