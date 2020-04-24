@@ -38,7 +38,7 @@
           ]"
           :disabled="!buttonsActive"
           @click="changeView('manage')"
-          v-if="project.admin === user._id || !this.auth"
+          v-if="project && (project.admin === user._id || !this.auth)"
         >
           Manage
         </button>
@@ -76,10 +76,8 @@ export default {
       token: state => state.auth.token,
       project: state => state.activeProject.data,
       auth: state => state.auth.status,
+      filter: state => state.activeProject.filter,
     }),
-    filter() {
-      return this.project.filter;
-    },
     permissions() {
       return this.project.members.find(el => el.id == this.user._id)
         .permissions;
@@ -132,9 +130,9 @@ export default {
 
         await this.connect();
 
-        this.$socket.on('update', data => {
-          this.updateProject(data);
-        });
+        // this.$socket.on('update', data => {
+        //   this.updateProject(data);
+        // });
       } else {
         this.activateButtons();
         this.changeView('dashboard');
@@ -146,6 +144,9 @@ export default {
   },
   created() {
     this.$eventBus.$on('fetch data', this.fetchDataHandler);
+  },
+  beforeMount() {
+    if (!this.project) this.navigate({ name: 'home' });
   },
   beforeDestroy() {
     this.$eventBus.$off('fetch data', this.fetchDataHandler);
