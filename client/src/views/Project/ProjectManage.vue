@@ -33,7 +33,7 @@
           {{ list.name }}
         </h4>
       </li>
-      <li class="row">
+      <li class="row" @click="addList">
         <app-icon class="m-auto" type="plus"></app-icon>
       </li>
     </ul>
@@ -147,7 +147,6 @@ export default {
       const project = this.$store.state.projects.data.find(
         el => el.name === this.project.name
       );
-
       const index = this.$store.state.projects.data.indexOf(project);
 
       return { index, project };
@@ -167,17 +166,14 @@ export default {
         const project = cloneDeep(this.project);
 
         project.lists[index].name = name;
-
         this.updateProject(project);
       }
     },
     updateLocalProject(project) {
       const projects = cloneDeep(this.$store.state.projects);
-
       const { index } = this.getLocalProject();
 
       projects.data[index] = project;
-
       localStorage.setItem('projects', JSON.stringify(projects.data));
     },
     updateProject(project) {
@@ -185,12 +181,25 @@ export default {
         .dispatch('activeProject/updateProject', project)
         .then(({ data }) => {
           this.$store.commit('activeProject/SET_PROJECT', data);
-
           this.alert(
             'success',
             'Project updated, your changes will be visible in Dashboard'
           );
         });
+    },
+    addList() {
+      const name = prompt('Name:');
+
+      if (name) {
+        this.$store.commit('activeProject/ADD_LIST', { name, data: [] });
+        const project = cloneDeep(this.project);
+
+        if (this.auth) {
+          this.updateProject(project);
+        } else {
+          this.updateLocalProject(project);
+        }
+      }
     },
   },
   mounted() {
@@ -201,7 +210,8 @@ export default {
 
 <style lang="scss" scoped>
 form {
-  height: auto;
+  height: 380px;
+  max-height: 100%;
   justify-content: flex-start;
 }
 label {
@@ -211,7 +221,7 @@ textarea {
   max-width: 100%;
   min-width: 100%;
   max-height: 100%;
-  height: auto;
+  height: 100%;
   border: 1px dashed #fff;
   border-bottom: 2px solid #fff;
 }
