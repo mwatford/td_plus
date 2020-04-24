@@ -87,44 +87,13 @@ export default {
 };
 </script>
 
-<style lang="scss">
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+<style lang="scss" scoped>
 .start {
   width: 100%;
   height: 100%;
   position: relative;
   align-items: center;
   justify-content: center;
-}
-.box {
-  width: 350px;
-  height: 250px;
-  display: flex;
-  flex-direction: column;
-  background: #000000cc;
-  color: #fff;
-  padding: 50px 50px;
-  border-radius: 2px;
-
-  &--inverted {
-    background: #fff;
-    color: #000;
-
-    &__input {
-      color: #000;
-      background: #fff;
-      border-color: #000;
-    }
-  }
-
-  &__link {
-    color: #fff;
-    margin: 20px auto;
-  }
 }
 section {
   display: flex;
@@ -139,45 +108,5 @@ section {
 }
 .header {
   margin-bottom: 20px;
-}
-.input {
-  height: 30px;
-  width: 100%;
-  margin: 10px 0px;
-  border: none;
-  background: none;
-  color: #fff;
-  border-bottom: 2px solid #fff;
-  padding: 2px;
-}
-.button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 20px;
-  font-size: 18px;
-  font-family: Ubuntu;
-  min-height: 40px;
-  max-height: 40px;
-  border-radius: 20px;
-  border: 2px solid #fff;
-  background-color: transparent;
-  color: #fff;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #fff;
-    color: #000;
-  }
-
-  &--inverted {
-    border-color: #000;
-    color: #000;
-
-    &:hover {
-      background-color: #000;
-      color: #fff;
-    }
-  }
 }
 </style>

@@ -75,9 +75,6 @@ export default {
 <style lang="scss" scoped>
 * {
   font-family: monospace;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
 }
 .navigation {
   display: flex;

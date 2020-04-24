@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Orbitron&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #f4d03f;
+  background-image: radial-gradient(#f4d03f 0%, #16a085 100%);
+  background-size: 400% 400%;
+  animation: Gradient 20s ease-in-out infinite;
+}
+
+@import './box.scss';
+@import './other.scss';
+@import './animations.scss';
+@import './input.scss';
+@import './button.scss';
+@import './view.scss';

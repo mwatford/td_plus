@@ -1,0 +1,30 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  font-size: 18px;
+  font-family: Ubuntu;
+  min-height: 40px;
+  max-height: 40px;
+  border-radius: 20px;
+  border: 2px solid #fff;
+  background-color: transparent;
+  color: #fff;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #fff;
+    color: #000;
+  }
+
+  &--inverted {
+    border-color: #000;
+    color: #000;
+
+    &:hover {
+      background-color: #000;
+      color: #fff;
+    }
+  }
+}

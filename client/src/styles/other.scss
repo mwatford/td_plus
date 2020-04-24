@@ -1,0 +1,35 @@
+.display {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+.row {
+  display: flex;
+  flex-direction: row;
+}
+.col {
+  display: flex;
+  flex-direction: column;
+}
+a {
+  text-decoration: none;
+}
+.m-auto {
+  margin: auto;
+}
+.as {
+  &--start {
+    align-self: flex-start;
+  }
+  &--end {
+    align-self: flex-end;
+  }
+}
+.js {
+  &--start {
+    justify-self: flex-start;
+  }
+  &--end {
+    justify-self: flex-end;
+  }
+}

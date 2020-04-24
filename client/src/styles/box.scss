@@ -1,0 +1,26 @@
+.box {
+  width: 350px;
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  background: #000000cc;
+  color: #fff;
+  padding: 50px 50px;
+  border-radius: 2px;
+
+  &--inverted {
+    background: #fff;
+    color: #000;
+
+    &__input {
+      color: #000;
+      background: #fff;
+      border-color: #000;
+    }
+  }
+
+  &__link {
+    color: #fff;
+    margin: 20px auto;
+  }
+}
