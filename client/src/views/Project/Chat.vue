@@ -6,7 +6,7 @@
         :key="index"
         :class="[
           'message col',
-          { 'message--right': message.user === user._id }
+          { 'message--right': message.user === user._id },
         ]"
       >
         <h4>{{ username(message.user) || message.user }}</h4>
@@ -14,49 +14,49 @@
       </li>
     </ul>
     <form class="row" @submit.prevent="sendMessage">
-      <input type="textarea" class="input" name="" id="" v-model="input" />
+      <input type="textarea" class="input" v-model="input" />
       <button type="submit" class="button">send</button>
     </form>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex';
 export default {
   data() {
     return {
-      input: "",
-      messages: []
+      input: '',
+      messages: [],
     };
   },
   computed: {
     ...mapState({
       user: state => state.user,
-      members: state => state.activeProject.data.members
-    })
+      members: state => state.activeProject.data.members,
+    }),
   },
   methods: {
     sendMessage() {
-      this.$socket.emit("sendMessage", this.input);
-      this.input = "";
+      this.$socket.emit('sendMessage', this.input);
+      this.input = '';
     },
     loadMessages() {
-      this.$socket.on("message", data => {
+      this.$socket.on('message', data => {
         if (Array.isArray(data)) {
           this.messages.push(...data);
         } else {
           this.messages.push(data);
         }
       });
-      this.$socket.emit("load messages");
+      this.$socket.emit('load messages');
     },
     username(value) {
-      return this.members.find(el => el.id === value).name
-    }
+      return this.members.find(el => el.id === value).name;
+    },
   },
   mounted() {
     this.loadMessages();
-  }
+  },
 };
 </script>
 
@@ -74,12 +74,12 @@ export default {
   width: 100%;
   max-width: 400px;
   height: 500px;
-  overflow: hidden;
 
   form {
     margin: 0 10px;
     padding-top: 10px;
     border-top: 1px solid #fff;
+
     .input {
       width: 100%;
     }
@@ -91,7 +91,7 @@ export default {
   &__messages {
     height: 100%;
     width: 100%;
-    overflow-y: auto;
+    overflow-y: scroll;
     overflow-x: hidden;
     padding: 10px;
     padding-bottom: 0;
@@ -102,9 +102,18 @@ export default {
   word-wrap: break-word;
   width: 70%;
 
+  p {
+    width: 100%;
+    text-align: left;
+  }
+
   &--right {
     align-items: flex-end;
     margin-left: auto;
+
+    p {
+      text-align: right;
+    }
   }
 }
 </style>
