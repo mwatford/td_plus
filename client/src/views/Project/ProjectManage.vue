@@ -257,7 +257,7 @@ textarea {
   border-bottom: 2px solid #fff;
 }
 ul {
-  margin-left: 10px;
+  margin-left: 3px;
   list-style-type: none;
 
   li {
