@@ -14,19 +14,19 @@
 </template>
 
 <script>
-import { comparePasswords } from "../../utils/password";
-import { mapState } from "vuex";
+import { comparePasswords } from '../../utils/password';
+import { mapState } from 'vuex';
 
 export default {
   data() {
     return {
-      password: ""
+      password: '',
     };
   },
   computed: {
     ...mapState({
-      project: state => state.activeProject
-    })
+      project: state => state.activeProject.data,
+    }),
   },
   methods: {
     comparePasswords,
@@ -36,11 +36,15 @@ export default {
         this.project.password
       );
       if (passwordValid) {
-        this.$eventBus.$emit("correct password");
+        this.$eventBus.$emit('correct password');
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.box {
+  justify-content: space-between;
+}
+</style>
