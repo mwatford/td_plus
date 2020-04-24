@@ -16,4 +16,7 @@ export const mutations = {
   ADD_LIST(state, list) {
     state.data.lists.push(list);
   },
+  ADD_TASK(state, task) {
+    state.data.lists[0].data.push(task);
+  },
 };
