@@ -1,9 +1,9 @@
 <template>
   <loading v-if="loading !== 'start'" :state="loading" :size="60"></loading>
-  <div v-else class="m-auto view row">
+  <div v-else class="m-auto row view">
     <form action="" class="box col">
       <h3>Add task</h3>
-      <input type="text" class="input" placeholder="name" />
+      <input type="text" class="input" placeholder="name" v-model="task.name" />
       <textarea
         class="input"
         placeholder="description"
@@ -22,6 +22,7 @@
           >
         </select>
       </div>
+      <button class="button" @click="addTask">ADD</button>
     </form>
     <ul>
       <li
@@ -34,7 +35,7 @@
         </h4>
       </li>
       <li class="row" @click="addList">
-        <app-icon class="m-auto" type="plus"></app-icon>
+        <app-icon class="m-auto" type="plus" size="19"></app-icon>
       </li>
     </ul>
     <button @click="deleteProject" class="button">delete</button>
@@ -42,7 +43,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import navigate from '../../mixins/navigate';
 import cloneDeep from '../../utils/cloneDeep';
 
@@ -77,11 +78,6 @@ export default {
             member: '',
           });
     },
-    addTask() {
-      // this.$socket.emit('addTask', this.task);
-
-      this.task = this.createEmptyTask();
-    },
     authenticate() {
       this.loading = 'loading';
 
@@ -90,7 +86,6 @@ export default {
         url: `/api/projects/${this.project._id}/admin`,
         headers: {
           Authorization: `Bearer ${this.token}`,
-          'Content-Type': 'application/json',
         },
       })
         .then(() => {
@@ -122,7 +117,6 @@ export default {
         url: `/api/projects/${this.project._id}`,
         headers: {
           Authorization: `Bearer ${this.token}`,
-          'Content-Type': 'application/json',
         },
       }).then(() => {
         this.alert('success', 'Project has been deleted');
@@ -174,24 +168,20 @@ export default {
       const { index } = this.getLocalProject();
 
       projects.data[index] = project;
+
       localStorage.setItem('projects', JSON.stringify(projects.data));
     },
     updateProject(project) {
-      this.$store
-        .dispatch('activeProject/updateProject', project)
-        .then(({ data }) => {
-          this.$store.commit('activeProject/SET_PROJECT', data);
-          this.alert(
-            'success',
-            'Project updated, your changes will be visible in Dashboard'
-          );
-        });
+      this.loading = 'loading';
+      this.$store.dispatch('activeProject/updateProject', project).then(() => {
+        this.loading = 'start';
+      });
     },
     addList() {
       const name = prompt('Name:');
 
       if (name) {
-        this.$store.commit('activeProject/ADD_LIST', { name, data: [] });
+        this.$store.commit('activeProject/ADD_LIST', { data: [], name });
         const project = cloneDeep(this.project);
 
         if (this.auth) {
@@ -200,6 +190,18 @@ export default {
           this.updateLocalProject(project);
         }
       }
+    },
+    addTask() {
+      this.$store.commit('activeProject/ADD_TASK', this.task);
+      const project = cloneDeep(this.project);
+
+      if (this.auth) {
+        this.updateProject(project);
+      } else {
+        this.updateLocalProject(project);
+      }
+
+      this.task = this.createEmptyTask();
     },
   },
   mounted() {
@@ -210,9 +212,13 @@ export default {
 
 <style lang="scss" scoped>
 form {
-  height: 380px;
+  height: 458px;
   max-height: 100%;
   justify-content: flex-start;
+
+  .button {
+    margin-top: 20px;
+  }
 }
 label {
   margin: 5px 0;
@@ -234,7 +240,7 @@ ul {
     background: #000000cc;
     border-radius: 2px;
     color: #fff;
-    margin-bottom: 10px;
+    margin-bottom: 3px;
     width: 250px;
     padding: 12px;
 
