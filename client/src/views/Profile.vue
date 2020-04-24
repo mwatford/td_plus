@@ -1,6 +1,9 @@
 <template>
   <div class="profile">
     <form @submit.prevent class="box">
+      <button class="button as--end" @click="deleteAccount">
+        Delete account
+      </button>
       <div class="col">
         <label for="name">Change name</label>
         <div class="row">
@@ -83,7 +86,7 @@ export default {
         headers: {
           Authorization: `Bearer ${this.token}`,
         },
-      });
+      }).then(this.$auth.logout);
     },
   },
   mounted() {
@@ -115,11 +118,15 @@ export default {
   height: auto;
 }
 .button {
-  min-width: 100px;
-  margin: auto;
+  margin-bottom: 10px;
 }
 .buttons {
   margin-top: 20px;
+
+  .button {
+    min-width: 100px;
+    margin: 0 auto;
+  }
 }
 input[type='text'] {
   margin: 10px 5px 10px 0;
