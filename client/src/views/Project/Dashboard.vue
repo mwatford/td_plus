@@ -41,10 +41,19 @@ export default {
 * {
   box-sizing: border-box;
 }
+.dashboard {
+  flex-wrap: wrap;
+}
 .box {
   width: 240px;
   padding: 20px;
   margin-right: 4px;
+  margin-bottom: 4px;
+  min-width: 240px;
+
+  &:last-child {
+    margin-right: 0;
+  }
 
   h3 {
     border-bottom: 1px solid #fff;
