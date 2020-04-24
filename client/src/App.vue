@@ -10,31 +10,31 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
-import sideBar from "./components/side-bar.vue";
-import timeline from "./components/timeline.vue";
-import alerts from "./components/alerts.vue";
+import { mapState, mapActions } from 'vuex';
+import sideBar from './components/side-bar.vue';
+import timeline from './components/timeline.vue';
+import alerts from './components/alerts.vue';
 
 export default {
   components: {
-    "side-bar": sideBar,
+    'side-bar': sideBar,
     timeline: timeline,
-    alerts
+    alerts,
   },
   computed: {
     ...mapState({
       app: state => state.app,
       user: state => state.user,
-      isAuthenticated: state => state.auth.status
-    })
+      isAuthenticated: state => state.auth.status,
+    }),
   },
-  methods: {}
+  methods: {},
 };
 </script>
 
 <style lang="scss">
-@import url("https://fonts.googleapis.com/css?family=Ubuntu&display=swap");
-@import url("https://fonts.googleapis.com/css?family=Orbitron&display=swap");
+@import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Orbitron&display=swap');
 body {
   overflow: hidden;
   margin: 0;
@@ -73,6 +73,22 @@ a {
 }
 .m-auto {
   margin: auto;
+}
+.as {
+  &--start {
+    align-self: flex-start;
+  }
+  &--end {
+    align-self: flex-end;
+  }
+}
+.js {
+  &--start {
+    justify-self: flex-start;
+  }
+  &--end {
+    justify-self: flex-end;
+  }
 }
 @keyframes Gradient {
   0% {
