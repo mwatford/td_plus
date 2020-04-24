@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="create" @click="navigate('create')">
-      <div>+</div>
+      <app-icon type="plus" size="100"></app-icon>
     </div>
     <router-link
       v-for="project in projects"
