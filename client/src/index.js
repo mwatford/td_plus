@@ -9,6 +9,7 @@ import io from 'socket.io-client';
 import VueChatScroll from 'vue-chat-scroll';
 import alert from './mixins/alert';
 import icon from './components/app-icon.vue';
+import './styles/global.scss';
 
 Vue.mixin(alert);
 

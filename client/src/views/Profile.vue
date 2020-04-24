@@ -99,11 +99,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 .row {
   align-items: center;
 }
