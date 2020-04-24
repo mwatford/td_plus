@@ -40,10 +40,6 @@ module.exports = (services, manager) => http =>
           }
         });
 
-        socket.on("addTask", task => {
-          project.lists[0].data.push(task);
-          io.to(project.name).emit("update", project.lists);
-        });
 
         socket.on("disconnect", () => {
           manager.get(project.name).removeUser(usera);
