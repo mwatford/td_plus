@@ -180,9 +180,17 @@ export default {
     updateProject(project) {
       this.loading = 'loading';
 
-      this.$store.dispatch('activeProject/updateProject', project).then(() => {
-        this.loading = 'start';
-      });
+      this.$store
+        .dispatch('activeProject/updateProject', project)
+        .then(() => {
+          this.loading = 'start';
+        })
+        .catch(e => {
+          this.alert(
+            'error',
+            'Error while updating the project, you will be redirected to home page.'
+          );
+        });
     },
     addList() {
       const name = prompt('Name:');
