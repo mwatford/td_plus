@@ -58,6 +58,10 @@ export default {
   h3 {
     border-bottom: 1px solid #fff;
     padding-bottom: 2px;
+    margin-bottom: 3px;
   }
+}
+ul {
+  list-style-type: none;
 }
 </style>
