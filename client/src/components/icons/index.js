@@ -4,6 +4,7 @@ import power from './power.vue';
 import user from './user.vue';
 import reload from './reload.vue';
 import plus from './plus.vue';
+import cross from './cross.vue';
 
 export default {
   home,
@@ -12,4 +13,5 @@ export default {
   user,
   reload,
   plus,
+  cross,
 };
