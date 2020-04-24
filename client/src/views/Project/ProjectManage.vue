@@ -32,12 +32,16 @@
     </form>
     <ul>
       <li v-for="(list, index) in project.lists" :key="index" class="row">
-        <div class="row change-name" @click="changeListName(index)" title="change name">
+        <div
+          class="row change-name"
+          @click="changeListName(index)"
+          title="change name"
+        >
           <h4>
             {{ list.name }}
           </h4>
         </div>
-        <div class="icon" @click="deleteList">
+        <div class="icon" @click="deleteList(index)">
           <app-icon type="cross" size="14" class="m-auto"></app-icon>
         </div>
       </li>
@@ -209,6 +213,20 @@ export default {
       }
 
       this.task = this.createEmptyTask();
+    },
+    deleteList(index) {
+      const confirmed = confirm(
+        `Are you sure you want to delete "${this.project.lists[index].name}"`
+      );
+
+      if (confirmed) {
+        this.$store.commit('activeProject/DELETE_LIST', index);
+        const project = cloneDeep(this.project);
+
+        return !this.auth
+          ? this.updateLocalProject(project)
+          : this.updateProject(project);
+      }
     },
   },
   mounted() {
