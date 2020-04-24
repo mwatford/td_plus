@@ -159,19 +159,14 @@ export default {
     changeListName(index) {
       const name = prompt(`Rename '${this.project.lists[index].name}':`);
 
-      if (name && !this.auth) {
+      if (name) {
         this.$store.commit('activeProject/UPDATE_LIST_NAME', {
           name,
           index,
         });
-        this.updateLocalProject(cloneDeep(this.project));
-      }
-
-      if (name && this.auth) {
         const project = cloneDeep(this.project);
 
-        project.lists[index].name = name;
-        this.updateProject(project);
+        this.save(project);
       }
     },
     updateLocalProject(project) {
@@ -184,6 +179,7 @@ export default {
     },
     updateProject(project) {
       this.loading = 'loading';
+
       this.$store.dispatch('activeProject/updateProject', project).then(() => {
         this.loading = 'start';
       });
@@ -195,22 +191,14 @@ export default {
         this.$store.commit('activeProject/ADD_LIST', { data: [], name });
         const project = cloneDeep(this.project);
 
-        if (this.auth) {
-          this.updateProject(project);
-        } else {
-          this.updateLocalProject(project);
-        }
+        this.save(project);
       }
     },
     addTask() {
       this.$store.commit('activeProject/ADD_TASK', this.task);
       const project = cloneDeep(this.project);
 
-      if (this.auth) {
-        this.updateProject(project);
-      } else {
-        this.updateLocalProject(project);
-      }
+      this.save(project);
 
       this.task = this.createEmptyTask();
     },
@@ -223,10 +211,13 @@ export default {
         this.$store.commit('activeProject/DELETE_LIST', index);
         const project = cloneDeep(this.project);
 
-        return !this.auth
-          ? this.updateLocalProject(project)
-          : this.updateProject(project);
+        this.save(project);
       }
+    },
+    save(project) {
+      return !this.auth
+        ? this.updateLocalProject(project)
+        : this.updateProject(project);
     },
   },
   mounted() {
