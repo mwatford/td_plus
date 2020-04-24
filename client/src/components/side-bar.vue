@@ -1,12 +1,6 @@
 <template>
   <nav class="navigation">
-    <div
-      title="Profile"
-      @mouseenter="displayUser = true"
-      @mouseleave="displayUser = false"
-      @click="navigate('profile')"
-      v-if="user.name"
-    >
+    <router-link :to="{ name: 'profile' }" title="Profile" v-if="auth">
       <router-link
         :to="{ name: 'profile' }"
         :class="[
@@ -16,7 +10,7 @@
       >
         <app-icon type="user"></app-icon>
       </router-link>
-    </div>
+    </router-link>
     <router-link
       :to="{ name: 'home' }"
       :class="[
@@ -28,12 +22,21 @@
     >
       <app-icon type="home"></app-icon>
     </router-link>
-    <button
+    <router-link
+      v-if="!auth"
+      :to="{ name: 'start' }"
       class="navigation__button"
-      @click="auth ? logout() : navigate({ name: 'start' })"
-      :title="auth ? 'Sign Out' : 'Sign In'"
+      title="Sign In"
     >
-      <app-icon :type="!auth ? 'sign-in' : 'power'"></app-icon>
+      <app-icon type="sign-in"></app-icon>
+    </router-link>
+    <button
+      v-if="auth"
+      class="navigation__button"
+      title="Sign Out"
+      @click="logout"
+    >
+      <app-icon type="power"></app-icon>
     </button>
   </nav>
 </template>
