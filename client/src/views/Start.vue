@@ -14,32 +14,32 @@
 </template>
 
 <script>
-import boxAnimations from "../mixins/boxAnimations";
-import signIn from "../components/sign-in.vue";
-import loader from "../components/loading.vue";
-import username from "../components/username.vue";
-import animations from "../mixins/animations";
-import navigate from "../mixins/navigate";
+import boxAnimations from '../mixins/boxAnimations';
+import signIn from '../components/sign-in.vue';
+import loader from '../components/loading.vue';
+import username from '../components/username.vue';
+import animations from '../mixins/animations';
+import navigate from '../mixins/navigate';
 
 export default {
   mixins: [boxAnimations, animations, navigate],
   data() {
     return {
-      state: "loading",
-      component: signIn
+      state: 'loading',
+      component: signIn,
     };
   },
   computed: {
     enterAnimation() {
       return this.component === loader
-        ? this.popUp(200, 0, "spring")
-        : this.fadeIn(200, 0, "linear");
+        ? this.popUp(200, 0, 'spring')
+        : this.fadeIn(200, 0, 'linear');
     },
     leaveAnimation() {
       return this.component !== loader
-        ? this.scaleDown(200, 0, "linear")
-        : this.fadeOut(200, 0, "linear");
-    }
+        ? this.scaleDown(200, 0, 'linear')
+        : this.fadeOut(200, 0, 'linear');
+    },
   },
   methods: {
     login() {
@@ -50,40 +50,40 @@ export default {
           const { isAuthenticated, user } = this.$auth;
           const token = await this.$auth.getTokenSilently();
 
-          this.$store.commit("auth/SET_TOKEN", token);
-          this.$store.commit("auth/SET_STATUS", true);
+          this.$store.commit('auth/SET_TOKEN', token);
+          this.$store.commit('auth/SET_STATUS', true);
 
-          return this.$store.dispatch("user/fetchUser", {
+          return this.$store.dispatch('user/fetchUser', {
             token,
-            email: user.email
+            email: user.email,
           });
         })
         .then(() => {
-          this.state = "done";
+          this.state = 'done';
 
           if (!this.$store.state.user.name) {
             this.component = username;
           } else {
-            this.$router.push({ name: "home" });
+            this.$router.push({ name: 'home' });
           }
         })
         .catch(err => {
-          this.state = "failed";
+          this.state = 'failed';
         });
-    }
+    },
   },
   mounted() {
-    this.$eventBus.$on("signIn", () => {
+    this.$eventBus.$on('signIn', () => {
       this.login();
     });
-    this.$eventBus.$on("name chosen", () => {
-      this.navigate({ name: "home" });
+    this.$eventBus.$on('name chosen', () => {
+      this.navigate({ name: 'home' });
     });
     this.boxEnterAnimation(400, 0, false);
   },
   beforeRouteLeave(to, from, next) {
     this.boxExitAnimation(300, 0, false).then(next);
-  }
+  },
 };
 </script>
 
@@ -107,7 +107,6 @@ export default {
   flex-direction: column;
   background: #000000cc;
   color: #fff;
-  justify-content: space-between;
   padding: 50px 50px;
   border-radius: 2px;
 
@@ -125,7 +124,6 @@ export default {
   &__link {
     color: #fff;
     margin: 20px auto;
-    // height: 30px;
   }
 }
 section {
@@ -166,7 +164,6 @@ section {
   background-color: transparent;
   color: #fff;
   cursor: pointer;
-  margin: 0 auto;
 
   &:hover {
     background-color: #fff;
