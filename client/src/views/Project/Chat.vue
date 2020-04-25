@@ -101,6 +101,7 @@ export default {
   width: 100%;
   max-width: 400px;
   height: 500px;
+  margin-left: 20px;
 
   form {
     margin: 0 10px;
@@ -133,11 +134,11 @@ export default {
   word-wrap: break-word;
   width: 70%;
   font-size: 16px;
-  background: #ffffffd2;
   border-radius: 12px;
   padding: 5px 15px;
   color: #000;
   margin-bottom: 5px;
+  background: #ffffffd2;
 
   h4 {
     font-size: 12px;
@@ -150,6 +151,7 @@ export default {
   }
 
   &--right {
+    background: #6aff76d2;
     align-items: flex-end;
     margin-left: auto;
 
@@ -169,7 +171,8 @@ export default {
   border-radius: 2px;
   cursor: pointer;
 
-  &:hover, &--open {
+  &:hover,
+  &--open {
     background: #0000008e;
   }
 }
