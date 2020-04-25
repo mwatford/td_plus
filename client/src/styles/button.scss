@@ -13,9 +13,17 @@
   color: #fff;
   cursor: pointer;
 
+  svg {
+    fill: #fff;
+  }
+
   &:hover {
     background-color: #fff;
     color: #000;
+
+    svg {
+      fill: #000;
+    }
   }
 
   &--inverted {
