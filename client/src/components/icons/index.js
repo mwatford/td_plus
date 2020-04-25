@@ -6,6 +6,7 @@ import reload from './reload.vue';
 import plus from './plus.vue';
 import cross from './cross.vue';
 import send from './send.vue';
+import search from './search.vue';
 
 export default {
   home,
@@ -16,4 +17,5 @@ export default {
   plus,
   cross,
   send,
+  search,
 };
