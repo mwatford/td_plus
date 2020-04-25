@@ -14,7 +14,22 @@
       </li>
     </ul>
     <form class="row" @submit.prevent="sendMessage">
-      <input type="textarea" class="input" v-model="input" />
+      <input type="textarea" class="input" v-model="input" ref="message" />
+      <div class="emojiPicker" @click="expandEmojiPicker = !expandEmojiPicker">
+        <div>
+          &#x1F604;
+        </div>
+        <ul class="emojiList" v-if="expandEmojiPicker">
+          <li
+            class="emojiList__element"
+            v-for="el in emojis"
+            :key="el"
+            @click="addEmoji(el)"
+          >
+            {{ String.fromCodePoint(el) }}
+          </li>
+        </ul>
+      </div>
       <button type="submit" class="button">send</button>
     </form>
   </div>
@@ -22,11 +37,15 @@
 
 <script>
 import { mapState } from 'vuex';
+import emojis from '../../modules/emojis';
+
 export default {
   data() {
     return {
       input: '',
       messages: [],
+      emojis,
+      expandEmojiPicker: false,
     };
   },
   computed: {
@@ -36,6 +55,9 @@ export default {
     }),
   },
   methods: {
+    username(value) {
+      return this.members.find(el => el.id === value).name;
+    },
     sendMessage() {
       this.$socket.emit('sendMessage', this.input);
       this.input = '';
@@ -50,8 +72,9 @@ export default {
       });
       this.$socket.emit('load messages');
     },
-    username(value) {
-      return this.members.find(el => el.id === value).name;
+    addEmoji(el) {
+      this.input = this.input + String.fromCodePoint(el);
+      this.$refs['message'].focus();
     },
   },
   mounted() {
@@ -61,9 +84,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-* {
-  box-sizing: border-box;
-}
 .box {
   margin: 0;
   padding: 0;
@@ -101,6 +121,17 @@ export default {
 .message {
   word-wrap: break-word;
   width: 70%;
+  font-size: 16px;
+  background: #ffffffd2;
+  border-radius: 12px;
+  padding: 5px 15px;
+  color: #000;
+  margin-bottom: 5px;
+
+  h4 {
+    font-size: 12px;
+    font-style: italic;
+  }
 
   p {
     width: 100%;
@@ -113,6 +144,39 @@ export default {
 
     p {
       text-align: right;
+    }
+  }
+}
+.emojiPicker {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  position: relative;
+}
+.emojiList {
+  justify-content: flex-start;
+  align-items: flex-start;
+  position: absolute;
+  bottom: 50%;
+  right: 50%;
+  display: flex;
+  flex-wrap: wrap;
+  width: 250px;
+  background: #fff;
+  list-style-type: none;
+  padding: 5px;
+  border-radius: 4px;
+
+  &__element {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background: #c0c0c0;
     }
   }
 }
