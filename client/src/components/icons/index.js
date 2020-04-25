@@ -5,6 +5,7 @@ import user from './user.vue';
 import reload from './reload.vue';
 import plus from './plus.vue';
 import cross from './cross.vue';
+import send from './send.vue';
 
 export default {
   home,
@@ -14,4 +15,5 @@ export default {
   reload,
   plus,
   cross,
+  send,
 };
