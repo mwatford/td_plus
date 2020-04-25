@@ -260,13 +260,17 @@ ul {
   list-style-type: none;
 
   li {
-    cursor: pointer;
+    display: flex;
     background: #000000cc;
     border-radius: 2px;
     color: #fff;
     margin-bottom: 3px;
     width: 250px;
     height: 43px;
+
+    &.row {
+      cursor: pointer;
+    }
 
     .icon {
       height: 100%;
