@@ -197,16 +197,14 @@ export default {
 
       if (name) {
         this.$store.commit('activeProject/ADD_LIST', { data: [], name });
-        const project = cloneDeep(this.project);
 
-        this.save(project);
+        this.save();
       }
     },
     addTask() {
       this.$store.commit('activeProject/ADD_TASK', this.task);
-      const project = cloneDeep(this.project);
 
-      this.save(project);
+      this.save();
 
       this.task = this.createEmptyTask();
     },
@@ -217,12 +215,13 @@ export default {
 
       if (confirmed) {
         this.$store.commit('activeProject/DELETE_LIST', index);
-        const project = cloneDeep(this.project);
 
-        this.save(project);
+        this.save();
       }
     },
-    save(project) {
+    save() {
+      const project = cloneDeep(this.project);
+
       return !this.auth
         ? this.updateLocalProject(project)
         : this.updateProject(project);
