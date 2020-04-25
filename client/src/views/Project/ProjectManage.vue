@@ -148,14 +148,6 @@ export default {
         this.navigate({ name: 'home' });
       }
     },
-    getLocalProject() {
-      const project = this.$store.state.projects.data.find(
-        el => el.name === this.project.name
-      );
-      const index = this.$store.state.projects.data.indexOf(project);
-
-      return { index, project };
-    },
     changeListName(index) {
       const name = prompt(`Rename '${this.project.lists[index].name}':`);
 
@@ -171,11 +163,19 @@ export default {
     },
     updateLocalProject(project) {
       const projects = cloneDeep(this.$store.state.projects);
-      const { index } = this.getLocalProject();
+      const index = this.getCurrentProjectIndex();
 
       projects.data[index] = project;
 
       localStorage.setItem('projects', JSON.stringify(projects.data));
+    },
+    getCurrentProjectIndex() {
+      const project = this.$store.state.projects.data.find(
+        el => el.name === this.project.name
+      );
+      const index = this.$store.state.projects.data.indexOf(project);
+
+      return index;
     },
     updateProject(project, copy) {
       this.loading = 'loading';
