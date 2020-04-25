@@ -31,6 +31,7 @@
       <button class="button" @click="addTask">ADD</button>
     </form>
     <ul>
+      <li><h3 class="m-auto">Lists</h3></li>
       <li v-for="(list, index) in project.lists" :key="index" class="row">
         <div
           class="row change-name"
@@ -78,16 +79,17 @@ export default {
   },
   methods: {
     createEmptyTask() {
-      const task = {
+      return {
         name: '',
         description: '',
+        stages: {},
       };
 
-      return !this.auth
-        ? task
-        : Object.assign(task, {
-            member: '',
-          });
+      // return !this.auth
+      //   ? task
+      //   : Object.assign(task, {
+      //       member: '',
+      //     });
     },
     authenticate() {
       this.loading = 'loading';
