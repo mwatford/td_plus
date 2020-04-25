@@ -61,7 +61,9 @@ export default {
       return this.members.find(el => el.id === value).name;
     },
     sendMessage() {
-      this.$socket.emit('sendMessage', this.input);
+      if (this.input) {
+        this.$socket.emit('sendMessage', this.input);
+      }
       this.input = '';
     },
     loadMessages() {
@@ -72,7 +74,6 @@ export default {
           this.messages.push(data);
         }
       });
-      this.$socket.emit('load messages');
     },
     addEmoji(el) {
       this.input = this.input + String.fromCodePoint(el);
@@ -80,6 +81,7 @@ export default {
     },
   },
   mounted() {
+    this.$socket.emit('load messages');
     this.loadMessages();
   },
 };
