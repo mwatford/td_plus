@@ -49,7 +49,7 @@
         <app-icon class="m-auto" type="plus" size="19"></app-icon>
       </li>
     </ul>
-    <button @click="deleteProject" class="button">delete</button>
+    <button @click="deleteProject" class="button">DELETE PROJECT</button>
   </div>
 </template>
 
@@ -239,7 +239,7 @@ form {
   justify-content: flex-start;
 
   .button {
-    margin-top: 20px;
+    margin: 20px 0 0 0;
   }
 }
 label {
@@ -286,5 +286,8 @@ ul {
       background: #000000da;
     }
   }
+}
+.button {
+  margin-left: auto;
 }
 </style>
