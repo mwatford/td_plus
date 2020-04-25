@@ -28,7 +28,14 @@
           >
         </select>
       </div>
-      <button class="button" @click="addTask">ADD</button>
+      <button class="button" @click="addTask">
+        <app-icon
+          class="m-auto"
+          type="plus"
+          size="19"
+          color="inherit"
+        ></app-icon>
+      </button>
     </form>
     <ul>
       <li><h3 class="m-auto">Lists</h3></li>
