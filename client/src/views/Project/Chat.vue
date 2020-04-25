@@ -30,7 +30,9 @@
           </li>
         </ul>
       </div>
-      <button type="submit" class="button">send</button>
+      <button type="submit" class="button">
+        <app-icon type="send"></app-icon>
+      </button>
     </form>
   </div>
 </template>
@@ -101,10 +103,14 @@ export default {
     border-top: 1px solid #fff;
 
     .input {
-      width: 100%;
+      width: 70%;
     }
     .button {
-      margin-left: 5px;
+      margin: 0 5px 0 auto;
+
+      &:hover svg {
+        fill: #000;
+      }
     }
   }
 
