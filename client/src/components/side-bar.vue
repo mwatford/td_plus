@@ -1,16 +1,5 @@
 <template>
   <nav class="navigation">
-    <router-link :to="{ name: 'profile' }" title="Profile" v-if="auth">
-      <router-link
-        :to="{ name: 'profile' }"
-        :class="[
-          'navigation__button',
-          { 'navigation__button--active': $route.name === 'profile' },
-        ]"
-      >
-        <app-icon type="user"></app-icon>
-      </router-link>
-    </router-link>
     <router-link
       :to="{ name: 'home' }"
       :class="[
@@ -21,6 +10,17 @@
       @click="navigate('home')"
     >
       <app-icon type="home"></app-icon>
+    </router-link>
+    <router-link :to="{ name: 'profile' }" title="Profile" v-if="auth">
+      <router-link
+        :to="{ name: 'profile' }"
+        :class="[
+          'navigation__button',
+          { 'navigation__button--active': $route.name === 'profile' },
+        ]"
+      >
+        <app-icon type="user"></app-icon>
+      </router-link>
     </router-link>
     <router-link
       v-if="!auth"
