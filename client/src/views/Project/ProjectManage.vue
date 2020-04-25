@@ -177,7 +177,7 @@ export default {
 
       localStorage.setItem('projects', JSON.stringify(projects.data));
     },
-    updateProject(project) {
+    updateProject(project, copy) {
       this.loading = 'loading';
 
       this.$store
@@ -186,10 +186,9 @@ export default {
           this.loading = 'start';
         })
         .catch(e => {
-          this.alert(
-            'error',
-            'Error while updating the project, you will be redirected to home page.'
-          );
+          this.$store.commit('activeProject/SET_PROJECT', copy);
+          this.loading = 'start';
+          this.alert('error', 'Error. Your changes have not been saved.');
         });
     },
     addList() {
@@ -219,12 +218,12 @@ export default {
         this.save();
       }
     },
-    save() {
+    save(copy) {
       const project = cloneDeep(this.project);
 
       return !this.auth
         ? this.updateLocalProject(project)
-        : this.updateProject(project);
+        : this.updateProject(project, copy);
     },
   },
   mounted() {
