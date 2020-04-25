@@ -294,6 +294,6 @@ ul {
   }
 }
 .button {
-  margin-left: auto;
+  margin: 0 10px 0 auto;
 }
 </style>
