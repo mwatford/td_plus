@@ -84,12 +84,6 @@ export default {
         description: '',
         stages: {},
       };
-
-      // return !this.auth
-      //   ? task
-      //   : Object.assign(task, {
-      //       member: '',
-      //     });
     },
     authenticate() {
       this.loading = 'loading';
