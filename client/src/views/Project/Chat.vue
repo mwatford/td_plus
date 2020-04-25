@@ -156,8 +156,17 @@ export default {
 .emojiPicker {
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
   position: relative;
+  height: 30px;
+  width: 30px;
+  margin: auto;
+  border-radius: 2px;
+  cursor: pointer;
+
+  &:hover {
+    background: #0000008e;
+  }
 }
 .emojiList {
   justify-content: flex-start;
