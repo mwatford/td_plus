@@ -15,7 +15,10 @@
     </ul>
     <form class="row" @submit.prevent="sendMessage">
       <input type="textarea" class="input" v-model="input" ref="message" />
-      <div class="emojiPicker" @click="expandEmojiPicker = !expandEmojiPicker">
+      <div
+        :class="['emojiPicker', { 'emojiPicker--open': expandEmojiPicker }]"
+        @click="expandEmojiPicker = !expandEmojiPicker"
+      >
         <div>
           &#x1F604;
         </div>
@@ -166,7 +169,7 @@ export default {
   border-radius: 2px;
   cursor: pointer;
 
-  &:hover {
+  &:hover, &--open {
     background: #0000008e;
   }
 }
