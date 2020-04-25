@@ -119,7 +119,7 @@ export default {
     },
     openDialog() {
       return confirm(
-        `Are you absolutely sure you want to delete ${this.project.name}?`
+        `Are you absolutely sure you want to delete '${this.project.name}'?`
       );
     },
     deleteFromDB() {
@@ -149,7 +149,7 @@ export default {
       }
     },
     changeListName(index) {
-      const name = prompt(`Rename '${this.project.lists[index].name}':`);
+      const name = prompt(`Rename list '${this.project.lists[index].name}':`);
 
       if (name) {
         this.$store.commit('activeProject/UPDATE_LIST_NAME', {
