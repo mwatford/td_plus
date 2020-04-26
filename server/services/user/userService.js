@@ -24,10 +24,8 @@ const get = User => (query, projection = '-sub') => {
   return User.find(query, projection);
 };
 
-const updateUser = async (user, changes) => {
-  Object.assign(user, changes);
-
-  return user.save();
+const update = User => async (id, changes) => {
+  return User.findByIdAndUpdate(id, changes);
 };
 
 const getId = User => email => {
@@ -53,7 +51,7 @@ module.exports = User => {
     find: find(User),
     findById: findById(User),
     get: get(User),
-    updateUser,
+    update: update(User),
     findByEmail: findByEmail(User),
     getId: getId(User),
     updateUsers: updateUsers(User),
