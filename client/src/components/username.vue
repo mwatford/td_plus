@@ -23,6 +23,7 @@ export default {
   computed: {
     ...mapState({
       token: state => state.auth.token,
+      user: state => state.user,
     }),
   },
   methods: {
@@ -33,6 +34,7 @@ export default {
           changes: {
             name: this.name,
           },
+          id: this.user._id,
         })
         .then(response => {
           const { message, type } = response.data;
@@ -53,5 +55,8 @@ form {
 }
 .button {
   margin-top: 30px;
+}
+.box {
+  padding: 50px;
 }
 </style>
