@@ -25,4 +25,7 @@ export const mutations = {
   ADD_MEMBER(state, user) {
     state.data.members.push(user);
   },
+  REMOVE_MEMBER(state, index) {
+    state.data.members.splice(index, 1);
+  },
 };
