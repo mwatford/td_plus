@@ -144,6 +144,18 @@ const update = services => async ({ project, id }) => {
   return { status: 200, data };
 };
 
+const removeUser = services => async ({ id, userId }) => {
+  const { userService } = services;
+  const user = await userService.findById(userId);
+  const index = user.projects.indexOf(id);
+
+  if (index > -1) user.projects.splice(index, 1);
+
+  await user.save();
+
+  return { status: 200 };
+};
+
 module.exports = services => ({
   create: create(services),
   getUserProjects: getUserProjects(services),
@@ -153,4 +165,5 @@ module.exports = services => ({
   import: importProjects(services),
   activeProject: activeProject(services),
   update: update(services),
+  removeUser: removeUser(services),
 });
