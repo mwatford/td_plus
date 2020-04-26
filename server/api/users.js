@@ -14,16 +14,6 @@ router.post(
   })
 );
 
-router.put(
-  '/current/update',
-  handler(controller.userUpdate, (req, res, next) => {
-    return {
-      sub: req.user.sub,
-      changes: req.body.changes,
-    };
-  })
-);
-
 router.get(
   '/search/:email',
   handler(controller.searchEmail, (req, res, next) => {
@@ -38,6 +28,16 @@ router.delete(
   handler(controller.delete, (req, res, next) => {
     return {
       sub: req.user.sub,
+    };
+  })
+);
+
+router.put(
+  '/:id',
+  handler(controller.update, (req, res, next) => {
+    return {
+      id: req.params.id,
+      changes: req.body.changes,
     };
   })
 );
