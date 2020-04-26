@@ -92,7 +92,7 @@ export default {
     importLocalProjects(projects) {
       return new Promise((resolve, reject) => {
         const importProjects = confirm(
-          'We have found local tasks, do you want to import them?'
+          'We have found local projects, do you want to import them?'
         );
 
         if (importProjects) {
@@ -140,6 +140,7 @@ export default {
   grid-template-columns: repeat(auto-fill, 250px);
   grid-auto-rows: 250px;
   padding: 40px;
+  overflow-y: auto;
 }
 .create {
   cursor: pointer;
