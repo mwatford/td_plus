@@ -160,6 +160,7 @@ export default {
   position: relative;
   min-height: 400px;
   justify-content: space-between;
+  padding: 50px;
 
   h2 {
     margin-bottom: 2px;
