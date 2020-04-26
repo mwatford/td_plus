@@ -11,15 +11,6 @@
         />
         <input
           v-if="auth"
-          type="text"
-          class="input"
-          name="invite"
-          v-model="search"
-          data-search
-          placeholder="invite people"
-        />
-        <input
-          v-if="auth"
           type="password"
           class="input"
           name="invite"
@@ -38,40 +29,6 @@
           Back
         </button>
       </div>
-      <ul
-        class="col box suggestions"
-        v-if="suggestions.length"
-        ref="suggestions"
-      >
-        <h3>Invite</h3>
-        <li
-          v-for="suggestion in suggestions"
-          :key="suggestion._id"
-          @click="addUser(suggestion)"
-          class="box__user col"
-          title="Invite"
-        >
-          <h4>{{ suggestion.name }}</h4>
-          <h5>
-            {{ suggestion.email }}
-          </h5>
-        </li>
-      </ul>
-      <ul class="col box members" v-if="memberList.length" ref="members">
-        <h3>Members</h3>
-        <li
-          v-for="(member, index) in memberList"
-          :key="member._id"
-          @click="removeUser(index)"
-          class="box__user col"
-          title="Remove"
-        >
-          <h4>{{ member.name }}</h4>
-          <h5>
-            {{ member.email }}
-          </h5>
-        </li>
-      </ul>
     </form>
   </div>
 </template>
@@ -87,10 +44,7 @@ export default {
   mixins: [boxAnimations, navigate],
   data() {
     return {
-      search: '',
       password: '',
-      responseList: [],
-      memberList: [],
       project: this.createEmptyProject(),
     };
   },
@@ -100,19 +54,6 @@ export default {
       token: state => state.auth.token,
       auth: state => state.auth.status,
     }),
-    //test
-    suggestions() {
-      const suggestions = this.responseList.filter(
-        el => el._id !== this.user._id
-      );
-
-      this.memberList.forEach(el => {
-        const element = suggestions.find(elem => elem._id === el._id);
-        const index = suggestions.indexOf(element);
-        suggestions.splice(index, 1);
-      });
-      return suggestions;
-    },
   },
   methods: {
     hashPassword,
@@ -127,18 +68,6 @@ export default {
           { name: 'Done', data: [] },
         ],
       };
-    },
-    addUser(user) {
-      this.project.members.push({
-        id: user._id,
-        type: 'basic',
-        permissions: [],
-      });
-      this.memberList.push(user);
-    },
-    removeUser(index) {
-      this.project.members.splice(index, 1);
-      this.memberList.splice(index, 1);
     },
     create() {
       return this.createPassword()
@@ -162,9 +91,7 @@ export default {
       });
     },
     saveProject() {
-      if (this.auth) {
-        return this.request();
-      } else return this.saveLocally();
+      return this.auth ? this.request() : this.saveLocally();
     },
     request() {
       if (this.auth) {
@@ -180,7 +107,8 @@ export default {
             project: this.project,
           },
         });
-      } else return;
+      }
+      return;
     },
     saveLocally() {
       let projects = window.localStorage.getItem('projects');
@@ -209,18 +137,8 @@ export default {
           token: this.token,
           email: this.user.email,
         });
-      } else return;
-    },
-    fetchUsers(search) {
-      this.$http({
-        method: 'get',
-        url: `/api/users/search/${search}`,
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-        },
-      }).then(response => {
-        this.responseList = response.data;
-      });
+      }
+      return;
     },
   },
   mounted() {
@@ -228,13 +146,6 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     this.boxExitAnimation(300, 0, false).then(next);
-  },
-  watch: {
-    search(n) {
-      if (n.length > 3) {
-        this.fetchUsers(n);
-      }
-    },
   },
 };
 </script>
@@ -253,33 +164,5 @@ export default {
   h2 {
     margin-bottom: 2px;
   }
-
-  &__user {
-    cursor: pointer;
-    margin: 2px auto;
-    width: 100%;
-    border-radius: 4px;
-    padding: 8px;
-    transition: all 0.2s ease;
-
-    &:hover {
-      background: #000000a2;
-    }
-  }
-}
-.suggestions,
-.members {
-  position: absolute;
-  justify-content: flex-start;
-  top: 0;
-  height: 100%;
-}
-.suggestions {
-  right: 100%;
-  margin-right: 40px;
-}
-.members {
-  left: 100%;
-  margin-left: 40px;
 }
 </style>

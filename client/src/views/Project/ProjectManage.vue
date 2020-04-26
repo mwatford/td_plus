@@ -83,13 +83,14 @@
         </li>
         <li
           class="row add"
-          @click="findMember"
+          @click="search = true"
           title="find member"
           v-if="project.members.length < 9"
         >
           <app-icon class="m-auto" type="search" size="19"></app-icon>
         </li>
       </ul>
+      <app-search v-if="search"></app-search>
     </div>
     <button @click="deleteProject" class="button">DELETE PROJECT</button>
   </div>
@@ -100,14 +101,19 @@ import { mapState, mapGetters } from 'vuex';
 import navigate from '../../mixins/navigate';
 import snippet from '../../mixins/snippet';
 import cloneDeep from '../../utils/cloneDeep';
+import search from './search.vue';
 
 export default {
   mixins: [navigate, snippet],
+  components: {
+    'app-search': search,
+  },
   data() {
     return {
       loading: 'start',
       task: this.createEmptyTask(),
       limit: 9,
+      search: false,
     };
   },
   computed: {
@@ -173,7 +179,7 @@ export default {
       });
     },
     deleteLocal() {
-      const { index } = this.getLocalProject();
+      const index = this.getCurrentProjectIndex();
 
       if (index > -1) {
         this.$store.commit('projects/REMOVE', index);
@@ -215,16 +221,27 @@ export default {
 
       return index;
     },
-    updateProject(project, copy) {
+    updateProject() {
       this.loading = 'loading';
 
+      const changes = cloneDeep({
+        lists: this.project.lists,
+        members: this.project.members.map(el => ({
+          id: el.id,
+          role: el.role,
+          permissions: el.permissions,
+        })),
+      });
+
       this.$store
-        .dispatch('activeProject/updateProject', project)
+        .dispatch('activeProject/updateProject', {
+          id: this.project._id,
+          changes,
+        })
         .then(() => {
           this.loading = 'start';
         })
         .catch(e => {
-          this.$store.commit('activeProject/SET_PROJECT', copy);
           this.loading = 'start';
           this.alert('error', 'Error. Your changes have not been saved.');
         });
@@ -256,16 +273,61 @@ export default {
         this.save();
       }
     },
-    save(copy) {
-      const project = cloneDeep(this.project);
+    save() {
+      if (!this.auth) {
+        const project = cloneDeep(this.project);
 
-      return !this.auth
-        ? this.updateLocalProject(project)
-        : this.updateProject(project, copy);
+        this.updateLocalProject(project);
+      } else {
+        this.updateProject();
+      }
+    },
+    removeMember(index) {
+      const confirmed = confirm(
+        `Are you sure you want to remove ${this.project.members[index].name} from the project?`
+      );
+    },
+    closeModal() {
+      this.search = false;
+    },
+    addUser(user) {
+      this.$store.commit('activeProject/ADD_MEMBER', {
+        id: user._id,
+        role: 'basic',
+        permissions: [],
+      });
+
+      this.updateUser(user, 'add');
+      this.updateProject();
+    },
+    updateUser({ projects, _id }, action) {
+      if (action === 'add') {
+        projects.push(this.project._id);
+      }
+
+      return this.$http({
+        method: 'put',
+        url: `/api/users/${_id}`,
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          'Content-Type': 'application/json',
+        },
+        data: {
+          changes: { projects },
+        },
+      });
     },
   },
   mounted() {
-    if (this.auth) this.authenticate();
+    if (this.auth) {
+      this.authenticate();
+      this.$eventBus.$on('close modal', this.closeModal);
+      this.$eventBus.$on('add user', this.addUser);
+    }
+  },
+  beforeDestroy() {
+    this.$eventBus.$off('add user', this.addUser);
+    this.$eventBus.$off('close modal', this.closeModal);
   },
 };
 </script>
@@ -334,5 +396,11 @@ ul {
 }
 .button {
   margin: 0 0 0 auto;
+}
+.suggestions {
+  height: auto;
+}
+.box {
+  padding: 50px;
 }
 </style>
