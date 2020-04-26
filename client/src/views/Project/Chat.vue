@@ -1,6 +1,6 @@
 <template>
-  <div class="box chat">
-    <ul v-chat-scroll="{ always: true }" class="chat__messages">
+  <div class="chat col">
+    <ul v-chat-scroll="{ always: true }" class="box chat__messages">
       <li
         v-for="(message, index) in messages"
         :key="index"
@@ -13,7 +13,7 @@
         <p>{{ message.text }}</p>
       </li>
     </ul>
-    <form class="row" @submit.prevent="sendMessage">
+    <form class="box row" @submit.prevent="sendMessage">
       <input type="textarea" class="input" v-model="input" ref="message" />
       <div
         :class="['emojiPicker', { 'emojiPicker--open': expandEmojiPicker }]"
@@ -34,7 +34,7 @@
         </ul>
       </div>
       <button type="submit" class="button">
-        <app-icon type="send"></app-icon>
+        <app-icon type="send" color="inherit"></app-icon>
       </button>
     </form>
   </div>
@@ -77,6 +77,7 @@ export default {
           this.messages.push(data);
         }
       });
+      this.$socket.emit('load messages');
     },
     addEmoji(el) {
       this.input = this.input + String.fromCodePoint(el);
@@ -84,7 +85,6 @@ export default {
     },
   },
   mounted() {
-    this.$socket.emit('load messages');
     this.loadMessages();
   },
 };
@@ -92,8 +92,22 @@ export default {
 
 <style lang="scss" scoped>
 .box {
-  margin: 0;
-  padding: 0;
+  border: 1px solid #000;
+}
+form.box {
+  margin: 3px 0 0 0;
+  width: 100%;
+  height: auto;
+  padding: 10px;
+  align-items: flex-end;
+
+  .input {
+    width: 70%;
+    margin: 0;
+  }
+  .button {
+    margin: 0 5px 0 auto;
+  }
 }
 .chat {
   display: flex;
@@ -102,23 +116,6 @@ export default {
   max-width: 400px;
   height: 500px;
   margin-left: 20px;
-
-  form {
-    margin: 0 10px;
-    padding-top: 10px;
-    border-top: 1px solid #fff;
-
-    .input {
-      width: 70%;
-    }
-    .button {
-      margin: 0 5px 0 auto;
-
-      &:hover svg {
-        fill: #000;
-      }
-    }
-  }
 
   &__messages {
     height: 100%;
@@ -168,6 +165,7 @@ export default {
   height: 30px;
   width: 30px;
   margin: auto;
+  margin-bottom: 0;
   border-radius: 2px;
   cursor: pointer;
 
