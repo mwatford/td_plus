@@ -1,9 +1,9 @@
 <template>
-  <div class="profile">
-    <form @submit.prevent class="box">
-      <button class="button as--end" @click="deleteAccount">
-        Delete account
-      </button>
+  <div class="profile box m-auto">
+    <button class="button as--end" @click="deleteAccount">
+      Delete account
+    </button>
+    <form @submit.prevent>
       <div class="col">
         <label for="name">Change name</label>
         <div class="row">
@@ -69,13 +69,13 @@ export default {
     save() {
       this.$store
         .dispatch('user/save', {
-          email: this.user.email,
           changes: this.changes,
           token: this.token,
+          id: this.user._id,
         })
         .then(this.handleResponse);
     },
-    handleResponse(response) {
+    handleResponse() {
       this.alert('success', 'Your profile has been upated');
       this.$store.commit('user/SET_USER', this.changes);
     },
@@ -111,6 +111,7 @@ export default {
 .box {
   width: auto;
   height: auto;
+  padding: 50px;
 }
 .button {
   margin-bottom: 10px;
