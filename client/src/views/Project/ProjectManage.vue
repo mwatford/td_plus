@@ -37,26 +37,60 @@
         ></app-icon>
       </button>
     </form>
-    <ul>
-      <li><h3 class="m-auto">Lists</h3></li>
-      <li v-for="(list, index) in project.lists" :key="index" class="row">
-        <div
-          class="row change-name"
-          @click="changeListName(index)"
-          title="change name"
+    <div class="list">
+      <ul>
+        <li><h3 class="m-auto">Lists</h3></li>
+        <li v-for="(list, index) in project.lists" :key="index" class="row">
+          <div
+            class="row text"
+            @click="changeListName(index)"
+            title="change name"
+          >
+            <h4>
+              {{ snippet(list.name, 16) }}
+            </h4>
+          </div>
+          <div class="icon" @click="deleteList(index)" title="delete list">
+            <app-icon type="cross" size="14" class="m-auto"></app-icon>
+          </div>
+        </li>
+        <li
+          class="row add"
+          @click="addList"
+          title="add new list"
+          v-if="project.lists.length < 9"
         >
-          <h4>
-            {{ list.name }}
-          </h4>
-        </div>
-        <div class="icon" @click="deleteList(index)">
-          <app-icon type="cross" size="14" class="m-auto"></app-icon>
-        </div>
-      </li>
-      <li class="row add" @click="addList" title="add new list">
-        <app-icon class="m-auto" type="plus" size="19"></app-icon>
-      </li>
-    </ul>
+          <app-icon class="m-auto" type="plus" size="19"></app-icon>
+        </li>
+      </ul>
+    </div>
+    <div class="list" v-if="project.members.length">
+      <ul>
+        <li><h3 class="m-auto">Members</h3></li>
+        <li v-for="(member, index) in project.members" :key="index" class="row">
+          <div
+            class="row text"
+            @click="changePermissions(index)"
+            title="edit user's permissions"
+          >
+            <h4>
+              {{ snippet(member.name, 16) }}
+            </h4>
+          </div>
+          <div class="icon" @click="removeMember(index)" title="remove member">
+            <app-icon type="cross" size="14" class="m-auto"></app-icon>
+          </div>
+        </li>
+        <li
+          class="row add"
+          @click="findMember"
+          title="find member"
+          v-if="project.members.length < 9"
+        >
+          <app-icon class="m-auto" type="search" size="19"></app-icon>
+        </li>
+      </ul>
+    </div>
     <button @click="deleteProject" class="button">DELETE PROJECT</button>
   </div>
 </template>
@@ -64,14 +98,16 @@
 <script>
 import { mapState, mapGetters } from 'vuex';
 import navigate from '../../mixins/navigate';
+import snippet from '../../mixins/snippet';
 import cloneDeep from '../../utils/cloneDeep';
 
 export default {
-  mixins: [navigate],
+  mixins: [navigate, snippet],
   data() {
     return {
       loading: 'start',
       task: this.createEmptyTask(),
+      limit: 9,
     };
   },
   computed: {
@@ -89,7 +125,6 @@ export default {
       return {
         name: '',
         description: '',
-        stages: {},
       };
     },
     authenticate() {
@@ -277,8 +312,12 @@ ul {
       height: 100%;
       width: 43px;
       display: flex;
+
+      &:hover {
+        background: #ff3131b4;
+      }
     }
-    .change-name {
+    .text {
       justify-content: space-between;
       align-items: center;
       padding: 0 12px;
@@ -286,8 +325,7 @@ ul {
       height: 100%;
     }
   }
-  .change-name,
-  .icon,
+  .text,
   li.add {
     &:hover {
       background: #000000da;
@@ -295,6 +333,6 @@ ul {
   }
 }
 .button {
-  margin: 0 10px 0 auto;
+  margin: 0 0 0 auto;
 }
 </style>
