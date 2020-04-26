@@ -13,15 +13,14 @@ const removeUser = user => ({
 
 const factory = user => {
   const admin = () => Object.assign(user, write(user), removeUser(user));
+  const basic = () => Object.assign(user, write(user));
   const custom = () =>
     Object.assign(user, ...user.permissions.map(el => eval(el)(user)));
 
-  const basic = () => Object.assign(user, write(user));
-
   try {
-    return eval(user.type)(user);
+    return eval(user.role)();
   } catch (e) {
-    return 'error when creating user';
+    return 'error creating user';
   }
 };
 
