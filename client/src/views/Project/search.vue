@@ -122,5 +122,6 @@ export default {
   height: 200px;
   width: 380px;
   box-shadow: 0 0 15px 3px #00000062;
+  padding: 50px;
 }
 </style>
