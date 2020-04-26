@@ -9,16 +9,16 @@ export const actions = requestModule => {
         },
       });
     },
-    updateProject({ commit, rootState }, project) {
+    updateProject({ commit, rootState }, { id, changes }) {
       return requestModule({
         method: 'put',
-        url: `/api/projects/${project._id}`,
+        url: `/api/projects/${id}`,
         headers: {
           Authorization: `Bearer ${rootState.auth.token}`,
           'Content-Type': 'application/json',
         },
         data: {
-          project,
+          project: changes,
         },
       }).then(({ data }) => commit('SET_PROJECT', data));
     },
