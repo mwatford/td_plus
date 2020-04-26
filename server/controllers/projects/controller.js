@@ -11,10 +11,7 @@ const create = services => async ({ sub, project }) => {
 const saveProject = async ({ projectService, userService }, project, admin) => {
   const newProject = await projectService.createProject({
     admin: admin._id,
-    members: [
-      { id: admin._id, type: 'admin', permissions: [] },
-      ...project.members,
-    ],
+    members: [{ id: String(admin._id), role: 'admin', permissions: [] }],
     name: project.name,
     password: project.password,
     lists: project.lists,
@@ -23,7 +20,7 @@ const saveProject = async ({ projectService, userService }, project, admin) => {
   await userService.updateUsers(
     newProject.members.map(el => el.id),
     user => {
-      user.projects.push(newProject._id);
+      user.projects.push(String(newProject._id));
       return user.save();
     }
   );
@@ -127,6 +124,7 @@ const activeProject = services => async ({ id }) => {
 
   for (let i = 0; i < project.members.length; i++) {
     const { name, email } = members[i];
+
     Object.assign(project.members[i], { name, email });
   }
 
@@ -135,14 +133,15 @@ const activeProject = services => async ({ id }) => {
 
 const update = services => async ({ project, id }) => {
   const { projectService } = services;
-
   const projectToOverwrite = await projectService.find(id);
 
   Object.assign(projectToOverwrite, project);
 
   await projectToOverwrite.save();
 
-  return { status: 200, data: projectToOverwrite };
+  const { data } = await activeProject(services)({ id });
+
+  return { status: 200, data };
 };
 
 module.exports = services => ({
