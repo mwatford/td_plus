@@ -77,7 +77,11 @@
               {{ snippet(member.name, 16) }}
             </h4>
           </div>
-          <div class="icon" @click="removeMember(index)" title="remove member">
+          <div
+            class="icon"
+            @click="removeUser(member, index)"
+            title="remove member"
+          >
             <app-icon type="cross" size="14" class="m-auto"></app-icon>
           </div>
         </li>
@@ -282,11 +286,6 @@ export default {
         this.updateProject();
       }
     },
-    removeMember(index) {
-      const confirmed = confirm(
-        `Are you sure you want to remove ${this.project.members[index].name} from the project?`
-      );
-    },
     closeModal() {
       this.search = false;
     },
@@ -298,6 +297,18 @@ export default {
       });
 
       this.updateUser(user, 'add');
+      this.updateProject();
+    },
+    removeUser(user, index) {
+      this.$store.commit('activeProject/REMOVE_MEMBER', index);
+
+      this.$http({
+        method: 'put',
+        url: `/api/projects/${this.project._id}/removeUser/${user.id}`,
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+      });
       this.updateProject();
     },
     updateUser({ projects, _id }, action) {
