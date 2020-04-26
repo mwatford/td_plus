@@ -34,16 +34,6 @@ const getId = User => email => {
   return User.findOne({ email }, '_id');
 };
 
-const getAllFriends = User => async sub => {
-  const user = await User.find({ sub });
-  const friends = await User.find({}, 'name email _id')
-    .where('_id')
-    .in(user.friends)
-    .exec();
-
-  return friends;
-};
-
 const updateUsers = User => async (users, cb) => {
   return await Promise.all(
     users.map(async id => {
@@ -66,7 +56,6 @@ module.exports = User => {
     updateUser,
     findByEmail: findByEmail(User),
     getId: getId(User),
-    getAllFriends: getAllFriends(User),
     updateUsers: updateUsers(User),
     delete: deleteUser(User),
   };
