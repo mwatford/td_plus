@@ -46,5 +46,6 @@ export default {
 <style lang="scss" scoped>
 .box {
   justify-content: space-between;
+  padding: 50px;
 }
 </style>
