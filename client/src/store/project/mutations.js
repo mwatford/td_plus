@@ -22,4 +22,7 @@ export const mutations = {
   DELETE_LIST(state, index) {
     state.data.lists.splice(index, 1);
   },
+  ADD_MEMBER(state, user) {
+    state.data.members.push(user);
+  },
 };
