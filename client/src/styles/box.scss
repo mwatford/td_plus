@@ -8,14 +8,35 @@
   padding: 50px 50px;
   border-radius: 2px;
 
+  &__item {
+    cursor: pointer;
+    margin: 2px auto;
+    width: 100%;
+    border-radius: 4px;
+    padding: 8px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: #000000a2;
+    }
+  }
+
   &--inverted {
     background: #fff;
     color: #000;
 
-    &__input {
+    & .input {
       color: #000;
       background: #fff;
       border-color: #000;
+    }
+
+    .box__item {
+      background: #d3d3d3;
+
+      &:hover {
+        background: #acacac;
+      }
     }
   }
 
