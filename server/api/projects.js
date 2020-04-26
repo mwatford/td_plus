@@ -85,4 +85,14 @@ router.put(
   })
 );
 
+router.put(
+  '/:id/removeUser/:userId',
+  handler(controller.removeUser, (req, res, next) => {
+    return {
+      id: req.params.id,
+      userId: req.params.userId,
+    };
+  })
+);
+
 module.exports = router;
