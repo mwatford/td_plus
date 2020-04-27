@@ -269,13 +269,9 @@ export default {
       }
     },
     save() {
-      if (!this.auth) {
-        const project = cloneDeep(this.project);
-
-        this.$store.dispatch('activeProject/saveLocally', project.name);
-      } else {
-        this.updateProject();
-      }
+      return !this.auth
+        ? this.$store.dispatch('activeProject/saveLocally', this.project.name)
+        : this.updateProject();
     },
     closeModal() {
       this.search = false;
@@ -300,6 +296,7 @@ export default {
           Authorization: `Bearer ${this.token}`,
         },
       });
+
       this.updateProject().then(() =>
         this.$socket.emit('user removed', user.id)
       );
