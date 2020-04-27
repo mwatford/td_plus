@@ -30,7 +30,12 @@
     >
       <textarea v-model="description" class="input"> </textarea>
       <div class="row">
-        <button class="button button--inverted m-auto">Update</button>
+        <button
+          class="button button--inverted m-auto"
+          @click="updateDescription"
+        >
+          Update
+        </button>
         <button
           class="button button--inverted m-auto"
           @click="descriptionOpen = false"
@@ -45,6 +50,7 @@
 <script>
 import snippet from '../../mixins/snippet';
 import { mapState } from 'vuex';
+import cloneDeep from '../../utils/cloneDeep';
 
 export default {
   props: ['task', 'listIndex', 'taskIndex', 'user'],
@@ -75,6 +81,21 @@ export default {
           value,
         })
         .then(this.triggerUpdate);
+    },
+    updateDescription() {
+      const changes = cloneDeep(this.task);
+
+      changes.description = this.description;
+
+      this.$store
+        .dispatch('activeProject/updateTask', {
+          listIndex: this.listIndex,
+          taskIndex: this.taskIndex,
+          changes,
+        })
+        .then(this.triggerUpdate);
+
+      this.descriptionOpen = false;
     },
     triggerUpdate() {
       if (!this.auth) {
