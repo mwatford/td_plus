@@ -99,7 +99,7 @@ export default {
           this.changeView('dashboard');
         })
         .catch(err => {
-          this.alert('error', err.response.data);
+          this.alert('error', 'Cannot access this resource.');
           this.navigate('home');
         });
     },
