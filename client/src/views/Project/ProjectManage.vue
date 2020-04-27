@@ -204,16 +204,8 @@ export default {
         });
         const project = cloneDeep(this.project);
 
-        this.save(project);
+        this.save();
       }
-    },
-    updateLocalProject(project) {
-      const projects = cloneDeep(this.$store.state.projects);
-      const index = this.getCurrentProjectIndex();
-
-      projects.data[index] = project;
-
-      localStorage.setItem('projects', JSON.stringify(projects.data));
     },
     getCurrentProjectIndex() {
       const project = this.$store.state.projects.data.find(
@@ -280,7 +272,7 @@ export default {
       if (!this.auth) {
         const project = cloneDeep(this.project);
 
-        this.updateLocalProject(project);
+        this.$store.dispatch('activeProject/saveLocally', project.name);
       } else {
         this.updateProject();
       }
