@@ -3,7 +3,7 @@
     <ul
       class="col box list"
       v-for="(list, listIndex) in lists"
-      :key="list.name"
+      :key="listIndex"
       ref="list"
     >
       <h3>
