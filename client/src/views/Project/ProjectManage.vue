@@ -176,6 +176,7 @@ export default {
         },
       }).then(() => {
         this.alert('success', 'Project has been deleted');
+        this.$socket.emit('project deleted');
         this.navigate({ name: 'home' });
       });
     },
@@ -234,13 +235,14 @@ export default {
         })),
       });
 
-      this.$store
+      return this.$store
         .dispatch('activeProject/updateProject', {
           id: this.project._id,
           changes,
         })
         .then(() => {
           this.loading = 'start';
+          this.$socket.emit('updated', this.project);
         })
         .catch(e => {
           this.loading = 'start';
@@ -306,7 +308,9 @@ export default {
           Authorization: `Bearer ${this.token}`,
         },
       });
-      this.updateProject();
+      this.updateProject().then(() =>
+        this.$socket.emit('user removed', user.id)
+      );
     },
     updateUser({ projects, _id }, action) {
       if (action === 'add') {
