@@ -14,8 +14,8 @@
     >
       <app-icon type="arrow-left" class="m-auto"></app-icon>
     </button>
-    <div class="task__text" @click="description = true">
-      <h4 class="m-auto">{{ snippet(task.name, 16) }}</h4>
+    <div class="task__text" @click="descriptionOpen = true">
+      <h4>{{ snippet(task.name, 16) }}</h4>
     </div>
     <button
       class="task__button task__button--right"
@@ -24,6 +24,21 @@
     >
       <app-icon type="arrow-right" class="m-auto"></app-icon>
     </button>
+    <form
+      class="box box--inverted task__descriptionOpen"
+      v-if="descriptionOpen"
+    >
+      <textarea v-model="description" class="input"> </textarea>
+      <div class="row">
+        <button class="button button--inverted m-auto">Update</button>
+        <button
+          class="button button--inverted m-auto"
+          @click="descriptionOpen = false"
+        >
+          Close
+        </button>
+      </div>
+    </form>
   </div>
 </template>
 
@@ -36,12 +51,14 @@ export default {
   mixins: [snippet],
   data() {
     return {
-      description: false,
+      descriptionOpen: false,
+      description: this.task.description,
     };
   },
   computed: {
     ...mapState({
       auth: state => state.auth.status,
+      project: state => state.activeProject,
     }),
     displayButton() {
       if (!this.auth) return true;
@@ -51,12 +68,21 @@ export default {
   },
   methods: {
     move(listIndex, taskIndex, value) {
-      this.$store.dispatch('activeProject/moveTask', {
-        listIndex,
-        taskIndex,
-        value,
-      });
-
+      this.$store
+        .dispatch('activeProject/moveTask', {
+          listIndex,
+          taskIndex,
+          value,
+        })
+        .then(this.triggerUpdate);
+    },
+    triggerUpdate() {
+      if (!this.auth) {
+        return this.$store.dispatch(
+          'activeProject/saveLocally',
+          this.project.name
+        );
+      }
       this.$eventBus.$emit('project updated');
     },
   },
@@ -100,11 +126,48 @@ export default {
     height: 100%;
     width: 100%;
     display: flex;
+    align-items: center;
+    padding: 0 5px;
 
     &:hover {
       background: #fff;
       color: #000;
     }
   }
+
+  &__descriptionOpen {
+    cursor: default;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+
+    &::before {
+      content: '';
+      z-index: -1;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      position: absolute;
+      height: 100vh;
+      width: 100vw;
+      background: transparent;
+    }
+  }
+}
+.box {
+  padding: 30px 50px;
+  height: 500px;
+  width: 420px;
+}
+textarea {
+  border: 1px dashed #fff;
+  border-bottom: 2px solid #fff;
+  max-height: 100%;
+  height: 100%;
+  max-width: 100%;
+  min-width: 100%;
 }
 </style>
