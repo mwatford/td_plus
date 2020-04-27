@@ -1,12 +1,22 @@
 <template>
   <div class="m-auto dashboard view row" v-if="project" ref="component">
-    <ul class="col box" v-for="list in lists" :key="list.name" ref="list">
+    <ul
+      class="col box list"
+      v-for="(list, listIndex) in lists"
+      :key="list.name"
+      ref="list"
+    >
       <h3>
         {{ list.name }}
       </h3>
-      <li v-for="task in list.data" :key="task._id">
-        {{ task.name }}
-      </li>
+      <app-task
+        v-for="(task, taskIndex) in list.data"
+        :key="taskIndex"
+        :task="task"
+        :listIndex="listIndex"
+        :taskIndex="taskIndex"
+      >
+      </app-task>
     </ul>
   </div>
 </template>
@@ -14,8 +24,12 @@
 <script>
 import { mapState } from 'vuex';
 import cloneDeep from '../../utils/cloneDeep';
+import task from './task.vue';
 
 export default {
+  components: {
+    'app-task': task,
+  },
   computed: {
     ...mapState({
       project: state => state.activeProject.data,
@@ -33,23 +47,19 @@ export default {
       return this.filter ? this.filteredLists : this.unfilteredLists;
     },
   },
-  methods: {},
 };
 </script>
 
 <style lang="scss" scoped>
-* {
-  box-sizing: border-box;
-}
 .dashboard {
   flex-wrap: wrap;
 }
 .box {
   width: 240px;
   padding: 20px;
-  margin-right: 4px;
-  margin-bottom: 4px;
-  min-width: 240px;
+  margin-right: 3px;
+  margin-bottom: 3px;
+  min-height: 240px;
 
   &:last-child {
     margin-right: 0;
@@ -63,5 +73,11 @@ export default {
 }
 ul {
   list-style-type: none;
+}
+.list {
+  height: fit-content;
+  max-height: 600px;
+  overflow-y: auto;
+  width: 280px;
 }
 </style>
