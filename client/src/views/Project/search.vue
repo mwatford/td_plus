@@ -125,4 +125,9 @@ export default {
   box-shadow: 0 0 15px 3px #00000062;
   padding: 50px;
 }
+.suggestions {
+  height: auto;
+  max-height: 400px;
+  overflow-y: auto;
+}
 </style>
