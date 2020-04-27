@@ -135,12 +135,16 @@ export default {
         });
 
         this.$socket.on('removed', id => {
-          if (id === this.user._id) this.navigate({ name: 'home' });
+          if (id === this.user._id) {
+            this.alert('info', 'You have been removed from the project');
+            this.navigate({ name: 'home' });
+          }
         });
 
-        this.$socket.on('project deleted', () =>
-          this.navigate({ name: 'home' })
-        );
+        this.$socket.on('project deleted', () => {
+          this.alert('info', 'Project you were currently in has been deleted');
+          this.navigate({ name: 'home' });
+        });
       } else {
         this.activateButtons();
         this.changeView('dashboard');
