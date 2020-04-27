@@ -51,15 +51,15 @@ export default {
       user: state => state.user,
     }),
     suggestions() {
-      const suggestions = cloneDeep(this.responseList);
+      let suggestions = this.responseList;
 
       this.memberList.forEach(el => {
-        const element = suggestions.find(elem => elem._id === el.id);
-        const index = suggestions.indexOf(element);
-        delete suggestions[index];
+        let element = suggestions.find(elem => elem._id === el.id);
+        let index = suggestions.indexOf(element);
+        if (index > -1) suggestions.splice(index, 1);
       });
 
-      return suggestions.filter(el => el !== null);
+      return suggestions;
     },
   },
   methods: {
@@ -68,6 +68,7 @@ export default {
     },
     addUser(user) {
       this.$eventBus.$emit('add user', user);
+      this.close();
     },
     fetchUsers(search) {
       this.$http({
