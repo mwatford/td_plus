@@ -42,4 +42,7 @@ export const mutations = {
       state.data.lists[listIndex - 1].data.push(...task);
     }
   },
+  UPDATE_TASK(state, { listIndex, taskIndex, changes }) {
+    state.data.lists[listIndex].data[taskIndex] = changes;
+  },
 };
