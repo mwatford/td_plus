@@ -15,6 +15,7 @@
         :task="task"
         :listIndex="listIndex"
         :taskIndex="taskIndex"
+        :user="user._id"
       >
       </app-task>
     </ul>
@@ -75,7 +76,7 @@ ul {
   list-style-type: none;
 }
 .list {
-  height: fit-content;
+  height: min-content;
   max-height: 600px;
   overflow-y: auto;
   width: 280px;
