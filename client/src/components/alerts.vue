@@ -56,5 +56,8 @@ export default {
   &--warning {
     background: #ffa6008a;
   }
+  &--info {
+    background: #35aeffa2;
+  }
 }
 </style>
