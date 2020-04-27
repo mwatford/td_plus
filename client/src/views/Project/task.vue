@@ -1,6 +1,17 @@
 <template>
-  <div :class="['task', { 'task--green': !task.member }, 'box__item', 'row']">
-    <button class="task__button task__button--left" v-if="displayButton">
+  <div
+    :class="[
+      'task',
+      { 'task--green': !task.member && this.auth },
+      'box__item',
+      'row',
+    ]"
+  >
+    <button
+      class="task__button task__button--left"
+      v-if="displayButton"
+      @click="move(listIndex, taskIndex, -1)"
+    >
       <app-icon type="arrow-left" class="m-auto"></app-icon>
     </button>
     <div class="task__text" @click="description = true">
@@ -8,7 +19,7 @@
     </div>
     <button
       class="task__button task__button--right"
-      @click="complete(listIndex, taskIndex)"
+      @click="move(listIndex, taskIndex, 1)"
       v-if="displayButton"
     >
       <app-icon type="arrow-right" class="m-auto"></app-icon>
@@ -39,11 +50,14 @@ export default {
     },
   },
   methods: {
-    complete(listIndex, taskIndex) {
-      this.$store.commit('activeProject/COMPLETE_TASK', {
+    move(listIndex, taskIndex, value) {
+      this.$store.dispatch('activeProject/moveTask', {
         listIndex,
         taskIndex,
+        value,
       });
+
+      this.$eventBus.$emit('project updated');
     },
   },
 };
