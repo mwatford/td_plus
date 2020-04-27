@@ -30,4 +30,32 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.task {
+  justify-content: space-between;
+  align-items: center;
+  height: 35px;
+  padding: 0;
+  overflow: hidden;
+
+  &__button {
+    height: 35px;
+    width: 35px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    display: flex;
+    outline: none;
+
+    &--left {
+      &:hover {
+        background: #2c76ff;
+      }
+    }
+    &--right {
+      &:hover {
+        background: #5dd964;
+      }
+    }
+  }
+}</style>
