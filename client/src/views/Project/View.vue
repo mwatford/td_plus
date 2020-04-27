@@ -130,16 +130,16 @@ export default {
 
         await this.connect();
 
-        // this.$socket.on('update', data => {
-        //   this.updateProject(data);
-        // });
+        this.$socket.on('update project', data => {
+          this.updateProject(data);
+        });
       } else {
         this.activateButtons();
         this.changeView('dashboard');
       }
     },
-    updateProject(data) {
-      this.$store.commit('activeProject/UPDATE', data);
+    updateProject(project) {
+      this.$store.commit('activeProject/SET_PROJECT', project);
     },
   },
   created() {
