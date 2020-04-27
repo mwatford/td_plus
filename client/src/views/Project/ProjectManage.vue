@@ -68,22 +68,19 @@
       <ul>
         <li><h3 class="m-auto">Members</h3></li>
         <li v-for="(member, index) in project.members" :key="index" class="row">
-          <div
-            class="row text"
-            @click="changePermissions(index)"
-            title="edit user's permissions"
-          >
+          <div class="row text" title="edit user's permissions">
             <h4>
               {{ snippet(member.name, 16) }}
             </h4>
           </div>
-          <div
+          <button
             class="icon"
             @click="removeUser(member, index)"
             title="remove member"
+            v-if="member.id !== project.admin"
           >
             <app-icon type="cross" size="14" class="m-auto"></app-icon>
-          </div>
+          </button>
         </li>
         <li
           class="row add"
@@ -376,6 +373,7 @@ ul {
     margin-bottom: 3px;
     width: 250px;
     height: 43px;
+    overflow: hidden;
 
     &.row {
       cursor: pointer;
@@ -413,5 +411,9 @@ ul {
 }
 .box {
   padding: 50px;
+}
+button.icon {
+  border: none;
+  background: transparent;
 }
 </style>
