@@ -34,5 +34,16 @@ export const actions = requestModule => {
 
       return Promise.resolve();
     },
+    saveLocally({ rootState, state }, name) {
+      const projects = rootState.projects;
+
+      const project = projects.data.find(el => el.name === name);
+
+      const index = rootState.projects.data.indexOf(project);
+
+      projects.data[index] = project;
+
+      localStorage.setItem('projects', JSON.stringify(projects.data));
+    },
   };
 };
