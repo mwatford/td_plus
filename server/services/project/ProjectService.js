@@ -54,6 +54,10 @@ const deleteProject = Project => async (projectId, cb) => {
   return await Project.findByIdAndRemove(projectId, cb);
 };
 
+const update = Project => (projectId, project) => {
+  return Project.findByIdAndUpdate(projectId, project);
+};
+
 module.exports = Project => {
   return {
     createProject: createProject(Project),
@@ -63,5 +67,6 @@ module.exports = Project => {
     addMember: addMember,
     findMany: findMany(Project),
     delete: deleteProject(Project),
+    update: update(Project),
   };
 };
