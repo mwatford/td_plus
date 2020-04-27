@@ -133,6 +133,10 @@ export default {
         this.$socket.on('update project', data => {
           this.updateProject(data);
         });
+
+        this.$socket.on('removed', id => {
+          if (id === this.user._id) this.navigate({ name: 'home' });
+        });
       } else {
         this.activateButtons();
         this.changeView('dashboard');
