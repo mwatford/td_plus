@@ -37,6 +37,9 @@ export default {
       );
       if (passwordValid) {
         this.$eventBus.$emit('correct password');
+      } else {
+        this.alert('error', 'Incorrect password');
+        this.password = '';
       }
     },
   },
