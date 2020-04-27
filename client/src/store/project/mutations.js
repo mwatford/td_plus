@@ -28,11 +28,18 @@ export const mutations = {
   REMOVE_MEMBER(state, index) {
     state.data.members.splice(index, 1);
   },
-  COMPLETE_TASK(state, { listIndex, taskIndex }) {
+  COMPLETE_TASK(state, { listIndex, taskIndex, value }) {
     if (listIndex + 1 < state.data.lists.length) {
       const task = state.data.lists[listIndex].data.splice(taskIndex, 1);
 
       state.data.lists[listIndex + 1].data.push(...task);
+    }
+  },
+  UNDO_TASK(state, { listIndex, taskIndex }) {
+    if (listIndex > 0) {
+      const task = state.data.lists[listIndex].data.splice(taskIndex, 1);
+
+      state.data.lists[listIndex - 1].data.push(...task);
     }
   },
 };
