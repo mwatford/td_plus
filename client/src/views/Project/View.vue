@@ -137,6 +137,10 @@ export default {
         this.$socket.on('removed', id => {
           if (id === this.user._id) this.navigate({ name: 'home' });
         });
+
+        this.$socket.on('project deleted', () =>
+          this.navigate({ name: 'home' })
+        );
       } else {
         this.activateButtons();
         this.changeView('dashboard');
