@@ -22,5 +22,17 @@ export const actions = requestModule => {
         },
       }).then(({ data }) => commit('SET_PROJECT', data));
     },
+    moveTask({ commit, rootState }, data) {
+      const { value } = data;
+
+      if (value === 1) {
+        commit('COMPLETE_TASK', data);
+      }
+      if (value === -1) {
+        commit('UNDO_TASK', data);
+      }
+
+      return Promise.resolve();
+    },
   };
 };
