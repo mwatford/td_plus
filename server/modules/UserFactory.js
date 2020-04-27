@@ -1,7 +1,6 @@
 const write = user => ({
   write: (data, room) => {
     room.addMessage({ user: user.id, text: data });
-    console.log('message added');
   },
 });
 
