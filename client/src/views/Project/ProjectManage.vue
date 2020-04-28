@@ -3,13 +3,7 @@
   <div v-else class="m-auto row view">
     <form action="" class="box col">
       <h3>Add task</h3>
-      <input
-        type="text"
-        class="input"
-        placeholder="name"
-        v-model="task.name"
-        required
-      />
+      <input type="text" class="input" placeholder="name" v-model="task.name" />
       <textarea
         class="input"
         placeholder="description"
@@ -21,8 +15,8 @@
         </label>
         <select v-model="task.member" required>
           <option
-            v-for="(member, index) in members"
-            :key="index"
+            v-for="member in members"
+            :key="member._id"
             :value="member.id"
             >{{ member.name }}</option
           >
@@ -67,7 +61,11 @@
     <div class="list" v-if="project.members.length">
       <ul>
         <li><h3 class="m-auto">Members</h3></li>
-        <li v-for="(member, index) in project.members" :key="index" class="row">
+        <li
+          v-for="(member, index) in project.members"
+          :key="member._id"
+          class="row"
+        >
           <div class="row text" title="edit user's permissions">
             <h4>
               {{ snippet(member.name, 16) }}
@@ -216,8 +214,6 @@ export default {
       return index;
     },
     updateProject() {
-      this.loading = 'loading';
-
       const changes = cloneDeep({
         lists: this.project.lists,
         members: this.project.members.map(el => ({
