@@ -5,7 +5,7 @@ export default class VueSocket {
   }
   connect(opt, fn) {
     if (!this.socket) {
-      this.socket = this.io("localhost:8000", opt);
+      this.socket = this.io("/", opt);
     }
   }
   close() {
