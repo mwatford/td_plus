@@ -8,7 +8,7 @@
     ]"
   >
     <button
-      class="task__button task__button--left"
+      class="task__button task__button--blue"
       v-if="displayButton"
       @click="move(listIndex, taskIndex, -1)"
     >
@@ -22,11 +22,18 @@
       <h4>{{ snippet(task.name, 16) }}</h4>
     </div>
     <button
-      class="task__button task__button--right"
+      class="task__button task__button--green"
       @click="move(listIndex, taskIndex, 1)"
       v-if="displayButton"
     >
       <app-icon type="arrow-right" class="m-auto"></app-icon>
+    </button>
+    <button
+      class="task__button task__button--blue"
+      v-if="auth && !task.member"
+      @click="grabTask(listIndex, taskIndex)"
+    >
+      <app-icon type="hand" class="m-auto"></app-icon>
     </button>
     <form class="box box--inverted task__description" v-if="descriptionOpen">
       <h4>{{ snippet(task.name, 16) }}</h4>
@@ -84,11 +91,9 @@ export default {
     },
     updateDescription() {
       const changes = cloneDeep(this.task);
-
-      changes.description = this.description;
-
       const data = this.getData(this.task);
 
+      changes.description = this.description;
       data.changes = changes;
 
       this.$store
@@ -96,6 +101,17 @@ export default {
         .then(this.triggerUpdate);
 
       this.descriptionOpen = false;
+    },
+    grabTask() {
+      const changes = cloneDeep(this.task);
+      const data = this.getData(this.task);
+
+      changes.member = this.user;
+      data.changes = changes;
+
+      this.$store
+        .dispatch('activeProject/updateTask', data)
+        .then(this.triggerUpdate);
     },
     triggerUpdate() {
       if (!this.auth) {
@@ -149,12 +165,12 @@ export default {
     display: flex;
     outline: none;
 
-    &--left {
+    &--blue {
       &:hover {
         background: #2c76ff;
       }
     }
-    &--right {
+    &--green {
       &:hover {
         background: #5dd964;
       }
