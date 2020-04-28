@@ -19,7 +19,7 @@ Vue.component('app-icon', icon);
 // import { domain, clientId, audience } from '../../auth_config.json';
 
 // Import the plugin here
-import { Auth0Plugin } from './auth/index.js';
+// import { Auth0Plugin } from './auth/index.js';
 import fakeAuthPlugin from './modules/fakeAuthPlugin.js';
 import VueSocket from './modules/Socket';
 
