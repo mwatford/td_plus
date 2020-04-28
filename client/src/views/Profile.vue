@@ -1,31 +1,24 @@
 <template>
   <div class="profile box m-auto">
-    <button class="button as--end" @click="deleteAccount">
+    <button class="button as--end" @click="deleteAccount" disabled>
       Delete account
     </button>
     <form @submit.prevent>
       <div class="col">
         <label for="name">Change name</label>
         <div class="row">
-          <input
-            type="text"
-            class="input"
-            name="newName"
-            id=""
-            v-model="name"
-          />
+          <input type="text" class="input" name="newName" v-model="name" />
           <input
             type="text"
             class="input"
             name="name"
-            id=""
-            disabled
             :value="user.name"
+            disabled
           />
         </div>
       </div>
       <div class="row buttons">
-        <button class="button" @click="save" type="submit" :disabled="!valid">
+        <button class="button" @click="save" type="submit" :disabled="true">
           Save
         </button>
         <button class="button" @click="navigate(-1)">Back</button>
@@ -59,10 +52,10 @@ export default {
       if (this.name) {
         this.changes.name = this.name;
         return true;
-      } else {
-        delete this.changes.name;
-        return false;
       }
+
+      delete this.changes.name;
+      return false;
     },
   },
   methods: {
