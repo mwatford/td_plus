@@ -136,13 +136,13 @@ export default {
 
         this.$socket.on('removed', id => {
           if (id === this.user._id) {
-            this.alert('info', 'You have been removed from the project');
+            this.alert('info', 'You have been removed from the project.');
             this.navigate({ name: 'home' });
           }
         });
 
         this.$socket.on('project deleted', () => {
-          this.alert('info', 'Project you were currently in has been deleted');
+          this.alert('info', 'Project you had open, has been deleted.');
           this.navigate({ name: 'home' });
         });
       } else {
@@ -153,15 +153,20 @@ export default {
     updateProject(project) {
       this.$store.commit('activeProject/SET_PROJECT', project);
     },
+    emitUpdate() {
+      this.$socket.emit('updated', this.project);
+    },
   },
   created() {
     this.$eventBus.$on('fetch data', this.fetchDataHandler);
+    this.$eventBus.$on('project updated', this.emitUpdate);
   },
   beforeMount() {
     if (!this.project) this.navigate({ name: 'home' });
   },
   beforeDestroy() {
     this.$eventBus.$off('fetch data', this.fetchDataHandler);
+    this.$eventBus.$off('project updated', this.emitUpdate);
     this.$socket.close();
   },
   beforeRouteLeave(from, to, next) {
