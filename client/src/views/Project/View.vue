@@ -130,21 +130,7 @@ export default {
 
         await this.connect();
 
-        this.$socket.on('update project', data => {
-          this.updateProject(data);
-        });
-
-        this.$socket.on('removed', id => {
-          if (id === this.user._id) {
-            this.alert('info', 'You have been removed from the project.');
-            this.navigate({ name: 'home' });
-          }
-        });
-
-        this.$socket.on('project deleted', () => {
-          this.alert('info', 'Project you had open, has been deleted.');
-          this.navigate({ name: 'home' });
-        });
+        this.initListeners();
       } else {
         this.activateButtons();
         this.changeView('dashboard');
@@ -155,6 +141,23 @@ export default {
     },
     emitUpdate() {
       this.$socket.emit('updated', this.project);
+    },
+    initListeners() {
+      this.$socket.on('update project', data => {
+        this.updateProject(data);
+      });
+
+      this.$socket.on('removed', id => {
+        if (id === this.user._id) {
+          this.alert('info', 'You have been removed from the project.');
+          this.navigate({ name: 'home' });
+        }
+      });
+
+      this.$socket.on('project deleted', () => {
+        this.alert('info', 'Project you had open, has been deleted.');
+        this.navigate({ name: 'home' });
+      });
     },
   },
   created() {
