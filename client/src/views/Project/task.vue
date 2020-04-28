@@ -14,7 +14,11 @@
     >
       <app-icon type="arrow-left" class="m-auto"></app-icon>
     </button>
-    <div class="task__text" @click="descriptionOpen = true">
+    <div
+      class="task__text"
+      @click="descriptionOpen = true"
+      :title="this.task._id"
+    >
       <h4>{{ snippet(task.name, 16) }}</h4>
     </div>
     <button
@@ -24,10 +28,8 @@
     >
       <app-icon type="arrow-right" class="m-auto"></app-icon>
     </button>
-    <form
-      class="box box--inverted task__descriptionOpen"
-      v-if="descriptionOpen"
-    >
+    <form class="box box--inverted task__description" v-if="descriptionOpen">
+      <h4>{{ snippet(task.name, 16) }}</h4>
       <textarea v-model="description" class="input"> </textarea>
       <div class="row">
         <button
@@ -74,12 +76,10 @@ export default {
   },
   methods: {
     move(listIndex, taskIndex, value) {
+      const data = this.getData(this.task, value);
+
       this.$store
-        .dispatch('activeProject/moveTask', {
-          listIndex,
-          taskIndex,
-          value,
-        })
+        .dispatch('activeProject/moveTask', data)
         .then(this.triggerUpdate);
     },
     updateDescription() {
@@ -87,12 +87,12 @@ export default {
 
       changes.description = this.description;
 
+      const data = this.getData(this.task);
+
+      data.changes = changes;
+
       this.$store
-        .dispatch('activeProject/updateTask', {
-          listIndex: this.listIndex,
-          taskIndex: this.taskIndex,
-          changes,
-        })
+        .dispatch('activeProject/updateTask', data)
         .then(this.triggerUpdate);
 
       this.descriptionOpen = false;
@@ -105,6 +105,24 @@ export default {
         );
       }
       this.$eventBus.$emit('project updated');
+    },
+    getData(task, value = null) {
+      const data = {
+        listIndex: this.listIndex,
+        taskIndex: this.taskIndex,
+        value,
+      };
+
+      if (this.auth) {
+        data.taskIndex = cloneDeep(
+          this.$store.getters['activeProject/getTaskIndex'](
+            this.listIndex,
+            task._id
+          )
+        );
+      }
+
+      return data;
     },
   },
 };
@@ -156,7 +174,7 @@ export default {
     }
   }
 
-  &__descriptionOpen {
+  &__description {
     cursor: default;
     position: absolute;
     top: 50%;
