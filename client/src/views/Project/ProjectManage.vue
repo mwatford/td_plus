@@ -156,14 +156,13 @@ export default {
         });
     },
     deleteProject() {
-      if (this.openDialog()) {
-        return this.auth ? this.deleteFromDB() : this.deleteLocal();
-      }
-    },
-    openDialog() {
-      return confirm(
+      const confirmed = confirm(
         `Are you absolutely sure you want to delete '${this.project.name}'?`
       );
+
+      if (confirmed) {
+        return this.auth ? this.deleteFromDB() : this.deleteLocal();
+      }
     },
     deleteFromDB() {
       return this.$http({
