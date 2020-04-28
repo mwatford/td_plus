@@ -16,21 +16,24 @@ Vue.mixin(alert);
 Vue.component('loading', loading);
 Vue.component('app-icon', icon);
 
-import { domain, clientId, audience } from '../../auth_config.json';
+// import { domain, clientId, audience } from '../../auth_config.json';
 
 // Import the plugin here
 import { Auth0Plugin } from './auth/index.js';
+import fakeAuthPlugin from './modules/fakeAuthPlugin.js';
 import VueSocket from './modules/Socket';
 
 // Install the authentication plugin here
-Vue.use(Auth0Plugin, {
-  domain,
-  clientId,
-  audience,
-  onRedirectCallback: appState => {
-    router.push({ name: 'home' });
-  },
-});
+// Vue.use(Auth0Plugin, {
+//   domain,
+//   clientId,
+//   audience,
+//   onRedirectCallback: appState => {
+//     router.push({ name: 'home' });
+//   },
+// });
+
+Vue.prototype.$auth = fakeAuthPlugin;
 
 Vue.use(VueChatScroll);
 
