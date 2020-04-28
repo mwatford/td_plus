@@ -64,9 +64,10 @@ export default {
       this.$store.commit(`app/TOGGLE_${component}`);
     },
     logout() {
-      this.$auth.logout({
-        returnTo: window.location.origin,
-      });
+      window.location.reload()
+      // this.$auth.logout({
+      //   returnTo: window.location.origin,
+      // });
     },
   },
 };
