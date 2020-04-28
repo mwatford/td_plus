@@ -11,7 +11,7 @@
       </h3>
       <app-task
         v-for="(task, taskIndex) in list.data"
-        :key="taskIndex"
+        :key="auth ? task._id + task.description : taskIndex"
         :task="task"
         :listIndex="listIndex"
         :taskIndex="taskIndex"
@@ -37,6 +37,7 @@ export default {
       user: state => state.user,
       unfilteredLists: state => state.activeProject.data.lists,
       filter: state => state.activeProject.filter,
+      auth: state => state.auth.status,
     }),
     filteredLists() {
       return cloneDeep(this.project.lists).map(list => {
