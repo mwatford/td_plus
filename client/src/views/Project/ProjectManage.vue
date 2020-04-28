@@ -13,10 +13,10 @@
         <label>
           Select member
         </label>
-        <select v-model="task.member" required>
+        <select v-model="task.member">
           <option
             v-for="member in members"
-            :key="member._id"
+            :key="member.id"
             :value="member.id"
             >{{ member.name }}</option
           >
@@ -34,14 +34,18 @@
     <div class="list">
       <ul>
         <li><h3 class="m-auto">Lists</h3></li>
-        <li v-for="(list, index) in project.lists" :key="index" class="row">
+        <li
+          v-for="(list, index) in project.lists"
+          :key="index"
+          class="row"
+        >
           <div
             class="row text"
             @click="changeListName(index)"
             title="change name"
           >
             <h4>
-              {{ snippet(list.name, 16) }}
+              {{ list.name }}
             </h4>
           </div>
           <div class="icon" @click="deleteList(index)" title="delete list">
@@ -63,12 +67,12 @@
         <li><h3 class="m-auto">Members</h3></li>
         <li
           v-for="(member, index) in project.members"
-          :key="member._id"
+          :key="index"
           class="row"
         >
           <div class="row text" title="edit user's permissions">
             <h4>
-              {{ snippet(member.name, 16) }}
+              {{ member.name }}
             </h4>
           </div>
           <button
@@ -213,6 +217,8 @@ export default {
       return index;
     },
     updateProject() {
+      this.loading = 'start';
+
       const changes = cloneDeep({
         lists: this.project.lists,
         members: this.project.members.map(el => ({
