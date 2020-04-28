@@ -208,7 +208,10 @@ export default {
     background: #000000d2;
     color: #fff;
   }
-  &:disabled {
+
+  &:disabled,
+  &:disabled:hover {
+    color: #fff;
     background: #616161cb;
   }
 
