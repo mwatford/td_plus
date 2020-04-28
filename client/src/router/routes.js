@@ -1,43 +1,42 @@
-import Home from "../views/Home.vue";
-import Profile from "../views/Profile.vue";
-import Project from "../views/Project/Project.vue";
-import View from "../views/Project/View.vue";
-import ProjectManage from "../views/Project/ProjectManage.vue";
-import Start from "../views/Start.vue";
-import Create from "../views/Create.vue";
+import Home from '../views/Home.vue';
+import Profile from '../views/Profile.vue';
+import View from '../views/Project/View.vue';
+import Start from '../views/FakeStart.vue';
+import Create from '../views/Create.vue';
 
 export default [
   {
-    name: "home",
-    path: "/",
+    name: 'home',
+    path: '/',
     component: Home,
     meta: {
-      requiresAuth: false
-    }
+      requiresAuth: false,
+    },
   },
   {
-    name: "create",
-    path: "/create",
+    name: 'create',
+    path: '/create',
     component: Create,
+    
     meta: {
-      requiresAuth: false
-    }
+      requiresAuth: false,
+    },
   },
   {
-    name: "profile",
-    path: "/profile",
+    name: 'profile',
+    path: '/profile',
     component: Profile,
     meta: {
-      requiresAuth: true
-    }
+      requiresAuth: true,
+    },
   },
   {
-    path: "/project/:id",
-    name: "project",
+    path: '/project/:id',
+    name: 'project',
     component: View,
     meta: {
-      requiresAuth: false
-    }
+      requiresAuth: false,
+    },
   },
   // children: [
   //   {
@@ -55,11 +54,11 @@ export default [
   // ]
 
   {
-    name: "start",
-    path: "/start",
+    name: 'start',
+    path: '/start',
     component: Start,
     meta: {
-      guest: true
-    }
-  }
+      guest: true,
+    },
+  },
 ];
