@@ -69,46 +69,36 @@ export default {
         ],
       };
     },
-    create() {
-      return this.createPassword()
-        .then(this.saveProject)
-        .then(this.updateUser)
-        .then(this.navigate({ name: 'home' }))
-        .catch(e => {
-          this.navigate({ name: 'home' });
-        });
+    async create() {
+      try {
+        await this.createPassword();
+        await this.saveProject();
+        await this.updateUser();
+        this.navigate({ name: 'home' });
+      } catch (e) {
+        this.navigate({ name: 'home' });
+      }
     },
-    createPassword() {
-      return new Promise(resolve => {
-        if (this.password) {
-          this.hashPassword(this.password).then(hash => {
-            this.project.password = hash;
-            resolve();
-          });
-        } else {
-          resolve();
-        }
-      });
+    async createPassword() {
+      if (this.password) {
+        this.project.password = await this.hashPassword(this.password);
+      }
     },
     saveProject() {
       return this.auth ? this.request() : this.saveLocally();
     },
     request() {
-      if (this.auth) {
-        return this.$http({
-          method: 'post',
-          url: '/api/projects/create',
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-            'Content-Type': 'application/json',
-          },
-          data: {
-            email: this.user.email,
-            project: this.project,
-          },
-        });
-      }
-      return;
+      return this.$http({
+        method: 'post',
+        url: '/api/projects/create',
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          'Content-Type': 'application/json',
+        },
+        data: {
+          project: this.project,
+        },
+      });
     },
     saveLocally() {
       let projects = window.localStorage.getItem('projects');
@@ -138,7 +128,6 @@ export default {
           email: this.user.email,
         });
       }
-      return;
     },
   },
   mounted() {
