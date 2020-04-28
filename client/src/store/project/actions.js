@@ -22,9 +22,8 @@ export const actions = requestModule => {
         },
       }).then(({ data }) => commit('SET_PROJECT', data));
     },
-    moveTask({ commit, rootState }, data) {
+    moveTask({ commit }, data) {
       const { value } = data;
-
       if (value === 1) {
         commit('COMPLETE_TASK', data);
       }
