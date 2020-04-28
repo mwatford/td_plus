@@ -1,7 +1,7 @@
 <template>
   <loading v-if="loading !== 'start'" :state="loading" :size="60"></loading>
   <div v-else class="m-auto row view">
-    <form action="" class="box col">
+    <form submit.prevent class="box col">
       <h3>Add task</h3>
       <input type="text" class="input" placeholder="name" v-model="task.name" />
       <textarea
@@ -34,11 +34,7 @@
     <div class="list">
       <ul>
         <li><h3 class="m-auto">Lists</h3></li>
-        <li
-          v-for="(list, index) in project.lists"
-          :key="index"
-          class="row"
-        >
+        <li v-for="(list, index) in project.lists" :key="index" class="row">
           <div
             class="row text"
             @click="changeListName(index)"
@@ -65,11 +61,7 @@
     <div class="list" v-if="project.members.length">
       <ul>
         <li><h3 class="m-auto">Members</h3></li>
-        <li
-          v-for="(member, index) in project.members"
-          :key="index"
-          class="row"
-        >
+        <li v-for="(member, index) in project.members" :key="index" class="row">
           <div class="row text" title="edit user's permissions">
             <h4>
               {{ member.name }}

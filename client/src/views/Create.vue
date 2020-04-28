@@ -1,6 +1,6 @@
 <template>
   <div class="create row">
-    <form action="" class="box">
+    <form submit.prevent class="box">
       <div class="col">
         <input
           type="text"
