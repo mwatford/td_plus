@@ -28,7 +28,7 @@ export const mutations = {
   REMOVE_MEMBER(state, index) {
     state.data.members.splice(index, 1);
   },
-  COMPLETE_TASK(state, { listIndex, taskIndex, value }) {
+  COMPLETE_TASK(state, { listIndex, taskIndex }) {
     if (listIndex + 1 < state.data.lists.length) {
       const task = state.data.lists[listIndex].data.splice(taskIndex, 1);
 
