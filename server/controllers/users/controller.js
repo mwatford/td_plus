@@ -3,18 +3,18 @@ const currentUser = services => async ({ sub, email }) => {
 
   const user = await userService.find(sub);
 
-  if (!user) {
-    const profile = {
-      email,
-      sub,
-    };
+  if (user) return { data: user, status: 200 };
 
-    const newUser = await userService.createUser(profile);
-    delete newUser.sub;
+  const profile = {
+    email,
+    sub,
+  };
 
-    return { data: newUser, status: 200 };
-  }
-  return { data: user, status: 200 };
+  const newUser = await userService.createUser(profile);
+
+  delete newUser.sub;
+
+  return { data: newUser, status: 200 };
 };
 
 const searchEmail = services => async ({ email }) => {
@@ -25,6 +25,7 @@ const searchEmail = services => async ({ email }) => {
     { email: regexp },
     '_id email name projects'
   );
+
   return { status: 200, data: users };
 };
 
