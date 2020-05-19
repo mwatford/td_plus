@@ -3,7 +3,13 @@
   <div v-else class="m-auto row view">
     <form @submit.prevent class="box col">
       <h3>Add task</h3>
-      <input type="text" class="input" placeholder="name" v-model="task.name" />
+      <input
+        type="text"
+        class="input"
+        placeholder="name"
+        v-model="task.name"
+        required
+      />
       <textarea
         class="input"
         placeholder="description"
