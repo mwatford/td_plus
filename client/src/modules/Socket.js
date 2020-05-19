@@ -5,7 +5,10 @@ export default class VueSocket {
   }
   connect(opt, fn) {
     if (!this.socket) {
-      this.socket = this.io("/", opt);
+      this.socket = this.io(
+        process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:8000',
+        opt
+      );
     }
   }
   close() {
