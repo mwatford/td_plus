@@ -1,12 +1,4 @@
-const createProject = Project => data => {
-  if (!data) {
-    throw new Error('Data was not passed!');
-  }
-
-  const project = new Project(data);
-
-  return project.save();
-};
+const { create } = require('../common');
 
 const find = Project => id => {
   if (!id) {
@@ -60,7 +52,7 @@ const update = Project => (projectId, project) => {
 
 module.exports = Project => {
   return {
-    createProject: createProject(Project),
+    createProject: create(Project),
     find: find(Project),
     isMember: isMember,
     isAdmin: isAdmin,

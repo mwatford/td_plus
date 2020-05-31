@@ -1,12 +1,4 @@
-const createUser = User => profile => {
-  if (!profile) {
-    throw new Error(`Profile: ${profile} loginStrategy: ${loginStrategy}`);
-  }
-
-  const user = new User(profile);
-
-  return user.save();
-};
+const { create } = require('../common');
 
 const find = User => sub => {
   return User.findOne({ sub }, '-sub');
@@ -45,16 +37,14 @@ const deleteUser = User => async (sub, cb) => {
   return await User.findOneAndRemove({ sub }, cb);
 };
 
-module.exports = User => {
-  return {
-    createUser: createUser(User),
-    find: find(User),
-    findById: findById(User),
-    get: get(User),
-    update: update(User),
-    findByEmail: findByEmail(User),
-    getId: getId(User),
-    updateUsers: updateUsers(User),
-    delete: deleteUser(User),
-  };
-};
+module.exports = User => ({
+  createUser: create(User),
+  find: find(User),
+  findById: findById(User),
+  get: get(User),
+  update: update(User),
+  findByEmail: findByEmail(User),
+  getId: getId(User),
+  updateUsers: updateUsers(User),
+  delete: deleteUser(User),
+});
