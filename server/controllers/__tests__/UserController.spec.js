@@ -1,113 +1,98 @@
-const Controller = require("../users/controller");
-const userService = require("userService");
+const Controller = require('../users/controller');
 
-const services = {
-  userService
+const Model = require('MongooseModel');
+
+const Models = {
+  User: Model(),
+  Project: Model(),
 };
 
-const controller = Controller(services);
+const controller = Controller(Models);
 
-describe("user controller", () => {
-  test("has a module", () => {
+describe('project controller', () => {
+  test('is defined', () => {
     expect(Controller).toBeDefined();
   });
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  describe("currentUser test", () => {
-    test("searches for a user", async () => {
-      await controller.currentUser({ sub: "123", email: "asd@asd.com" });
-
-      expect(userService.find).toHaveBeenCalledWith("123");
-    });
-
-    test("sends user if user was found", async () => {
-      userService.find.mockImplementationOnce(() =>
-        Promise.resolve({ name: "Adam" })
+  describe('currentUser', () => {
+    test('return 200, user for valid argument', async () => {
+      Models.User.findOne.mockImplementationOnce(() =>
+        Promise.resolve({ name: 'test user', email: 'user@test.com' })
       );
-      const expected = { data: { name: "Adam" }, status: 200 };
+      const actual = await controller.currentUser({ sub: '123' });
 
-      const response = await controller.currentUser({
-        sub: "1234",
-        email: "asd@asd.com"
-      });
-
-      expect(response).toEqual(expected);
-    });
-
-    test("creates a user if user was not found", async () => {
-      const expected = { data: { email: "asd@asd.com" }, status: 200 };
-      const user = {
-        sub: "asd",
-        email: "asd@asd.com"
-      };
-
-      const response = await controller.currentUser(user);
-
-      expect(response).toEqual(expected);
-      expect(userService.createUser).toHaveBeenCalledWith(user);
-    });
-  });
-
-  describe("userUpdate test", () => {
-    const args = { sub: "123", changes: { name: "Mark" } };
-    test("searches for a user", async () => {
-      await controller.userUpdate(args);
-
-      expect(userService.find).toHaveBeenCalledWith("123");
-    });
-
-    test("calls updateUser method", async () => {
-      userService.find.mockImplementationOnce(() =>
-        Promise.resolve({ name: "Adam" })
-      );
-      await controller.userUpdate(args);
-
-      expect(userService.updateUser).toHaveBeenCalledWith(
-        { name: "Adam" },
-        args.changes
-      );
-    });
-
-    test("sends correct response when user is updated", async () => {
-      const expected = {
+      expect(actual).toMatchObject({
         status: 200,
         data: {
-          name: "Adam"
-        }
-      };
-      userService.find.mockImplementationOnce(() =>
-        Promise.resolve({ name: "Adam" })
-      );
-
-      const response = await controller.userUpdate(args);
-
-      expect(response).toEqual(expected);
+          user: {
+            name: 'test user',
+          },
+          message: { type: 'success', message: 'Logged in' },
+        },
+      });
     });
 
-    test("sends correct response when user is not updated", async () => {
-      const response = await controller.userUpdate(args);
+    test('returns status 500 if no user is found', async () => {
+      Models.User.findOne.mockImplementationOnce(() => Promise.resolve(null));
 
-      expect(response).toEqual({ status: 200 });
+      const actual = await controller.currentUser({ sub: '22' });
+
+      expect(actual).toMatchObject({
+        status: 500,
+        data: { message: { type: 'error', message: 'Error trying to log in' } },
+      });
     });
   });
 
-  describe("searchEmail test", () => {
-    test.only("finds users friends", async () => {
-      await controller.searchEmail({ email: "asd@asd.com" });
+  describe('searchByEmail', () => {
+    test('returns 200, users', async () => {
+      const actual = await controller.searchByEmail({ email: 'user@test.com' });
 
-      expect(userService.get).toHaveBeenCalledWith(
-        { email: /asd@asd.com/g },
-        "_id email name"
-      );
+      expect(actual).toMatchObject({
+        status: 200,
+        data: {},
+      });
     });
+  });
 
-    test("sends correct search response", async () => {
-      const response = await controller.searchEmail({ email: "asd@asd.com" });
+  describe('delete', () => {
+    test('returns status 200 on success ', async () => {
+      const save = jest.fn();
+      const chain = (() => {
+        const c = {};
+        c.where = jest.fn().mockReturnValue(c);
+        c.in = jest.fn().mockReturnValue(c);
+        c.exec = jest.fn(() => [
+          { members: [], save },
+          { members: [], save },
+        ]);
+        return c;
+      })();
+      Models.User.findOne.mockImplementationOnce(() =>
+        Promise.resolve({ projects: [1, 2, 3] })
+      );
+      Models.Project.find.mockImplementationOnce(() => chain);
 
-      expect(response).toEqual({ status: 200, data: [{ a: "a" }, { b: "b" }] });
+      const actual = await controller.delete({ sub: '11' });
+
+      expect(actual).toMatchObject({ status: 200 });
+    });
+  });
+
+  describe('update', () => {
+    test('returns 200, updated user', async () => {
+      Models.User.findByIdAndUpdate.mockImplementationOnce(() =>
+        Promise.resolve({ name: 'test name' })
+      );
+      const actual = await controller.update({
+        id: '11',
+        changes: { name: '123' },
+      });
+
+      expect(actual).toMatchObject({
+        status: 200,
+        data: { name: 'test name' },
+      });
     });
   });
 });
