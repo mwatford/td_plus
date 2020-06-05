@@ -10,6 +10,7 @@ import VueChatScroll from 'vue-chat-scroll';
 import alert from './mixins/alert';
 import icon from './components/app-icon.vue';
 import './styles/global.scss';
+import './components/_global';
 
 Vue.mixin(alert);
 
