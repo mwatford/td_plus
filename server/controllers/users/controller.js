@@ -1,6 +1,6 @@
 const helpers = require('./helpers');
 
-const currentUser = models => async ({ sub, email }) => {
+const currentUser = models => async ({ sub }) => {
   const { User } = models;
 
   const user = await User.findOne({ sub }, '-sub');
