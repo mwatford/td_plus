@@ -1,3 +1,5 @@
+const helpers = require('./helpers');
+
 const currentUser = models => async ({ sub, email }) => {
   const { User } = models;
 
@@ -25,10 +27,7 @@ const searchByEmail = models => async ({ email }) => {
   const { User } = models;
   const regexp = new RegExp(email, 'g');
 
-  const users = await User.findOne(
-    { email: regexp },
-    '_id email name projects'
-  );
+  const users = await User.find({ email: regexp }, '_id email name projects');
 
   return { status: 200, data: users };
 };
@@ -37,9 +36,9 @@ const deleteUser = models => async ({ sub }) => {
   const { Project, User } = models;
   const user = await User.findOne({ sub });
   const { projects } = user;
-  const userProjects = await findUserProjects(Project, projects);
+  const userProjects = await helpers.findUserProjects(Project, projects);
 
-  await Promise.all(userProjects.map(removeUserFromProject(user)));
+  await Promise.all(userProjects.map(helpers.removeUserFromProject(user)));
   await User.findOneAndRemove({ sub });
 
   return { status: 200 };
@@ -54,20 +53,6 @@ const update = models => async ({ id, changes }) => {
     status: 200,
     data: user,
   };
-};
-
-const findUserProjects = (Project, projects) =>
-  Project.find({}, 'name members password admin')
-    .where('_id')
-    .in(projects)
-    .exec();
-
-const removeUserFromProject = user => project => {
-  const member = project.members.find(el => user._id.equals(el.id));
-  const index = project.members.indexOf(member);
-  if (index !== -1) project.members.splice(index, 1);
-
-  return project.save();
 };
 
 module.exports = models => {
