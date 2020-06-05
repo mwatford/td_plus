@@ -143,9 +143,7 @@ export default {
       this.$socket.emit('updated', this.project);
     },
     initListeners() {
-      this.$socket.on('update project', data => {
-        this.updateProject(data);
-      });
+      this.$socket.on('update project', this.updateProject);
 
       this.$socket.on('removed', id => {
         if (id === this.user._id) {
