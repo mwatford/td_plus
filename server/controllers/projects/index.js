@@ -1,8 +1,8 @@
-const Controller = require("./controller");
+const Controller = require('./controller');
 
-const services = {
-  userService: require("../../services/user/index"),
-  projectService: require("../../services/project/index")
+const models = {
+  User: require('../../models/User'),
+  Project: require('../../models/Project'),
 };
 
-module.exports = Controller(services);
+module.exports = Controller(models);
