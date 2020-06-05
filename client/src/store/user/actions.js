@@ -1,6 +1,6 @@
 export const actions = requestModule => {
   return {
-    fetchUser({ commit }, { token, email }) {
+    fetchUser({ commit, dispatch }, { token, email }) {
       return requestModule({
         method: 'post',
         url: '/api/users/current',
@@ -11,9 +11,19 @@ export const actions = requestModule => {
         data: {
           email,
         },
-      }).then(response => {
-        commit('SET_USER', response.data);
-      });
+      })
+        .then(({ data }) => {
+          if (data.message)
+            dispatch('alerts/display', data.message, { root: true });
+          if (data.user) {
+            commit('SET_USER', data.user);
+          }
+        })
+        .catch(({ response }) => {
+          const { data } = response;
+          if (data.message)
+            dispatch('alerts/display', data.message, { root: true });
+        });
     },
     resetState({ commit }) {
       commit('RESET_STATE');
