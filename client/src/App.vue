@@ -2,9 +2,6 @@
   <div id="app">
     <side-bar></side-bar>
     <alerts></alerts>
-    <transition mode="out-in" name="slide">
-      <timeline v-if="app.timeline"></timeline>
-    </transition>
     <router-view class="display"></router-view>
   </div>
 </template>
@@ -12,13 +9,11 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import sideBar from './components/side-bar.vue';
-import timeline from './components/timeline.vue';
 import alerts from './components/alerts.vue';
 
 export default {
   components: {
-    'side-bar': sideBar,
-    timeline: timeline,
+    sideBar,
     alerts,
   },
   computed: {
@@ -28,7 +23,6 @@ export default {
       isAuthenticated: state => state.auth.status,
     }),
   },
-  methods: {},
 };
 </script>
 
