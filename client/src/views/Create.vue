@@ -1,13 +1,14 @@
 <template>
   <div class="create row">
-    <form @submit.prevent class="box">
+    <form @submit.prevent class="box" ref="form">
       <div class="col">
         <input
           type="text"
           name="name"
           placeholder="project name"
-          v-model="project.name"
+          v-model="name"
           class="input"
+          required
         />
         <input
           v-if="auth"
@@ -17,6 +18,11 @@
           v-model="password"
           placeholder="password (optional)"
         />
+        <BaseSelect
+          :options="options"
+          :placeholder="'Choose a template'"
+          @change="v => (type = v)"
+        ></BaseSelect>
       </div>
       <div class="row">
         <input
@@ -39,13 +45,17 @@ import { mapState } from 'vuex';
 import boxAnimations from '../mixins/boxAnimations';
 import { hashPassword } from '../utils/password';
 import navigate from '../mixins/navigate';
+import factory from '../classes/ProjectFactory';
+import { manageProject } from '../services/LocalDbManager';
 
 export default {
   mixins: [boxAnimations, navigate],
   data() {
     return {
       password: '',
-      project: this.createEmptyProject(),
+      name: '',
+      type: '',
+      project: null,
     };
   },
   computed: {
@@ -54,38 +64,34 @@ export default {
       token: state => state.auth.token,
       auth: state => state.auth.status,
     }),
+    options() {
+      return Object.keys(factory.templates).map(el => ({
+        value: el,
+        text: el,
+      }));
+    },
   },
   methods: {
-    hashPassword,
-    createEmptyProject() {
-      return {
-        name: '',
-        password: '',
-        members: [],
-        lists: [
-          { name: 'To Do', data: [] },
-          { name: 'In Progress', data: [] },
-          { name: 'Done', data: [] },
-        ],
-      };
-    },
     async create() {
       try {
-        await this.createPassword();
+        await this.validate();
+
+        const password = (await hashPassword(this.password)) || '';
+        this.project = factory.create(this.type, { name: this.name, password });
+
         await this.saveProject();
-        await this.updateUser();
+        if (this.auth) await this.updateUser();
+
         this.navigate({ name: 'home' });
       } catch (e) {
-        this.navigate({ name: 'home' });
+        this.alert('error', e);
       }
     },
-    async createPassword() {
-      if (this.password) {
-        this.project.password = await this.hashPassword(this.password);
-      }
+    async validate() {
+      return this.name && this.type;
     },
     saveProject() {
-      return this.auth ? this.request() : this.saveLocally();
+      return this.auth ? this.request() : manageProject('add', this.project);
     },
     request() {
       return this.$http({
@@ -100,34 +106,11 @@ export default {
         },
       });
     },
-    saveLocally() {
-      let projects = window.localStorage.getItem('projects');
-
-      if (projects) {
-        projects = JSON.parse(projects);
-      } else {
-        projects = [];
-      }
-
-      if (projects.find(el => el.name === this.project.name)) {
-        this.project.name = prompt(
-          `You already have a project with given name,
-           please provide a different name: `
-        );
-        return this.project.name ? this.saveLocally() : Promise.reject();
-      }
-
-      projects.push(this.project);
-      projects = JSON.stringify(projects);
-      window.localStorage.setItem('projects', projects);
-    },
     updateUser() {
-      if (this.auth) {
-        return this.$store.dispatch('user/fetchUser', {
-          token: this.token,
-          email: this.user.email,
-        });
-      }
+      return this.$store.dispatch('user/fetchUser', {
+        token: this.token,
+        email: this.user.email,
+      });
     },
   },
   mounted() {
