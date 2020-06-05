@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const ProjectSchema = new Schema(
   {
+    type: String,
     name: { type: String, required: true, default: '' },
     admin: { type: String, required: true },
     members: [],
@@ -13,6 +14,7 @@ const ProjectSchema = new Schema(
       },
     ],
     password: String,
+    timestamp: { type: Date, default: Date.now() },
   },
   {
     versionKey: false,
