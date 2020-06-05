@@ -1,32 +1,35 @@
 <template>
   <div class="home">
-    <div class="create" @click="navigate('create')">
+    <div class="create" @click="navigate('create')" ref="create">
       <app-icon type="plus" size="100"></app-icon>
     </div>
     <router-link
       v-for="project in projects"
       :key="project._id"
       :to="{ path: `/project/${project.name}` }"
+      ref="project-link"
     >
-      <project
+      <ProjectTile
         :project="project"
         v-if="display"
         @click.native="setActiveProject(project)"
-      ></project>
+      ></ProjectTile>
     </router-link>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
-import project from '../components/project.vue';
+import ProjectTile from '../components/ProjectTile.vue';
 import boxAnimations from '../mixins/boxAnimations';
 import navigate from '../mixins/navigate';
+import { manageProject } from '../services/LocalDbManager';
+import { sendProjects } from '../services/api/projects';
 
 export default {
   mixins: [boxAnimations, navigate],
   components: {
-    project,
+    ProjectTile,
   },
   data() {
     return {
@@ -40,94 +43,66 @@ export default {
       token: state => state.auth.token,
       auth: state => state.auth.status,
     }),
-    animate() {
-      return this.$refs['animate'];
-    },
   },
   methods: {
-    getProjects() {
-      return new Promise(resolve => {
-        this.getLocalProjects()
-          .then(resolve)
-          .catch(() => {
-            this.fetchProjects().then(resolve);
-          });
-      });
+    async getProjects() {
+      try {
+        let projects = await manageProject('get');
+
+        if (!this.auth) {
+          return projects.length
+            ? this.$store.commit('projects/SET_PROJECTS', projects)
+            : 0;
+        }
+
+        if (projects.length) {
+          await this.importLocalProjects(projects);
+        }
+
+        await this.fetchProjects();
+      } catch (e) {
+        this.alert('error', e);
+      }
     },
-    fetchProjects() {
-      return this.$store
-        .dispatch('projects/fetchProjects', {
+    async fetchProjects() {
+      try {
+        await this.$store.dispatch('projects/fetchProjects', {
           token: this.token,
           id: this.user._id,
-        })
-        .catch(e => e);
-    },
-    getLocalProjects() {
-      let projects = window.localStorage.getItem('projects');
-
-      if (!projects && !this.auth) {
-        return Promise.resolve();
+        });
+      } catch (e) {
+        this.alert('error', e);
       }
-
-      if (!projects) {
-        return Promise.reject();
-      }
-
-      projects = JSON.parse(projects);
-
-      if (!projects.length) {
-        return this.auth ? Promise.reject() : Promise.resolve();
-      }
-
-      if (!this.auth) {
-        this.$store.commit('projects/SET_PROJECTS', projects);
-        return Promise.resolve();
-      }
-
-      return this.importLocalProjects(projects);
     },
     setActiveProject(project) {
       this.$store.commit('activeProject/SET_PROJECT', project);
     },
-    importLocalProjects(projects) {
-      return new Promise((resolve, reject) => {
-        const importProjects = confirm(
-          'We have found local projects, do you want to import them?'
-        );
+    async importLocalProjects(projects) {
+      const importProjects = confirm(
+        'We have found local projects, do you want to import them?'
+      );
 
-        if (importProjects) {
-          this.sendProjects(projects).then(({ data }) => {
-            this.$store.commit('projects/SET_PROJECTS', data);
-            localStorage.removeItem('projects');
-            resolve();
-          });
-        } else {
-          reject();
-        }
-      });
-    },
-    sendProjects(projects) {
-      return this.$http({
-        method: 'post',
-        url: '/api/projects/import',
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-          'Content-Type': 'application/json',
-        },
-        data: {
-          projects,
-        },
-      });
+      if (importProjects) {
+        const { data } = await sendProjects(projects, this.token);
+
+        this.$store.commit('projects/SET_PROJECTS', data);
+
+        await manageProject('removeAll');
+      }
     },
   },
   beforeUpdate() {
     this.display = true;
   },
   mounted() {
-    this.getProjects().then(() => this.boxEnterAnimation(200, 50, true));
+    this.getProjects()
+      .then(() => this.boxEnterAnimation(200, 50, true))
+      .catch(e => {});
   },
   beforeRouteLeave(to, from, next) {
-    this.boxExitAnimation(500, 20, true).then(next);
+    this.boxExitAnimation(500, 20, true)
+      .then(next)
+      .catch(e => {});
   },
 };
 </script>
