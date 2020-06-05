@@ -16,7 +16,7 @@ router.post(
 
 router.get(
   '/search/:email',
-  handler(controller.searchEmail, (req, res, next) => {
+  handler(controller.searchByEmail, (req, res, next) => {
     return {
       email: req.params.email,
     };
