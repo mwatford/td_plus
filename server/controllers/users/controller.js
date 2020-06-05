@@ -1,27 +1,31 @@
-const currentUser = services => async ({ sub, email }) => {
-  const { userService } = services;
+const currentUser = models => async ({ sub, email }) => {
+  const { User } = models;
 
-  const user = await userService.find(sub);
+  const user = await User.findOne({ sub }, '-sub');
 
-  if (user) return { data: user, status: 200 };
+  if (user)
+    return {
+      status: 200,
+      data: {
+        user,
+        message: {
+          type: 'success',
+          message: 'Logged in',
+        },
+      },
+    };
 
-  const profile = {
-    email,
-    sub,
+  return {
+    status: 500,
+    data: { message: { type: 'error', message: 'Error trying to log in' } },
   };
-
-  const newUser = await userService.createUser(profile);
-
-  delete newUser.sub;
-
-  return { data: newUser, status: 200 };
 };
 
-const searchEmail = services => async ({ email }) => {
-  const { userService } = services;
+const searchByEmail = models => async ({ email }) => {
+  const { User } = models;
   const regexp = new RegExp(email, 'g');
 
-  const users = await userService.get(
+  const users = await User.findOne(
     { email: regexp },
     '_id email name projects'
   );
@@ -29,34 +33,22 @@ const searchEmail = services => async ({ email }) => {
   return { status: 200, data: users };
 };
 
-const deleteUser = services => async ({ sub }) => {
-  const { userService, projectService } = services;
-
-  const user = await userService.find(sub);
-
+const deleteUser = models => async ({ sub }) => {
+  const { Project, User } = models;
+  const user = await User.findOne({ sub });
   const { projects } = user;
+  const userProjects = await findUserProjects(Project, projects);
 
-  const userProjects = await projectService.findMany(projects);
-
-  await Promise.all(
-    userProjects.map(project => {
-      const member = project.members.find(el => user._id.equals(el.id));
-      const index = project.members.indexOf(member);
-      project.members.splice(index, 1);
-
-      return project.save();
-    })
-  );
-
-  userService.delete(sub);
+  await Promise.all(userProjects.map(removeUserFromProject(user)));
+  await User.findOneAndRemove({ sub });
 
   return { status: 200 };
 };
 
-const update = services => async ({ id, changes }) => {
-  const { userService } = services;
+const update = models => async ({ id, changes }) => {
+  const { User } = models;
 
-  const user = await userService.update(id, changes);
+  const user = await User.findByIdAndUpdate(id, changes);
 
   return {
     status: 200,
@@ -64,11 +56,25 @@ const update = services => async ({ id, changes }) => {
   };
 };
 
-module.exports = services => {
+const findUserProjects = (Project, projects) =>
+  Project.find({}, 'name members password admin')
+    .where('_id')
+    .in(projects)
+    .exec();
+
+const removeUserFromProject = user => project => {
+  const member = project.members.find(el => user._id.equals(el.id));
+  const index = project.members.indexOf(member);
+  if (index !== -1) project.members.splice(index, 1);
+
+  return project.save();
+};
+
+module.exports = models => {
   return {
-    currentUser: currentUser(services),
-    searchEmail: searchEmail(services),
-    delete: deleteUser(services),
-    update: update(services),
+    currentUser: currentUser(models),
+    searchByEmail: searchByEmail(models),
+    delete: deleteUser(models),
+    update: update(models),
   };
 };
