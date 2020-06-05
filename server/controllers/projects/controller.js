@@ -1,48 +1,35 @@
-const create = services => async ({ sub, project }) => {
-  const { userService } = services;
-  const admin = await userService.find(sub);
+const helpers = require('./helpers');
+
+const create = models => async ({ sub, project }) => {
+  const { User } = models;
+  const admin = await User.findOne({ sub }, '-sub');
 
   if (admin) {
-    const newProject = await saveProject(services, project, admin);
+    const newProject = await helpers.saveProject(models, project, admin);
+
     return { data: newProject, status: 201 };
   }
 };
 
-const saveProject = async ({ projectService, userService }, project, admin) => {
-  const newProject = await projectService.createProject({
-    admin: admin._id,
-    members: [{ id: String(admin._id), role: 'admin', permissions: [] }],
-    name: project.name,
-    password: project.password,
-    lists: project.lists,
-  });
+const getUserProjects = models => async ({ sub }) => {
+  const { User, Project } = models;
 
-  await userService.updateUsers(
-    newProject.members.map(el => el.id),
-    user => {
-      user.projects.push(String(newProject._id));
-      return user.save();
-    }
-  );
-  return newProject;
-};
+  const user = await User.findOne({ sub }, '-sub');
 
-const getUserProjects = services => async ({ sub }) => {
-  const { userService, projectService } = services;
-
-  const user = await userService.find(sub);
-
-  const projects = await projectService.findMany(user.projects);
+  const projects = await Project.find({}, 'name members password admin')
+    .where('_id')
+    .in(user.projects)
+    .exec();
 
   return { data: projects, status: 200 };
 };
 
-const getProject = services => async ({ sub, id }) => {
-  const { userService, projectService } = services;
-  const { _id } = await userService.find(sub);
-  const project = await projectService.find(id);
+const getProject = models => async ({ sub, id }) => {
+  const { User, Project } = models;
+  const { _id } = await User.findOne({ sub });
+  const project = await Project.findById(id);
 
-  const isMember = await projectService.isMember(project, _id);
+  const isMember = await project.members.find(el => _id.equals(el));
 
   if (isMember) {
     return {
@@ -55,12 +42,12 @@ const getProject = services => async ({ sub, id }) => {
   };
 };
 
-const isAdmin = services => async ({ id, sub }) => {
-  const { userService, projectService } = services;
+const isAdmin = models => async ({ id, sub }) => {
+  const { Project, User } = models;
 
-  const { _id } = await userService.find(sub);
-  const project = await projectService.find(id);
-  const isAdmin = projectService.isAdmin(project, _id);
+  const { _id } = await User.findOne({ sub });
+  const project = await Project.findById(id);
+  const isAdmin = _id.equals(project.admin);
 
   if (isAdmin) {
     return { status: 200 };
@@ -68,26 +55,15 @@ const isAdmin = services => async ({ id, sub }) => {
   return { status: 403 };
 };
 
-const deleteProject = services => async ({ sub, id }) => {
-  const { userService, projectService } = services;
-  const { _id } = await userService.find(sub);
-  const project = await projectService.find(id);
+const deleteProject = models => async ({ sub, id }) => {
+  const { Project, User } = models;
+  const { _id } = await User.findOne({ sub });
+  const project = await Project.findById(id);
 
-  const isAdmin = await projectService.isAdmin(project, _id);
+  const isAdmin = _id.equals(project.admin);
 
   if (isAdmin) {
-    await projectService.delete(id, (err, { members }) => {
-      userService.updateUsers(
-        members.map(el => el.id),
-        user => {
-          const index = user.projects.indexOf(id);
-          if (index !== -1) {
-            user.projects.splice(index, 1);
-            user.save();
-          }
-        }
-      );
-    });
+    await Project.findByIdAndRemove(id, helpers.updateUsersAfterDelete(User));
 
     return { status: 200 };
   } else {
@@ -95,31 +71,34 @@ const deleteProject = services => async ({ sub, id }) => {
   }
 };
 
-const importProjects = services => async ({ sub, projects }) => {
-  const { userService, projectService } = services;
+const importProjects = models => async ({ sub, projects }) => {
+  const { User, Project } = models;
 
-  let admin = await userService.find(sub);
+  let admin = await User.findOne({ sub });
 
   if (admin) {
     await Promise.all(
-      projects.map(project => saveProject(services, project, admin))
+      projects.map(project => helpers.saveProject(models, project, admin))
     );
   }
 
-  admin = await userService.find(sub);
+  admin = await User.findOne({ sub });
 
-  const userProjects = await projectService.findMany(admin.projects);
+  const userProjects = await Project.find({}, 'name members password admin')
+    .where('_id')
+    .in(admin.projects)
+    .exec();
 
   return { status: 200, data: userProjects };
 };
 
-const activeProject = services => async ({ id }) => {
-  const { userService, projectService } = services;
+const activeProject = models => async ({ id }) => {
+  const { User, Project } = models;
 
-  let project = await projectService.find(id);
+  let project = await Project.findById(id);
 
   const members = await Promise.all(
-    project.members.map(member => userService.findById(member.id, 'name email'))
+    project.members.map(member => User.findById(member.id, 'name email'))
   );
 
   for (let i = 0; i < project.members.length; i++) {
@@ -131,22 +110,22 @@ const activeProject = services => async ({ id }) => {
   return { status: 200, data: project };
 };
 
-const update = services => async ({ project, id }) => {
-  const { projectService } = services;
-  const projectToOverwrite = await projectService.find(id);
+const update = models => async ({ project, id }) => {
+  const { Project } = models;
+  const projectToOverwrite = await Project.findById(id);
 
   Object.assign(projectToOverwrite, project);
 
   await projectToOverwrite.save();
 
-  const { data } = await activeProject(services)({ id });
+  const { data } = await activeProject(models)({ id });
 
   return { status: 200, data };
 };
 
-const removeUser = services => async ({ id, userId }) => {
-  const { userService } = services;
-  const user = await userService.findById(userId);
+const removeUser = models => async ({ id, userId }) => {
+  const { User } = models;
+  const user = await User.findById(userId);
   const index = user.projects.indexOf(id);
 
   if (index > -1) user.projects.splice(index, 1);
@@ -156,14 +135,14 @@ const removeUser = services => async ({ id, userId }) => {
   return { status: 200 };
 };
 
-module.exports = services => ({
-  create: create(services),
-  getUserProjects: getUserProjects(services),
-  getProject: getProject(services),
-  deleteProject: deleteProject(services),
-  isAdmin: isAdmin(services),
-  import: importProjects(services),
-  activeProject: activeProject(services),
-  update: update(services),
-  removeUser: removeUser(services),
+module.exports = models => ({
+  create: create(models),
+  getUserProjects: getUserProjects(models),
+  getProject: getProject(models),
+  deleteProject: deleteProject(models),
+  isAdmin: isAdmin(models),
+  import: importProjects(models),
+  activeProject: activeProject(models),
+  update: update(models),
+  removeUser: removeUser(models),
 });
