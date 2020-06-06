@@ -12,7 +12,7 @@ router.post(
   handler(controller.create, (req, res, next) => {
     return {
       sub: req.user.sub,
-      project: req.body.project,
+      project: req.body,
     };
   })
 );
@@ -61,7 +61,7 @@ router.post(
   handler(controller.import, (req, res, next) => {
     return {
       sub: req.user.sub,
-      projects: req.body.projects,
+      projects: req.body,
     };
   })
 );
@@ -79,7 +79,7 @@ router.put(
   '/:id',
   handler(controller.update, (req, res, next) => {
     return {
-      project: req.body.project,
+      project: req.body,
       id: req.params.id,
     };
   })
