@@ -62,7 +62,7 @@ export default {
       (!this.project.password || this.user._id === this.project.admin)
     ) {
       this.component = loader;
-      this.$eventBus.$emit('fetch data');
+      this.$eventBus.$emit('fetch-data');
     } else {
       this.component = password;
     }

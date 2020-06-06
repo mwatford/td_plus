@@ -56,6 +56,8 @@ import { mapState } from 'vuex';
 import navigate from '../../mixins/navigate';
 import Project from './Project.vue';
 import Chat from './Chat.vue';
+import http from '../../services/api/index';
+import projectFactory from '../../classes/ProjectFactory';
 
 export default {
   components: {
@@ -68,6 +70,7 @@ export default {
       buttonsActive: false,
       currentView: '',
       chat: false,
+      data: null,
     };
   },
   computed: {
@@ -85,14 +88,12 @@ export default {
   },
   methods: {
     fetchData() {
-      this.$store
-        .dispatch('activeProject/fetchProject', {
-          id: this.project._id,
-          token: this.token,
-        })
+      http.projects
+        .fetchActiveProject(this.token, this.project._id)
         .then(({ data }) => {
           this.$store.commit('activeProject/RESET_STATE');
           this.$store.commit('activeProject/SET_PROJECT', data);
+          this.data = projectFactory.create(data.type, data);
 
           this.activateButtons();
           this.toggleChat();
@@ -159,14 +160,14 @@ export default {
     },
   },
   created() {
-    this.$eventBus.$on('fetch data', this.fetchDataHandler);
+    this.$eventBus.$on('fetch-data', this.fetchDataHandler);
     this.$eventBus.$on('project updated', this.emitUpdate);
   },
   beforeMount() {
     if (!this.project) this.navigate({ name: 'home' });
   },
   beforeDestroy() {
-    this.$eventBus.$off('fetch data', this.fetchDataHandler);
+    this.$eventBus.$off('fetch-data', this.fetchDataHandler);
     this.$eventBus.$off('project updated', this.emitUpdate);
     this.$socket.close();
   },
