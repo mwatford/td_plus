@@ -69,7 +69,7 @@ describe('Project', () => {
       expect(result).toBeFalsy();
     });
 
-    test('not add already existing members', () => {
+    test('does not add already existing members', () => {
       const members = [{ id: '1' }, { id: '2' }, { id: '3' }];
 
       const project = new Basic({ name: 'test', members });
@@ -79,6 +79,38 @@ describe('Project', () => {
       const result = project.members.length;
 
       expect(result).toEqual(3);
+    });
+  });
+
+  describe('moveTask', () => {
+    const project = new Basic({ name: 'test' });
+    test('is defined', () => {
+      expect(project.moveTask).toBeDefined();
+    });
+
+    test('moves a task from one list to another', () => {
+      project.lists[0].data.push({ id: 'task id' });
+
+      project.moveTask('task id', 0, 2);
+
+      const result = project.lists[0].data.length === 0;
+      const result2 = project.lists[2].data.length === 1;
+
+      expect(result).toBeTruthy();
+      expect(result2).toBeTruthy();
+    });
+
+    test('does not move a task if list is the same', () => {
+      project.lists[2].data.push({ id: 'task 2 id' });
+
+      project.moveTask('task id', 2, 2);
+
+      const length = project.lists[2].data.length;
+      const element = project.lists[2].data.find(el => el.id === 'task id');
+      const index = project.lists[2].data.indexOf(element);
+
+      expect(length).toEqual(2);
+      expect(index).toEqual(0);
     });
   });
 });

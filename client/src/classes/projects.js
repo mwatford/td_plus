@@ -38,6 +38,14 @@ export class Basic {
     if (!this.members.find(el => el.id === member.id))
       this.members.push(member);
   }
+  moveTask(id, from, to) {
+    if (from === to) return;
+    const index = this.lists[from].data.find(el => el.id === id);
+    if (index !== -1) {
+      const task = this.lists[from].data.splice(index, 1);
+      this.lists[to].data.push(...task);
+    }
+  }
 }
 
 export class Kanban extends Basic {
