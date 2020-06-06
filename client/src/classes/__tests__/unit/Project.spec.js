@@ -50,9 +50,35 @@ describe('Project', () => {
 
       project.removeMember('1');
 
-      const actual = project.members.indexOf(member1) === -1;
+      const result = project.members.indexOf(member1) === -1;
 
-      expect(actual).toBeTruthy();
+      expect(result).toBeTruthy();
+    });
+  });
+
+  describe('addMember', () => {
+    test('adds provided member', () => {
+      const member = { id: '1' };
+
+      const project = new Basic({ name: 'test' });
+
+      project.addMember(member);
+
+      const result = project.members.indexOf(member) === -1;
+
+      expect(result).toBeFalsy();
+    });
+
+    test('not add already existing members', () => {
+      const members = [{ id: '1' }, { id: '2' }, { id: '3' }];
+
+      const project = new Basic({ name: 'test', members });
+
+      project.addMember(members[0]);
+
+      const result = project.members.length;
+
+      expect(result).toEqual(3);
     });
   });
 });

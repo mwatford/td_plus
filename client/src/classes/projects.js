@@ -34,6 +34,10 @@ export class Basic {
       this.members.splice(index, 1);
     }
   }
+  addMember(member) {
+    if (!this.members.find(el => el.id === member.id))
+      this.members.push(member);
+  }
 }
 
 export class Kanban extends Basic {
