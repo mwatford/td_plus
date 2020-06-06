@@ -48,6 +48,12 @@ export class Basic {
   isMember(id) {
     return this.members.find(el => el.id === id) ? true : false;
   }
+  addTask(task, listIndex) {
+    if (!this.lists[listIndex]) return false;
+    if (!task || typeof task === 'string' || typeof task === 'number')
+      return false;
+    this.lists[listIndex].data.push(task);
+  }
 }
 
 export class Kanban extends Basic {

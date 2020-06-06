@@ -138,4 +138,39 @@ describe('Project', () => {
       expect(result).toBe(false);
     });
   });
+
+  describe('addTask', () => {
+    const project = new Basic({ name: 'test' });
+
+    test('is defined', () => {
+      expect(project.addTask).toBeDefined();
+    });
+
+    test('add a task to given list', () => {
+      project.addTask({}, 0);
+      project.addTask({}, 1);
+
+      const result = project.lists[0].data.length === 1;
+      const result2 = project.lists[1].data.length === 1;
+
+      expect([result, result2]).toEqual([true, true]);
+    });
+
+    test('returns false if list does not exist', () => {
+      const result = project.addTask({}, 7);
+
+      expect(result).toEqual(false);
+    });
+
+    test('returns false if task is primitive type', () => {
+      const results = [];
+
+      results.push(project.addTask(1, 0));
+      results.push(project.addTask('a', 0));
+      results.push(project.addTask(undefined, 0));
+      results.push(project.addTask(null, 0));
+
+      expect(results).toEqual([false, false, false, false]);
+    });
+  });
 });
