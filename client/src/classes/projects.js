@@ -46,6 +46,9 @@ export class Basic {
       this.lists[to].data.push(...task);
     }
   }
+  isMember(id) {
+    return this.members.find(el => el.id === id);
+  }
 }
 
 export class Kanban extends Basic {

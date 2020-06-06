@@ -113,4 +113,29 @@ describe('Project', () => {
       expect(index).toEqual(0);
     });
   });
+
+  describe('isMember', () => {
+    const project = new Basic({
+      name: 'test',
+      members: [{ id: 'test id' }, { id: 'test id 2' }],
+    });
+
+    test('is defined', () => {
+      expect(project.isMember).toBeDefined();
+    });
+
+    test('returns true if member is found', () => {
+      const result = project.isMember('test id');
+      const result2 = project.isMember('test id 2');
+
+      expect(result).toBeTruthy();
+      expect(result2).toBeTruthy();
+    });
+
+    test('returns false if member is not found', () => {
+      const result = project.isMember('test id 3');
+
+      expect(result).toBeFalsy();
+    });
+  });
 });
