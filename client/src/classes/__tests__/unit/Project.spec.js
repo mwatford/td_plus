@@ -162,7 +162,7 @@ describe('Project', () => {
       expect(result).toEqual(false);
     });
 
-    test('returns false if task is primitive type', () => {
+    test('returns false if task is of primitive type', () => {
       const results = [];
 
       results.push(project.addTask(1, 0));
