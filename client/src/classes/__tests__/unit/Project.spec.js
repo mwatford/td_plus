@@ -1,4 +1,4 @@
-import { Basic } from '../../ProjectFactory';
+import { Basic } from '../../projects';
 
 const members = [
   { id: 'test id 1', name: 'adam' },
@@ -35,6 +35,24 @@ describe('Project', () => {
       project.save(cb);
 
       expect(cb).toHaveBeenCalledWith(stripped);
+    });
+  });
+
+  describe('removeMember', () => {
+    test('removes member with specified id', () => {
+      const member1 = { id: '1' };
+      const member2 = { id: '2' };
+
+      const project = new Basic({
+        name: 'test',
+        members: [member1, member2],
+      });
+
+      project.removeMember('1');
+
+      const actual = project.members.indexOf(member1) === -1;
+
+      expect(actual).toBeTruthy();
     });
   });
 });
