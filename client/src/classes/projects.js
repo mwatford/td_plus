@@ -20,15 +20,18 @@ export class Basic {
   }
   strip() {
     const copy = cloneDeep(this);
+
     copy.members = this.members.map(el => ({
       id: el.id,
       role: el.role,
       permissions: el.permissions,
     }));
+
     return copy;
   }
   removeMember(id) {
     const member = this.members.find(el => el.id === id);
+
     if (member) {
       const index = this.members.indexOf(member);
       this.members.splice(index, 1);
@@ -37,14 +40,6 @@ export class Basic {
   addMember(member) {
     if (!this.isMember(member.id)) this.members.push(member);
   }
-  moveTask(id, from, to) {
-    if (from === to) return;
-    const item = this.lists[from].data.find(el => el.id === id);
-    if (item) {
-      const task = this.lists[from].data.splice(item, 1);
-      this.lists[to].data.push(...task);
-    }
-  }
   isMember(id) {
     return this.members.find(el => el.id === id) ? true : false;
   }
@@ -52,7 +47,18 @@ export class Basic {
     if (!this.lists[listIndex]) return false;
     if (!task || typeof task === 'string' || typeof task === 'number')
       return false;
+
     this.lists[listIndex].data.push(task);
+  }
+  moveTask(id, from, to) {
+    if (from === to) return;
+
+    const item = this.lists[from].data.find(el => el.id === id);
+
+    if (item) {
+      const task = this.lists[from].data.splice(item, 1);
+      this.lists[to].data.push(...task);
+    }
   }
 }
 
