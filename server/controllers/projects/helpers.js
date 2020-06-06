@@ -14,7 +14,7 @@ const saveProject = async ({ Project }, project, admin) => {
   project.admin = admin._id;
   project.members = [{ id: String(admin._id), role: 'admin', permissions: [] }];
 
-  const newProject = await new Project(project).save();
+  const newProject = await Project.create(project);
   admin.projects.push(String(newProject._id));
 
   await admin.save();
