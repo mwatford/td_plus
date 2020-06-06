@@ -14,6 +14,7 @@ const factory = (method, url, token, data) => {
   if (data) _.defaultsDeep(defaults, { data });
   if (method.toUpperCase() === 'GET' || method.toUpperCase() === 'DELETE')
     delete defaults.headers['Content-Type'];
+
   return defaults;
 };
 
