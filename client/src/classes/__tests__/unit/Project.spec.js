@@ -157,9 +157,12 @@ describe('Project', () => {
     });
 
     test('returns false if list does not exist', () => {
-      const result = project.addTask({}, 7);
+      const results = [];
 
-      expect(result).toEqual(false);
+      results.push(project.addTask({}, 7));
+      results.push(project.addTask({}, 3));
+
+      expect(results).toEqual([false, false]);
     });
 
     test('returns false if task is of primitive type', () => {
