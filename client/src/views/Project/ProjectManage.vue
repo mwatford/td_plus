@@ -237,7 +237,7 @@ export default {
         })
         .catch(e => {
           this.loading = 'start';
-          this.alert('error', 'Error. Your changes have not been saved.');
+          this.alert('error', 'Your changes have not been saved.');
         });
     },
     addList() {
