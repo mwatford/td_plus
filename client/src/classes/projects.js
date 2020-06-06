@@ -39,9 +39,9 @@ export class Basic {
   }
   moveTask(id, from, to) {
     if (from === to) return;
-    const index = this.lists[from].data.find(el => el.id === id);
-    if (index !== -1) {
-      const task = this.lists[from].data.splice(index, 1);
+    const item = this.lists[from].data.find(el => el.id === id);
+    if (item) {
+      const task = this.lists[from].data.splice(item, 1);
       this.lists[to].data.push(...task);
     }
   }
