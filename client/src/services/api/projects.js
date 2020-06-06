@@ -21,12 +21,12 @@ const fetchActiveProject = http => (token, id) =>
     },
   });
 
-const updateProject = http => (id, changes) =>
+const updateProject = http => (token, id) => changes =>
   http({
-    method: 'post',
+    method: 'put',
     url: `/api/projects/${id}`,
     headers: {
-      Authorization: `Bearer ${rootState.auth.token}`,
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
     data: {
