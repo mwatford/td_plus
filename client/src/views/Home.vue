@@ -24,7 +24,7 @@ import ProjectTile from '../components/ProjectTile.vue';
 import boxAnimations from '../mixins/boxAnimations';
 import navigate from '../mixins/navigate';
 import { manageProject } from '../services/LocalDbManager';
-import { sendProjects } from '../services/api/projects';
+import http from '../services/api/index';
 
 export default {
   mixins: [boxAnimations, navigate],
@@ -78,12 +78,12 @@ export default {
       this.$store.commit('activeProject/SET_PROJECT', project);
     },
     async importLocalProjects(projects) {
-      const importProjects = confirm(
+      const userResponse = confirm(
         'We have found local projects, do you want to import them?'
       );
 
-      if (importProjects) {
-        const { data } = await sendProjects(projects, this.token);
+      if (userResponse) {
+        const { data } = await http.projects.import(this.token, projects);
 
         this.$store.commit('projects/SET_PROJECTS', data);
 
