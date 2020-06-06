@@ -35,8 +35,7 @@ export class Basic {
     }
   }
   addMember(member) {
-    if (!this.members.find(el => el.id === member.id))
-      this.members.push(member);
+    if (!this.isMember(member.id)) this.members.push(member);
   }
   moveTask(id, from, to) {
     if (from === to) return;
@@ -47,7 +46,7 @@ export class Basic {
     }
   }
   isMember(id) {
-    return this.members.find(el => el.id === id);
+    return this.members.find(el => el.id === id) ? true : false;
   }
 }
 

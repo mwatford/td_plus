@@ -128,14 +128,14 @@ describe('Project', () => {
       const result = project.isMember('test id');
       const result2 = project.isMember('test id 2');
 
-      expect(result).toBeTruthy();
-      expect(result2).toBeTruthy();
+      expect(result).toBe(true);
+      expect(result2).toBe(true);
     });
 
     test('returns false if member is not found', () => {
       const result = project.isMember('test id 3');
 
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
   });
 });
