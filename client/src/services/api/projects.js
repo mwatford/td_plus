@@ -1,4 +1,4 @@
-const sendProjects = http => (projects, token) => {
+const sendProjects = http => (token, data) => {
   return http({
     method: 'post',
     url: '/api/projects/import',
@@ -6,9 +6,7 @@ const sendProjects = http => (projects, token) => {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
-    data: {
-      projects,
-    },
+    data,
   });
 };
 
@@ -21,7 +19,7 @@ const fetchActiveProject = http => (token, id) =>
     },
   });
 
-const updateProject = http => (token, id) => changes =>
+const updateProject = http => (token, id) => data =>
   http({
     method: 'put',
     url: `/api/projects/${id}`,
@@ -29,9 +27,7 @@ const updateProject = http => (token, id) => changes =>
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
-    data: {
-      project: changes,
-    },
+    data,
   });
 
 const create = http => (token, data) =>
@@ -42,9 +38,7 @@ const create = http => (token, data) =>
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
-    data: {
-      project: data,
-    },
+    data,
   });
 
 const fetchAllProjects = http => (token, id) =>
