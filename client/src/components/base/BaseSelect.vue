@@ -17,6 +17,7 @@ export default {
     options: {
       type: Array,
       required: true,
+      default: () => [],
       validator: data =>
         data.every(
           el => el.hasOwnProperty('text') && el.hasOwnProperty('value')
