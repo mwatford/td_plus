@@ -1,4 +1,4 @@
-const Controller = require('../users/controller');
+const Controller = require('../../users/controller');
 
 const Model = require('MongooseModel');
 

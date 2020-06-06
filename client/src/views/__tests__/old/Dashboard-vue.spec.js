@@ -5,7 +5,7 @@ import user from "user";
 
 let localVue = createLocalVue();
 
-describe("Component", () => {
+describe("Dashboard", () => {
   const wrapper = shallowMount(Component, {
     localVue,
     computed: {

@@ -1,5 +1,5 @@
-import factory from '../ProjectFactory';
-import { Basic, Kanban } from '../ProjectFactory';
+import factory from '../../ProjectFactory';
+import { Basic, Kanban } from '../../ProjectFactory';
 
 describe('factory', () => {
   test('should return basic project', () => {

@@ -1,74 +1,78 @@
-import Component from "../../Project/password.vue";
-import { createLocalVue, mount, shallowMount } from "@vue/test-utils";
-import activeProject from "activeProject";
-import user from "user";
+import Component from '../../Project/password.vue';
+import { createLocalVue, shallowMount } from '@vue/test-utils';
+import activeProject from 'activeProject';
 
 let localVue = createLocalVue();
 
-describe("Component", () => {
-  const wrapper = shallowMount(Component, {
+const alert = jest.fn();
+const compare = jest.fn();
+
+const factory = (data = {}) => {
+  const options = {
     localVue,
     computed: {
       project: () => activeProject,
-      user: () => user
-    }
+    },
+  };
+
+  Object.assign(options, data);
+  const wrapper = shallowMount(Component, options);
+
+  wrapper.setMethods({
+    alert,
+    comparePasswords: compare,
   });
 
-  test("is vue instance", () => {
+  return wrapper;
+};
+
+describe('Password', () => {
+  const wrapper = factory();
+  test('is vue instance', () => {
     expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
-  describe("renders", () => {
-    test("correct project name", () => {
-      const actual = wrapper.find("h3");
-      expect(actual.text()).toEqual("project name");
+  describe('renders', () => {
+    test('correct project name', () => {
+      const actual = wrapper.find('h3');
+      expect(actual.text()).toEqual('project name');
     });
   });
 });
 
-describe("methods", () => {
-  const compare = jest.fn();
-  const $emit = jest.fn();
-
-  const wrapper = shallowMount(Component, {
-    localVue,
-    mocks: {
-      $eventBus: {
-        $emit
-      }
-    },
-    computed: {
-      project: () => activeProject,
-      user: () => user
-    },
-    methods: {
-      comparePasswords: compare
-    }
-  });
-
+describe('methods', () => {
   beforeAll(() => {
     jest.clearAllMocks();
   });
 
-  describe("comparePasswords", () => {
-    wrapper.setData({ password: "test password" });
+  describe('comparePasswords', () => {
+    const $emit = jest.fn();
+    const options = {
+      mocks: {
+        $eventBus: {
+          $emit,
+        },
+      },
+    };
+    const wrapper = factory(options);
+    wrapper.setData({ password: 'test password' });
 
-    test("gets called on form submit", () => {
-      wrapper.find("form").trigger("submit");
+    test('gets called on form submit', () => {
+      wrapper.find('form').trigger('submit');
 
       expect(compare).toHaveBeenCalled();
     });
 
-    test("gets called with correct arguments", () => {
-      expect(compare).toHaveBeenCalledWith("test password", "project password");
+    test('gets called with correct arguments', () => {
+      expect(compare).toHaveBeenCalledWith('test password', 'project password');
     });
 
-    test("emits event if passwords match", () => {
+    test('emits event if passwords match', () => {
       compare.mockImplementationOnce(() => true);
 
-      wrapper.find("form").trigger("submit");
+      wrapper.find('form').trigger('submit');
 
-      expect($emit).toHaveBeenCalledWith("correct password");
+      expect($emit).toHaveBeenCalledWith('correct password');
     });
   });
 });

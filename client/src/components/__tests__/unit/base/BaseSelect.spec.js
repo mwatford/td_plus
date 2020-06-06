@@ -1,19 +1,18 @@
 import { shallowMount } from '@vue/test-utils';
-import Component from '../../base/BaseSelect.vue';
+import Component from '../../../base/BaseSelect.vue';
+import _ from 'lodash';
 
 const options = [
-  { text: '1', value: 1 },
-  { text: '22', value: 'asda' },
+  { text: '0', value: 'value at 0' },
+  { text: '1', value: 'value at 1' },
 ];
 
-const factory = data => {
+const factory = (data = {}) => {
   const defaults = {
     propsData: { options },
   };
-  if (data) {
-    Object.assign(defaults, data);
-  }
-  return shallowMount(Component, defaults);
+  const a = _.defaultsDeep(defaults, data);
+  return shallowMount(Component, a);
 };
 
 describe('Component', () => {
@@ -31,7 +30,7 @@ describe('Component', () => {
     const actual = wrapper.findAll({ ref: 'option' });
 
     expect(actual.length).toEqual(2);
-    expect(actual.at(0).text()).toEqual('1');
+    expect(actual.at(0).text()).toEqual('0');
   });
 
   test('should render default placeholder option', () => {
@@ -43,7 +42,9 @@ describe('Component', () => {
   });
 
   test('should render given placeholder option', () => {
-    const wrapper = factory({ propsData: { placeholder: 'test placeholder' } });
+    const wrapper = factory({
+      propsData: { placeholder: 'test placeholder' },
+    });
 
     const actual = wrapper.find('option').text();
 
@@ -52,17 +53,16 @@ describe('Component', () => {
 
   describe('handleChange method', () => {
     test('should get called on change', () => {
-      const wrapper = factory();
       const handleChange = jest.fn();
+      const wrapper = factory({ methods: { handleChange } });
 
-      wrapper.setMethods({ handleChange });
-
-      wrapper.findAll({ ref: 'option' }).at(1).trigger('change');
+      wrapper.findAll({ ref: 'option' }).at(0).element.selected = true;
+      wrapper.findAll({ ref: 'select' }).at(0).trigger('change');
 
       expect(handleChange).toHaveBeenCalled();
     });
 
-    test('should trigger change event with correct value', async () => {
+    test('should emit change event with correct value', async () => {
       const wrapper = factory();
       const emit = jest.fn();
 
@@ -72,7 +72,7 @@ describe('Component', () => {
 
       await wrapper.vm.$nextTick();
 
-      expect(emit).toHaveBeenCalledWith('change', 'asda');
+      expect(emit).toHaveBeenCalledWith('change', 'value at 1');
     });
   });
 });

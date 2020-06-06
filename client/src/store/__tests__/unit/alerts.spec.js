@@ -1,6 +1,6 @@
-import { defaultState } from "../alerts/state";
-import store from "../index";
-import { actions } from "../alerts/actions";
+import { defaultState } from "../../alerts/state";
+import store from "../../index";
+import { actions } from "../../alerts/actions";
 
 beforeEach(done => {
   store.commit("alerts/RESET_STATE");

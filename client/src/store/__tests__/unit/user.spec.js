@@ -1,5 +1,5 @@
-import { defaultState } from "../user/state";
-import store from "../index";
+import { defaultState } from "../../user/state";
+import store from "../../index";
 
 // let store;
 

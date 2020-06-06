@@ -1,4 +1,4 @@
-const Controller = require('../projects/controller');
+const Controller = require('../../projects/controller');
 
 const Model = require('MongooseModel');
 
@@ -25,7 +25,10 @@ describe('project controller', () => {
         project: { name: 'test project' },
       });
 
-      expect(actual).toMatchObject({ status: 200 });
+      expect(actual).toMatchObject({
+        status: 201,
+        data: { name: 'test project' },
+      });
     });
   });
 });

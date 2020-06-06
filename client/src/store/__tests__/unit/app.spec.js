@@ -1,5 +1,5 @@
-import { defaultState } from "../app/state";
-import store from "../index";
+import { defaultState } from "../../app/state";
+import store from "../../index";
 
 beforeEach(done => {
   store.commit("alerts/RESET_STATE");
