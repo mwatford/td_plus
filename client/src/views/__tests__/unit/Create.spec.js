@@ -30,6 +30,8 @@ jest.mock('../../../classes/ProjectFactory', () => ({
 const store = {
   dispatch: jest.fn(),
 };
+const boxEnterAnimation = jest.fn();
+const boxExitAnimation = jest.fn(() => Promise.resolve());
 
 const setup = (auth, options = {}, shallow = true) => {
   const defaults = {
@@ -43,6 +45,10 @@ const setup = (auth, options = {}, shallow = true) => {
     },
     stubs: {
       BaseSelect: shallow || BaseSelect,
+    },
+    methods: {
+      boxEnterAnimation,
+      boxExitAnimation,
     },
   };
 
@@ -176,6 +182,7 @@ describe('Create component', () => {
           expect(alert).toHaveBeenCalledWith('error', 'Something went wrong');
         });
       });
+
       describe('if logged in', () => {
         const alert = jest.fn();
         const wrapper = setup(true, { methods: { alert } });
@@ -248,6 +255,28 @@ describe('Create component', () => {
       wrapper.findAll('.button').at(1).trigger('click');
 
       expect(navigate).toHaveBeenCalledWith(-1);
+    });
+  });
+
+  describe('lifecycle hooks', () => {
+    describe('mounted', () => {
+      test('calls enter animation', () => {
+        const wrapper = setup(false);
+
+        expect(boxEnterAnimation).toHaveBeenCalled();
+      });
+    });
+
+    describe('beforeRouteLeave', () => {
+      test('calls leave animation', async () => {
+        const wrapper = setup(false);
+        const next = jest.fn();
+
+        Component.beforeRouteLeave.call(wrapper.vm, undefined, undefined, next);
+        await wrapper.vm.$nextTick();
+
+        expect(next).toHaveBeenCalled();
+      });
     });
   });
 });
