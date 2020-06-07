@@ -7,10 +7,10 @@ const handler = require('../utils/handler');
 
 router.use(authenticate);
 
-router.post(
+router.get(
   '/current',
   handler(controller.currentUser, (req, res, next) => {
-    return { sub: req.user.sub, email: req.body.email };
+    return { sub: req.user.sub };
   })
 );
 
@@ -33,11 +33,11 @@ router.delete(
 );
 
 router.put(
-  '/:id',
+  '/current',
   handler(controller.update, (req, res, next) => {
     return {
       id: req.params.id,
-      changes: req.body.changes,
+      changes: req.body,
     };
   })
 );
