@@ -37,10 +37,10 @@ export const manageProject = (operation, project) =>
     let request;
 
     if (operation === 'add') {
-      request = projects.add(project);
+      request = projects.put(project);
     }
     if (operation === 'delete') {
-      request = projects.delete(project.id);
+      request = projects.delete(project.timestamp);
     }
     if (operation === 'get') {
       request = projects.getAll();
