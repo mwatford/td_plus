@@ -36,6 +36,7 @@
 <script>
 import { mapState } from 'vuex';
 import cloneDeep from '../../utils/cloneDeep';
+import http from '../../services/api/index';
 
 export default {
   data() {
@@ -46,16 +47,20 @@ export default {
   },
   computed: {
     ...mapState({
-      memberList: state => state.activeProject.data.members,
+      project: state => state.activeProject.data,
       token: state => state.auth.token,
       user: state => state.user,
     }),
+    memberList() {
+      return this.project.members;
+    },
     suggestions() {
       let suggestions = this.responseList;
 
       this.memberList.forEach(el => {
         let element = suggestions.find(elem => elem._id === el.id);
         let index = suggestions.indexOf(element);
+
         if (index > -1) suggestions.splice(index, 1);
       });
 
@@ -66,20 +71,27 @@ export default {
     close() {
       this.$eventBus.$emit('close modal');
     },
-    addUser(user) {
-      this.$eventBus.$emit('add user', user);
-      this.close();
-    },
-    fetchUsers(search) {
-      this.$http({
-        method: 'get',
-        url: `/api/users/search/${search}`,
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-        },
-      }).then(({ data }) => {
-        this.responseList = data;
+
+    async addUser(user) {
+      try {
+        await http.projects.addUser(this.token, {
+          id: this.project._id,
+          userId: user._id,
+        });
+      } catch (e) {}
+
+      await this.$store.dispatch('activeProject/fetchProject', {
+        token: this.token,
+        id: this.project._id,
       });
+    },
+    async fetchUsers(search) {
+      try {
+        const { data } = await http.users.searchByEmail(this.token, search);
+        this.responseList = data;
+      } catch (e) {
+        this.alert('error', 'Connection error');
+      }
     },
   },
   watch: {
