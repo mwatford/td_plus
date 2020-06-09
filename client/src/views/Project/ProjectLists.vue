@@ -43,9 +43,11 @@ export default {
       }
     },
     editListName(index) {
+      if (typeof index !== 'number') return;
+
       let name = prompt('Change name:');
 
-      if (name && index) {
+      if (name) {
         this.update({
           fn: this.project.editListName,
           data: { index, name },
@@ -54,9 +56,11 @@ export default {
       }
     },
     deleteList(index, name) {
+      if (typeof index !== 'number') return;
+
       let userResponse = confirm(`Are you sure you want to delete ${name}`);
 
-      if (userResponse && index) {
+      if (userResponse) {
         this.update({ fn: this.project.deleteList, data: { index } });
         //save
       }
