@@ -12,8 +12,7 @@ const factory = (method, url, token, data) => {
   };
 
   if (data) _.defaultsDeep(defaults, { data });
-  if (method.toUpperCase() === 'GET' || method.toUpperCase() === 'DELETE')
-    delete defaults.headers['Content-Type'];
+  if (!data) delete defaults.headers['Content-Type'];
 
   return defaults;
 };
@@ -96,6 +95,18 @@ describe('projects api', () => {
       const expected = factory('delete', '/api/projects/1', 'test token');
 
       instance.delete('test token', 1);
+
+      expect(apiModule).toHaveBeenCalledWith(expected);
+    });
+
+    test('addUser', () => {
+      const expected = factory(
+        'put',
+        '/api/projects/1/addUser/1',
+        'test token'
+      );
+
+      instance.addUser('test token', { id: 1, userId: 1 });
 
       expect(apiModule).toHaveBeenCalledWith(expected);
     });
