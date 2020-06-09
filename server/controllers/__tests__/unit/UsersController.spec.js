@@ -27,7 +27,6 @@ describe('project controller', () => {
           user: {
             name: 'test user',
           },
-          message: { type: 'success', message: 'Logged in' },
         },
       });
     });
