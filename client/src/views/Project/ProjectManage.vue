@@ -2,7 +2,7 @@
   <loading v-if="loading !== 'start'" :state="loading" :size="60"></loading>
   <div v-else class="m-auto row view">
     <AddTask></AddTask>
-    <TaskList></TaskList>
+    <ProjectLists></ProjectLists>
     <MemberList v-if="auth"></MemberList>
     <button @click="deleteProject" class="button">
       DELETE PROJECT
@@ -21,7 +21,7 @@ import http from '../../services/api/index';
 import factory from '../../classes/ProjectFactory';
 import AddTask from '../Project/AddTask.vue';
 import MemberList from './MemberList.vue';
-import TaskList from './TaskList.vue';
+import ProjectLists from './ProjectLists.vue';
 
 export default {
   mixins: [navigate, snippet],
@@ -29,7 +29,7 @@ export default {
     UserSearch,
     AddTask,
     MemberList,
-    TaskList,
+    ProjectLists,
   },
   data() {
     return {
