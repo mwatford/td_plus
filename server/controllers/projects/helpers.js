@@ -1,7 +1,7 @@
 const updateUsersAfterDelete = User => (err, { members, _id }) => {
   return members.map(async member => {
     const user = await User.findById(member);
-    const index = user.projects.indexOf(_id);
+    const index = user.projects.findIndex(_id);
 
     if (index !== -1) {
       user.projects.splice(index, 1);
