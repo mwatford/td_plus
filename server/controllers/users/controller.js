@@ -10,10 +10,6 @@ const currentUser = models => async ({ sub }) => {
       status: 200,
       data: {
         user,
-        message: {
-          type: 'success',
-          message: 'Logged in',
-        },
       },
     };
 
