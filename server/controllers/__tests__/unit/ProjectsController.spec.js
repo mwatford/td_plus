@@ -83,6 +83,36 @@ describe('project controller', () => {
 
       expect(actual).toMatchObject({ status: 404 });
     });
+
+    test('does not add already existing user', async () => {
+      const save = jest.fn();
+      Models.User.findById.mockImplementationOnce(() =>
+        Promise.resolve({
+          _id: {
+            equals: () => true,
+          },
+          projects: [],
+          save
+        })
+      );
+      Models.Project.findById.mockImplementationOnce(() =>
+        Promise.resolve({
+          _id: 'test project id',
+          name: 'test name',
+          members: [{ id: 'test user id' }],
+          save,
+        })
+      );
+
+      const actual = await controller.addUser({ _id: 'test user id' });
+
+      expect(actual).toMatchObject({
+        status: 200,
+        data: {
+          message: { type: 'info', message: 'User is already a member' },
+        },
+      });
+    });
   });
 
   describe('removeUser', () => {
