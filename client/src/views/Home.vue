@@ -25,6 +25,7 @@ import boxAnimations from '../mixins/boxAnimations';
 import navigate from '../mixins/navigate';
 import { manageProject } from '../services/LocalDbManager';
 import http from '../services/api/index';
+import factory from '../classes/ProjectFactory';
 
 export default {
   mixins: [boxAnimations, navigate],
@@ -74,8 +75,22 @@ export default {
         this.alert('error', e);
       }
     },
-    setActiveProject(project) {
-      this.$store.commit('activeProject/SET_PROJECT', project);
+    async setActiveProject(project) {
+      try {
+        let d;
+        if (this.auth) {
+          const { data } = await http.projects.fetchActiveProject(
+            this.token,
+            project._id
+          );
+          d = factory.create(data.type, data);
+        } else {
+          d = factory.create(project.type, project);
+        }
+        this.$store.commit('activeProject/SET_PROJECT', d);
+      } catch (e) {
+        this.alert('error', e || 'Something went wrong');
+      }
     },
     async importLocalProjects(projects) {
       const userResponse = confirm(
