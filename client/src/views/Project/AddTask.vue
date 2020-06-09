@@ -68,7 +68,7 @@ export default {
 
 <style lang="scss" scoped>
 form {
-  height: 458px;
+  height: 457px;
   max-height: 100%;
   justify-content: flex-start;
 
