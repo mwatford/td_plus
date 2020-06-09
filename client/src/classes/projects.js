@@ -1,7 +1,7 @@
 const cloneDeep = x => JSON.parse(JSON.stringify(x));
 
 export class Basic {
-  constructor({ name, admin, password, members = [], lists, _id }) {
+  constructor({ name, admin, password, members = [], lists, _id, ...rest }) {
     this._id = _id;
     this.type = 'basic';
     this.name = name;
@@ -13,9 +13,9 @@ export class Basic {
       { name: 'In Progress', data: [] },
       { name: 'Done', data: [] },
     ];
-    this.timestamp = Date.now();
+    this.timestamp = rest.timestamp || Date.now();
   }
-  save(fn) {
+  save({ fn }) {
     return fn(this.strip());
   }
   strip() {
@@ -27,9 +27,10 @@ export class Basic {
       permissions: el.permissions,
     }));
 
+    console.log(copy);
     return copy;
   }
-  removeMember(id) {
+  removeMember({ id }) {
     const member = this.members.find(el => el.id === id);
 
     if (member) {
@@ -37,20 +38,20 @@ export class Basic {
       this.members.splice(index, 1);
     }
   }
-  addMember(member) {
-    if (!this.isMember(member.id)) this.members.push(member);
+  addMember({ member }) {
+    if (!this.isMember(member)) this.members.push(member);
   }
-  isMember(id) {
+  isMember({ id }) {
     return this.members.find(el => el.id === id) ? true : false;
   }
-  addTask(task, listIndex) {
+  addTask({ task, listIndex }) {
     if (!this.lists[listIndex]) return false;
     if (!task || typeof task === 'string' || typeof task === 'number')
       return false;
 
     this.lists[listIndex].data.push(task);
   }
-  moveTask(id, from, to) {
+  moveTask({ id, from, to }) {
     if (from === to) return;
 
     const item = this.lists[from].data.find(el => el.id === id);
@@ -59,6 +60,11 @@ export class Basic {
       const task = this.lists[from].data.splice(item, 1);
       this.lists[to].data.push(...task);
     }
+  }
+  addList({ name }) {
+    console.log(name, this);
+    if (!this.lists.find(el => el.name === name))
+      this.lists.push({ data: [], name });
   }
 }
 
