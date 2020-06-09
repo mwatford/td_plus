@@ -20,8 +20,10 @@
 import { mapState, mapMutations } from 'vuex';
 import AppList from '../../components/appList/AppList.vue';
 import AppListItemAction from '../../components/appList/AppListItemAction.vue';
+import saveProject from '../../mixins/saveProject';
 
 export default {
+  mixins: [saveProject],
   components: {
     AppListItemAction,
     AppList,
@@ -39,7 +41,7 @@ export default {
 
       if (name) {
         this.update({ fn: this.project.addList, data: { name: name } });
-        //save
+        this.save();
       }
     },
     editListName(index) {
@@ -47,13 +49,13 @@ export default {
 
       let name = prompt('Change name:');
 
-      if (name) {
-        this.update({
-          fn: this.project.editListName,
-          data: { index, name },
-        });
-        //save
-      }
+      if (name.trim() === '') return this.alert('error', "Name can't be empty");
+
+      this.update({
+        fn: this.project.editListName,
+        data: { index, name },
+      });
+      this.save();
     },
     deleteList(index, name) {
       if (typeof index !== 'number') return;
@@ -62,7 +64,7 @@ export default {
 
       if (userResponse) {
         this.update({ fn: this.project.deleteList, data: { index } });
-        //save
+        this.save();
       }
     },
   },
