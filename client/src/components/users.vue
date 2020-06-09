@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     selectUser(user) {
-      this.$eventBus.$emit('user chosen', user);
+      this.$eventBus.$emit('user-chosen', user);
     },
   },
 };

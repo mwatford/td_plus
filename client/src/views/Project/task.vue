@@ -120,7 +120,7 @@ export default {
           this.project.name
         );
       }
-      this.$eventBus.$emit('project updated');
+      this.$eventBus.$emit('project-updated');
     },
     getData(task, value = null) {
       const data = {

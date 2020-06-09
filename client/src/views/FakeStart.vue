@@ -71,9 +71,9 @@ export default {
     },
   },
   mounted() {
-    this.$eventBus.$on('signIn', this.login);
-    this.$eventBus.$on('user chosen', this.fetchUser);
-    this.$eventBus.$on('name chosen', () => this.navigate({ name: 'home' }));
+    this.$eventBus.$on('sign-in', this.login);
+    this.$eventBus.$on('user-chosen', this.fetchUser);
+    this.$eventBus.$on('name-chosen', () => this.navigate({ name: 'home' }));
     this.boxEnterAnimation(400, 0, false);
   },
   beforeRouteLeave(to, from, next) {

@@ -16,7 +16,7 @@ export default {
   },
   methods: {
     login() {
-      this.$eventBus.$emit("signIn");
+      this.$eventBus.$emit("sign-in");
     }
   }
 };

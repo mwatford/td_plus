@@ -69,7 +69,7 @@ export default {
   },
   methods: {
     close() {
-      this.$eventBus.$emit('close modal');
+      this.$eventBus.$emit('close-modal');
     },
 
     async addUser(user) {

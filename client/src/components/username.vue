@@ -40,7 +40,7 @@ export default {
           const { message, type } = response.data;
 
           this.$store.commit('user/SET_USER', { name: this.name });
-          this.$eventBus.$emit('name chosen');
+          this.$eventBus.$emit('name-chosen');
         });
     },
   },

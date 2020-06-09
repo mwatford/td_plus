@@ -49,13 +49,13 @@ export default {
       this.component = this.views[view];
     },
     grantAccess() {
-      this.$eventBus.$emit('fetch data');
+      this.$eventBus.$emit('fetch-data');
       this.component = this.views.loader;
     },
   },
   mounted() {
-    this.$eventBus.$on('changeView', this.changeView);
-    this.$eventBus.$on('correct password', this.grantAccess);
+    this.$eventBus.$on('change-view', this.changeView);
+    this.$eventBus.$on('correct-password', this.grantAccess);
 
     if (
       this.project &&
@@ -68,8 +68,8 @@ export default {
     }
   },
   beforeDestroy() {
-    this.$eventBus.$off('changeView', this.changeView);
-    this.$eventBus.$off('correct password', this.grantAccess);
+    this.$eventBus.$off('change-view', this.changeView);
+    this.$eventBus.$off('correct-password', this.grantAccess);
   },
 };
 </script>

@@ -73,10 +73,10 @@ export default {
     },
   },
   mounted() {
-    this.$eventBus.$on('signIn', () => {
+    this.$eventBus.$on('sign-in', () => {
       this.login();
     });
-    this.$eventBus.$on('name chosen', () => {
+    this.$eventBus.$on('name-chosen', () => {
       this.navigate({ name: 'home' });
     });
     this.boxEnterAnimation(400, 0, false);

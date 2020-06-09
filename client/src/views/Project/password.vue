@@ -36,7 +36,7 @@ export default {
         this.project.password
       );
       if (passwordValid) {
-        this.$eventBus.$emit('correct password');
+        this.$eventBus.$emit('correct-password');
       } else {
         this.alert('error', 'Incorrect password');
         this.password = '';
