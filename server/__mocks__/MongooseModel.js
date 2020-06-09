@@ -1,5 +1,6 @@
 module.exports = a => {
   const defaults = {
+    findById: jest.fn(),
     create: jest.fn(x => Promise.resolve(x)),
     findOne: jest.fn(),
     find: jest.fn(),
