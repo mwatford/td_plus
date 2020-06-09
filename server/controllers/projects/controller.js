@@ -59,7 +59,6 @@ const deleteProject = models => async ({ sub, id }) => {
   const { Project, User } = models;
   const { _id } = await User.findOne({ sub });
   const project = await Project.findById(id);
-
   const isAdmin = _id.equals(project.admin);
 
   if (isAdmin) {
@@ -123,16 +122,43 @@ const update = models => async ({ project, id }) => {
   return { status: 200, data };
 };
 
-const removeUser = models => async ({ id, userId }) => {
-  const { User } = models;
+const addUser = models => async ({ id, userId }) => {
+  const { User, Project } = models;
   const user = await User.findById(userId);
-  const index = user.projects.indexOf(id);
+  const project = await Project.findById(id);
 
-  if (index > -1) user.projects.splice(index, 1);
+  if (!user || !project) return { status: 404 };
 
+  project.members.push({
+    id: user._id.toString(),
+    role: 'basic',
+    permissions: [],
+  });
+
+  user.projects.push(project._id.toString());
+
+  await project.save();
   await user.save();
 
-  return { status: 200 };
+  return { status: 200, data: project };
+};
+
+const removeUser = models => async ({ id, userId }) => {
+  const { User, Project } = models;
+  const user = await User.findById(userId);
+  const project = await Project.findById(id);
+  const isMember = project.members.findIndex(el => el.id === userId);
+  const isProject = user.projects.findIndex(el => el === id);
+
+  if (isMember === -1 || isProject === -1) return { status: 200 };
+
+  project.members.splice(isMember, 1);
+  user.projects.splice(isProject, 1);
+
+  await project.save();
+  await user.save();
+
+  return { status: 200, data: project };
 };
 
 module.exports = models => ({
@@ -145,4 +171,5 @@ module.exports = models => ({
   activeProject: activeProject(models),
   update: update(models),
   removeUser: removeUser(models),
+  addUser: addUser(models),
 });
