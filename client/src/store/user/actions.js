@@ -1,29 +1,19 @@
-export const actions = requestModule => {
+export const actions = http => {
   return {
-    fetchUser({ commit, dispatch }, { token, email }) {
-      return requestModule({
-        method: 'post',
-        url: '/api/users/current',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        data: {
-          email,
-        },
-      })
-        .then(({ data }) => {
-          if (data.message)
-            dispatch('alerts/display', data.message, { root: true });
-          if (data.user) {
-            commit('SET_USER', data.user);
-          }
-        })
-        .catch(({ response }) => {
-          const { data } = response;
-          if (data.message)
-            dispatch('alerts/display', data.message, { root: true });
-        });
+    async fetchUser({ commit, dispatch }, { token }) {
+      try {
+        const { data } = await http.users.fetchUser(token);
+        if (data.message) {
+          dispatch('alerts/display', data.message, { root: true });
+        }
+        if (data.user) commit('SET_USER', data.user);
+      } catch (error) {
+        const { response } = error;
+        const { data } = response;
+        if (data.message) {
+          dispatch('alerts/display', data.message, { root: true });
+        }
+      }
     },
     resetState({ commit }) {
       commit('RESET_STATE');
@@ -31,17 +21,16 @@ export const actions = requestModule => {
     logout({ commit }) {
       commit('RESET_STATE');
     },
-    save({ commit }, { changes, token, id }) {
-      return requestModule({
+    // remove
+    save({ commit }, { changes, token }) {
+      return http.projects.updateUser({
         method: 'put',
-        url: `/api/users/${id}`,
+        url: '/api/users/current',
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        data: {
-          changes,
-        },
+        data: changes,
       });
     },
   };
