@@ -32,7 +32,7 @@ describe('Project', () => {
       const cb = jest.fn();
 
       const stripped = project.strip();
-      project.save(cb);
+      project.save({ fn: cb });
 
       expect(cb).toHaveBeenCalledWith(stripped);
     });
@@ -42,13 +42,12 @@ describe('Project', () => {
     test('removes member with specified id', () => {
       const member1 = { id: '1' };
       const member2 = { id: '2' };
-
       const project = new Basic({
         name: 'test',
         members: [member1, member2],
       });
 
-      project.removeMember('1');
+      project.removeMember({ id: '1' });
 
       const result = project.members.indexOf(member1) === -1;
 
@@ -59,10 +58,9 @@ describe('Project', () => {
   describe('addMember', () => {
     test('adds provided member', () => {
       const member = { id: '1' };
-
       const project = new Basic({ name: 'test' });
 
-      project.addMember(member);
+      project.addMember({ member });
 
       const result = project.members.indexOf(member) === -1;
 
@@ -71,10 +69,9 @@ describe('Project', () => {
 
     test('does not add already existing members', () => {
       const members = [{ id: '1' }, { id: '2' }, { id: '3' }];
-
       const project = new Basic({ name: 'test', members });
 
-      project.addMember(members[0]);
+      project.addMember({ member: { id: '1' } });
 
       const result = project.members.length;
 
@@ -91,7 +88,7 @@ describe('Project', () => {
     test('moves a task from one list to another', () => {
       project.lists[0].data.push({ id: 'task id' });
 
-      project.moveTask('task id', 0, 2);
+      project.moveTask({ id: 'task id', from: 0, to: 2 });
 
       const result = project.lists[0].data.length === 0;
       const result2 = project.lists[2].data.length === 1;
@@ -103,7 +100,7 @@ describe('Project', () => {
     test('does not move a task if list is the same', () => {
       project.lists[2].data.push({ id: 'task 2 id' });
 
-      project.moveTask('task id', 2, 2);
+      project.moveTask({ id: 'task id', from: 2, to: 2 });
 
       const length = project.lists[2].data.length;
       const element = project.lists[2].data.find(el => el.id === 'task id');
@@ -125,15 +122,15 @@ describe('Project', () => {
     });
 
     test('returns true if member is found', () => {
-      const result = project.isMember('test id');
-      const result2 = project.isMember('test id 2');
+      const result = project.isMember({ id: 'test id' });
+      const result2 = project.isMember({ id: 'test id 2' });
 
       expect(result).toBe(true);
       expect(result2).toBe(true);
     });
 
     test('returns false if member is not found', () => {
-      const result = project.isMember('test id 3');
+      const result = project.isMember({ id: 'test id 3' });
 
       expect(result).toBe(false);
     });
@@ -147,8 +144,8 @@ describe('Project', () => {
     });
 
     test('add a task to given list', () => {
-      project.addTask({}, 0);
-      project.addTask({}, 1);
+      project.addTask({ task: {}, listIndex: 0 });
+      project.addTask({ task: {}, listIndex: 1 });
 
       const result = project.lists[0].data.length === 1;
       const result2 = project.lists[1].data.length === 1;
@@ -159,8 +156,8 @@ describe('Project', () => {
     test('returns false if list does not exist', () => {
       const results = [];
 
-      results.push(project.addTask({}, 7));
-      results.push(project.addTask({}, 3));
+      results.push(project.addTask({ task: {}, listIndex: 7 }));
+      results.push(project.addTask({ task: {}, listIndex: 3 }));
 
       expect(results).toEqual([false, false]);
     });
@@ -168,10 +165,10 @@ describe('Project', () => {
     test('returns false if task is of primitive type', () => {
       const results = [];
 
-      results.push(project.addTask(1, 0));
-      results.push(project.addTask('a', 0));
-      results.push(project.addTask(undefined, 0));
-      results.push(project.addTask(null, 0));
+      results.push(project.addTask({ task: 1, listIndex: 0 }));
+      results.push(project.addTask({ task: 'a', listIndex: 0 }));
+      results.push(project.addTask({ task: undefined, listIndex: 0 }));
+      results.push(project.addTask({ task: null, listIndex: 0 }));
 
       expect(results).toEqual([false, false, false, false]);
     });
