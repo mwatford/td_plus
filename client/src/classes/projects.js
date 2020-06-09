@@ -64,6 +64,15 @@ export class Basic {
     if (!this.lists.find(el => el.name === name))
       this.lists.push({ data: [], name });
   }
+  editListName({ index, name }) {
+    if (this._listExists(index)) this.lists[index].name = name;
+  }
+  deleteList({ index }) {
+    if (this._listExists(index)) this.lists.splice(index, 1);
+  }
+  _listExists(index) {
+    return this.lists[index];
+  }
 }
 
 export class Kanban extends Basic {
