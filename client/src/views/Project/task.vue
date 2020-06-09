@@ -73,7 +73,7 @@ export default {
   computed: {
     ...mapState({
       auth: state => state.auth.status,
-      project: state => state.activeProject,
+      project: state => state.activeProject.data,
     }),
     displayButton() {
       if (!this.auth) return true;
