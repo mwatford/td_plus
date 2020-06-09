@@ -27,7 +27,6 @@ export class Basic {
       permissions: el.permissions,
     }));
 
-    console.log(copy);
     return copy;
   }
   removeMember({ id }) {
@@ -62,7 +61,6 @@ export class Basic {
     }
   }
   addList({ name }) {
-    console.log(name, this);
     if (!this.lists.find(el => el.name === name))
       this.lists.push({ data: [], name });
   }
