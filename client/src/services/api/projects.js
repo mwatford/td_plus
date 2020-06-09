@@ -68,7 +68,21 @@ const deleteProject = http => (token, id) =>
     },
   });
 
-const removeUser = http => () => http({});
+const addUser = http => (token, { id, userId }) =>
+  http({
+    method: 'put',
+    url: `/api/projects/${id}/addUser/${userId}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+const removeUser = http => (token, { id, userId }) =>
+  http({
+    method: 'put',
+    url: `/api/projects/${id}/removeUser/${userId}`,
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 export default http => ({
   import: sendProjects(http),
@@ -78,4 +92,6 @@ export default http => ({
   fetchAllProjects: fetchAllProjects(http),
   isAdmin: isAdmin(http),
   delete: deleteProject(http),
+  addUser: addUser(http),
+  removeUser: removeUser(http),
 });
