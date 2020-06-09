@@ -129,6 +129,14 @@ const addUser = models => async ({ id, userId }) => {
 
   if (!user || !project) return { status: 404 };
 
+  const isMember = project.members.find(el => user._id.equals(el.id));
+
+  if (isMember)
+    return {
+      status: 200,
+      data: { message: { type: 'info', message: 'User is already a member' } },
+    };
+
   project.members.push({
     id: user._id.toString(),
     role: 'basic',
