@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="row buttons">
-        <button class="button" @click="save" type="submit" :disabled="true">
+        <button class="button" @click="save" type="submit" :disabled="!true">
           Save
         </button>
         <button class="button" @click="navigate(-1)">Back</button>
@@ -31,6 +31,7 @@
 import { mapState } from 'vuex';
 import boxAnimations from '../mixins/boxAnimations';
 import navigate from '../mixins/navigate';
+import http from '../services/api/index';
 
 export default {
   mixins: [boxAnimations, navigate],
@@ -49,37 +50,39 @@ export default {
       return this.testName;
     },
     testName() {
-      if (this.name) {
+      if (!!this.name) {
         this.changes.name = this.name;
         return true;
       }
 
       delete this.changes.name;
+
       return false;
     },
   },
   methods: {
-    save() {
-      this.$store
-        .dispatch('user/save', {
-          changes: this.changes,
-          token: this.token,
-          id: this.user._id,
-        })
-        .then(this.handleResponse);
+    async save() {
+      if (this.testName) {
+        try {
+          const data = await http.users.updateUser(this.token, this.changes);
+
+          this.handleResponse(data);
+        } catch (e) {
+          this.alert(e);
+        }
+      }
     },
     handleResponse() {
-      this.alert('success', 'Your profile has been upated');
       this.$store.commit('user/SET_USER', this.changes);
+      this.alert('success', 'Your profile has been upated');
     },
-    deleteAccount() {
-      this.$http({
-        method: 'delete',
-        url: `/api/users/current`,
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-        },
-      }).then(this.$auth.logout);
+    async deleteAccount() {
+      try {
+        await http.users.deleteUser(this.token);
+        this.$auth.logout();
+      } catch (e) {
+        this.alert('error', 'Could not delete your account');
+      }
     },
   },
   mounted() {
