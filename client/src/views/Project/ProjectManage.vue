@@ -1,118 +1,39 @@
 <template>
   <loading v-if="loading !== 'start'" :state="loading" :size="60"></loading>
   <div v-else class="m-auto row view">
-    <form @submit.prevent class="box col">
-      <h3>Add task</h3>
-      <input
-        type="text"
-        class="input"
-        placeholder="name"
-        v-model="task.name"
-        required
-      />
-      <textarea
-        class="input"
-        placeholder="description"
-        v-model="task.description"
-      />
-      <div class="col" v-if="auth">
-        <label>
-          Select member
-        </label>
-        <select v-model="task.member">
-          <option
-            v-for="member in members"
-            :key="member.id"
-            :value="member.id"
-            >{{ member.name }}</option
-          >
-        </select>
-      </div>
-      <button class="button" @click="addTask">
-        <app-icon
-          class="m-auto"
-          type="plus"
-          size="19"
-          color="inherit"
-        ></app-icon>
-      </button>
-    </form>
-    <div class="list">
-      <ul>
-        <li><h3 class="m-auto">Lists</h3></li>
-        <li v-for="(list, index) in project.lists" :key="index" class="row">
-          <div
-            class="row text"
-            @click="changeListName(index)"
-            title="change name"
-          >
-            <h4>
-              {{ list.name }}
-            </h4>
-          </div>
-          <div class="icon" @click="deleteList(index)" title="delete list">
-            <app-icon type="cross" size="14" class="m-auto"></app-icon>
-          </div>
-        </li>
-        <li
-          class="row add"
-          @click="addList"
-          title="add new list"
-          v-if="project.lists.length < 9"
-        >
-          <app-icon class="m-auto" type="plus" size="19"></app-icon>
-        </li>
-      </ul>
-    </div>
-    <div class="list" v-if="project.members.length">
-      <ul>
-        <li><h3 class="m-auto">Members</h3></li>
-        <li v-for="(member, index) in project.members" :key="index" class="row">
-          <div class="row text" title="edit user's permissions">
-            <h4>
-              {{ member.name }}
-            </h4>
-          </div>
-          <button
-            class="icon"
-            @click="removeUser(member, index)"
-            title="remove member"
-            v-if="member.id !== project.admin"
-          >
-            <app-icon type="cross" size="14" class="m-auto"></app-icon>
-          </button>
-        </li>
-        <li
-          class="row add"
-          @click="search = true"
-          title="find member"
-          v-if="project.members.length < 9"
-        >
-          <app-icon class="m-auto" type="search" size="19"></app-icon>
-        </li>
-      </ul>
-      <app-search v-if="search"></app-search>
-    </div>
-    <button @click="deleteProject" class="button">DELETE PROJECT</button>
+    <AddTask></AddTask>
+    <TaskList></TaskList>
+    <MemberList v-if="auth"></MemberList>
+    <button @click="deleteProject" class="button">
+      DELETE PROJECT
+    </button>
   </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapGetters, mapMutations } from 'vuex';
 import navigate from '../../mixins/navigate';
 import snippet from '../../mixins/snippet';
 import cloneDeep from '../../utils/cloneDeep';
-import search from './search.vue';
+import UserSearch from './search.vue';
+import { manageProject } from '../../services/LocalDbManager';
+import http from '../../services/api/index';
+import factory from '../../classes/ProjectFactory';
+import AddTask from '../Project/AddTask.vue';
+import MemberList from './MemberList.vue';
+import TaskList from './TaskList.vue';
 
 export default {
   mixins: [navigate, snippet],
   components: {
-    'app-search': search,
+    UserSearch,
+    AddTask,
+    MemberList,
+    TaskList,
   },
   data() {
     return {
       loading: 'start',
-      task: this.createEmptyTask(),
       limit: 9,
       search: false,
     };
@@ -123,74 +44,39 @@ export default {
       token: state => state.auth.token,
       auth: state => state.auth.status,
     }),
-    members() {
-      return this.project.members;
-    },
   },
   methods: {
-    createEmptyTask() {
-      return {
-        name: '',
-        description: '',
-      };
-    },
-    authenticate() {
+
+    ...mapMutations({ update: 'activeProject/UPDATE' }),
+    async authenticate() {
       this.loading = 'loading';
-
-      this.$http({
-        method: 'get',
-        url: `/api/projects/${this.project._id}/admin`,
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-        },
-      })
-        .then(() => {
-          this.loading = 'done';
-
-          setTimeout(() => {
-            this.loading = 'start';
-          }, 500);
-        })
-        .catch(e => {
-          this.loading = 'failed';
-          this.alert('error', e.response.data);
-          this.$router.go(-1);
-        });
+      try {
+        await http.projects.isAdmin(this.token, this.project._id);
+        this.loading = 'start';
+      } catch (error) {
+        this.loading = 'failed';
+        this.alert('error', e.response.data);
+        this.navigate(-1);
+      }
     },
-    deleteProject() {
+    async deleteProject() {
       const confirmed = confirm(
         `Are you absolutely sure you want to delete '${this.project.name}'?`
       );
 
-      if (confirmed) {
-        return this.auth ? this.deleteFromDB() : this.deleteLocal();
-      }
-    },
-    deleteFromDB() {
-      return this.$http({
-        method: 'delete',
-        url: `/api/projects/${this.project._id}`,
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-        },
-      }).then(() => {
+      if (!confirmed) return;
+
+      try {
+        if (!this.auth) {
+          await manageProject('delete', this.project);
+        } else {
+          await http.projects.delete(this.token, this.project._id);
+          this.$socket.emit('project deleted');
+        }
         this.alert('success', 'Project has been deleted');
-        this.$socket.emit('project deleted');
         this.navigate({ name: 'home' });
-      });
-    },
-    deleteLocal() {
-      const index = this.getCurrentProjectIndex();
-
-      if (index > -1) {
-        this.$store.commit('projects/REMOVE', index);
-
-        localStorage.setItem(
-          'projects',
-          JSON.stringify(this.$store.state.projects.data)
-        );
-
-        this.navigate({ name: 'home' });
+      } catch (error) {
+        this.alert('error', 'Something went wrong');
       }
     },
     changeListName(index) {
@@ -205,14 +91,6 @@ export default {
 
         this.save();
       }
-    },
-    getCurrentProjectIndex() {
-      const project = this.$store.state.projects.data.find(
-        el => el.name === this.project.name
-      );
-      const index = this.$store.state.projects.data.indexOf(project);
-
-      return index;
     },
     updateProject() {
       this.loading = 'start';
@@ -240,22 +118,6 @@ export default {
           this.alert('error', 'Your changes have not been saved.');
         });
     },
-    addList() {
-      const name = prompt('Name:');
-
-      if (name) {
-        this.$store.commit('activeProject/ADD_LIST', { data: [], name });
-
-        this.save();
-      }
-    },
-    addTask() {
-      this.$store.commit('activeProject/ADD_TASK', this.task);
-
-      this.save();
-
-      this.task = this.createEmptyTask();
-    },
     deleteList(index) {
       const confirmed = confirm(
         `Are you sure you want to delete "${this.project.lists[index].name}"`
@@ -275,37 +137,23 @@ export default {
     closeModal() {
       this.search = false;
     },
-    addUser(user) {
-      this.$store.commit('activeProject/ADD_MEMBER', {
-        id: user._id,
-        role: 'basic',
-        permissions: [],
-      });
-
-      this.updateUser(user, 'add');
-      this.updateProject();
-    },
-    removeUser(user, index) {
-      this.$store.commit('activeProject/REMOVE_MEMBER', index);
-
-      this.$http({
-        method: 'put',
-        url: `/api/projects/${this.project._id}/removeUser/${user.id}`,
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-        },
-      });
-
-      this.updateProject().then(() =>
-        this.$socket.emit('user removed', user.id)
-      );
+    async removeUser(user, index) {
+      try {
+        await http.projects.removeUser(this.token, {
+          id: this.project._id,
+          userId: user.id,
+        });
+        this.alert('success', 'User has been removed');
+      } catch (e) {
+        this.alert('error', 'User was not removed');
+      }
     },
     updateUser({ projects, _id }, action) {
       if (action === 'add') {
         projects.push(this.project._id);
       }
 
-      return this.$http({
+      return this.$this.http({
         method: 'put',
         url: `/api/users/${_id}`,
         headers: {
@@ -333,79 +181,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-form {
-  height: 458px;
-  max-height: 100%;
-  justify-content: flex-start;
-
-  .button {
-    margin: 20px 0 0 0;
-  }
-}
-label {
-  margin: 5px 0;
-}
-textarea {
-  max-width: 100%;
-  min-width: 100%;
-  max-height: 100%;
-  height: 100%;
-  border: 1px dashed #fff;
-  border-bottom: 2px solid #fff;
-}
-ul {
-  margin-left: 3px;
-  list-style-type: none;
-
-  li {
-    display: flex;
-    background: #000000cc;
-    border-radius: 2px;
-    color: #fff;
-    margin-bottom: 3px;
-    width: 250px;
-    height: 43px;
-    overflow: hidden;
-
-    &.row {
-      cursor: pointer;
-    }
-
-    .icon {
-      height: 100%;
-      width: 43px;
-      display: flex;
-
-      &:hover {
-        background: #ff3131b4;
-      }
-    }
-    .text {
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 12px;
-      width: 100%;
-      height: 100%;
-    }
-  }
-  .text,
-  li.add {
-    &:hover {
-      background: #000000da;
-    }
-  }
-}
-.button {
-  margin: 0 0 0 auto;
-}
 .suggestions {
   height: auto;
 }
 .box {
   padding: 50px;
-}
-button.icon {
-  border: none;
-  background: transparent;
 }
 </style>
