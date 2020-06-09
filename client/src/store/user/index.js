@@ -1,13 +1,13 @@
-import { actions } from "./actions";
-import { getters } from "./getters";
-import { state } from "./state";
-import { mutations } from "./mutations";
-import axios from "axios";
+import { actions } from './actions';
+import { getters } from './getters';
+import { state } from './state';
+import { mutations } from './mutations';
+import http from '../../services/api/index';
 
 export default {
   state,
   mutations,
-  actions: actions(axios),
+  actions: actions(http),
   getters,
-  namespaced: true
+  namespaced: true,
 };
