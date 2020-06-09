@@ -86,6 +86,15 @@ router.put(
 );
 
 router.put(
+  '/:id/addUser/:userId',
+  handler(controller.addUser, (req, res, next) => {
+    return {
+      id: req.params.id,
+      userId: req.params.userId,
+    };
+  })
+);
+router.put(
   '/:id/removeUser/:userId',
   handler(controller.removeUser, (req, res, next) => {
     return {
