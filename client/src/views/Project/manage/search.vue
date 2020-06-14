@@ -35,8 +35,8 @@
 
 <script>
 import { mapState } from 'vuex';
-import cloneDeep from '../../utils/cloneDeep';
-import http from '../../services/api/index';
+import cloneDeep from 'Utils/cloneDeep';
+import http from 'Services/api/index';
 
 export default {
   data() {
@@ -78,12 +78,14 @@ export default {
           id: this.project._id,
           userId: user._id,
         });
-      } catch (e) {}
 
-      await this.$store.dispatch('activeProject/fetchProject', {
-        token: this.token,
-        id: this.project._id,
-      });
+        await this.$store.dispatch('activeProject/fetchProject', {
+          token: this.token,
+          id: this.project._id,
+        });
+      } catch (e) {
+        this.alert('error', e || 'Error adding the user');
+      }
     },
     async fetchUsers(search) {
       try {

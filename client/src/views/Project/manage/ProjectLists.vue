@@ -18,9 +18,9 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
-import AppList from '../../components/appList/AppList.vue';
-import AppListItemAction from '../../components/appList/AppListItemAction.vue';
-import saveProject from '../../mixins/saveProject';
+import AppList from 'Components/appList/AppList.vue';
+import AppListItemAction from 'Components/appList/AppListItemAction.vue';
+import saveProject from 'Mixins/saveProject';
 
 export default {
   mixins: [saveProject],
@@ -49,7 +49,8 @@ export default {
 
       let name = prompt('Change name:');
 
-      if (name.trim() === '') return this.alert('error', "Name can't be empty");
+      if (typeof name === 'object' || !name.trim().length)
+        return this.alert('error', "Name can't be empty");
 
       this.update({
         fn: this.project.editListName,

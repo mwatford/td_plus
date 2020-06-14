@@ -15,8 +15,8 @@
 
 <script>
 import { mapState } from 'vuex';
-import AppList from '../../components/appList/AppList.vue';
-import AppListItemAction from '../../components/appList/AppListItemAction.vue';
+import AppList from 'Components/appList/AppList.vue';
+import AppListItemAction from 'Components/appList/AppListItemAction.vue';
 
 export default {
   components: {

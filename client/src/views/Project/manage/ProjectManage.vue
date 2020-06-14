@@ -12,14 +12,13 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
-import navigate from '../../mixins/navigate';
-import snippet from '../../mixins/snippet';
-import cloneDeep from '../../utils/cloneDeep';
+import navigate from 'Mixins/navigate';
+import snippet from 'Mixins/snippet';
+import cloneDeep from 'Utils/cloneDeep';
 import UserSearch from './search.vue';
-import { manageProject } from '../../services/LocalDbManager';
-import http from '../../services/api/index';
-import factory from '../../classes/ProjectFactory';
-import AddTask from '../Project/AddTask.vue';
+import { manageProject } from 'Services/LocalDbManager';
+import http from 'Services/api/index';
+import AddTask from './AddTask.vue';
 import MemberList from './MemberList.vue';
 import ProjectLists from './ProjectLists.vue';
 
@@ -46,7 +45,6 @@ export default {
     }),
   },
   methods: {
-
     ...mapMutations({ update: 'activeProject/UPDATE' }),
     async authenticate() {
       this.loading = 'loading';
@@ -169,13 +167,13 @@ export default {
   mounted() {
     if (this.auth) {
       this.authenticate();
-      this.$eventBus.$on('close modal', this.closeModal);
-      this.$eventBus.$on('add user', this.addUser);
+      this.$eventBus.$on('close-modal', this.closeModal);
+      this.$eventBus.$on('add-user', this.addUser);
     }
   },
   beforeDestroy() {
-    this.$eventBus.$off('add user', this.addUser);
-    this.$eventBus.$off('close modal', this.closeModal);
+    this.$eventBus.$off('add-user', this.addUser);
+    this.$eventBus.$off('close-modal', this.closeModal);
   },
 };
 </script>
