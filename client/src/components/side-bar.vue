@@ -47,11 +47,6 @@ import navigate from '../mixins/navigate';
 
 export default {
   mixins: [navigate],
-  data() {
-    return {
-      displayUser: false,
-    };
-  },
   computed: {
     ...mapState({
       app: state => state.app,
@@ -60,14 +55,8 @@ export default {
     }),
   },
   methods: {
-    toggle(component) {
-      this.$store.commit(`app/TOGGLE_${component}`);
-    },
     logout() {
-      window.location.reload()
-      // this.$auth.logout({
-      //   returnTo: window.location.origin,
-      // });
+      window.location.reload();
     },
   },
 };
