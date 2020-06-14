@@ -1,24 +1,21 @@
 <template>
   <div class="box project">
     <h3 class="project__name">
-      {{ snippet(project.name, 16) || "not set" }}
+      {{ snippet(project.name, 16) || 'not set' }}
     </h3>
   </div>
 </template>
 
 <script>
-import snippet from "../mixins/snippet";
+import snippet from '../mixins/snippet';
 export default {
   mixins: [snippet],
   props: {
     project: {
+      type: Object,
       required: true,
-      type: Object
-    }
+    },
   },
-  data() {
-    return {};
-  }
 };
 </script>
 
