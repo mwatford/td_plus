@@ -72,7 +72,7 @@ describe('methods', () => {
 
       wrapper.find('form').trigger('submit');
 
-      expect($emit).toHaveBeenCalledWith('correct password');
+      expect($emit).toHaveBeenCalledWith('correct-password');
     });
   });
 });
