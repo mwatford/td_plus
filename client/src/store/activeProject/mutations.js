@@ -1,7 +1,9 @@
 import { defaultState } from './state';
+import projectFactory from '../../classes/ProjectFactory';
 
 export const mutations = {
-  SET_PROJECT(state, project) {
+  SET_PROJECT(state, data) {
+    const project = projectFactory.create(data.type, data);
     state.data = project;
   },
   RESET_STATE(state) {
