@@ -50,15 +50,5 @@ export default {
   max-width: 400px;
   height: 500px;
   margin-left: 20px;
-
-  &__messages {
-    height: 100%;
-    width: 100%;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    padding: 10px;
-    padding-bottom: 0;
-    list-style-type: none;
-  }
 }
 </style>

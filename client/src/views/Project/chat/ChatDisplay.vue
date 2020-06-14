@@ -1,5 +1,5 @@
 <template>
-  <ul v-chat-scroll="{ always: true }" class="box chat__messages">
+  <ul v-chat-scroll="{ always: true }" class="box display">
     <ChatMessage
       v-for="(message, index) in messages"
       :key="index"
@@ -37,4 +37,14 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.display {
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 10px;
+  padding-bottom: 0;
+  list-style-type: none;
+}
+</style>
