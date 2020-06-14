@@ -27,21 +27,15 @@ export default {
     }),
   },
   methods: {
-    chooseName() {
-      this.$store
-        .dispatch('user/save', {
-          token: this.token,
-          changes: {
-            name: this.name,
-          },
-          id: this.user._id,
-        })
-        .then(response => {
-          const { message, type } = response.data;
+    async chooseName() {
+      if (!name.trim()) return this.alert('error', 'Choose your name.');
 
-          this.$store.commit('user/SET_USER', { name: this.name });
-          this.$eventBus.$emit('name-chosen');
-        });
+      await this.$store.dispatch('user/save', {
+        token: this.token,
+        data: { name: this.name },
+      });
+
+      this.$eventBus.$emit('name-chosen');
     },
   },
 };
