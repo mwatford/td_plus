@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { comparePasswords } from '../../utils/password';
+import { comparePasswords } from 'Utils/password';
 import { mapState } from 'vuex';
 
 export default {

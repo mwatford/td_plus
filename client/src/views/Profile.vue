@@ -29,9 +29,9 @@
 
 <script>
 import { mapState } from 'vuex';
-import boxAnimations from '../mixins/boxAnimations';
-import navigate from '../mixins/navigate';
-import http from '../services/api/index';
+import boxAnimations from 'Mixins/boxAnimations';
+import navigate from 'Mixins/navigate';
+import http from 'Services/api/index';
 
 export default {
   mixins: [boxAnimations, navigate],

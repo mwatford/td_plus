@@ -14,12 +14,12 @@
 </template>
 
 <script>
-import boxAnimations from '../mixins/boxAnimations';
-import signIn from '../components/sign-in.vue';
-import loader from '../components/loading.vue';
-import username from '../components/username.vue';
-import animations from '../mixins/animations';
-import navigate from '../mixins/navigate';
+import boxAnimations from 'Mixins/boxAnimations';
+import signIn from 'Components/sign-in.vue';
+import loader from 'Components/loading.vue';
+import username from 'Components/username.vue';
+import animations from 'Mixins/animations';
+import navigate from 'Mixins/navigate';
 
 export default {
   mixins: [boxAnimations, animations, navigate],

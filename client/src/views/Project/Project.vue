@@ -4,11 +4,11 @@
 
 <script>
 import { mapState } from 'vuex';
-import navigate from '../../mixins/navigate';
-import { popUp, scaleDown } from '../../mixins/animations';
-import loader from '../../components/loading.vue';
+import navigate from 'Mixins/navigate';
+import { popUp, scaleDown } from 'Mixins/animations';
+import loader from 'Components/loading.vue';
 import dashboard from './Dashboard.vue';
-import manage from './ProjectManage.vue';
+import manage from './manage/ProjectManage.vue';
 import password from './password.vue';
 
 export default {

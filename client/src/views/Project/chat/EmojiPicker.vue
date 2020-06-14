@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import emojis from '../../../utils/emojiList';
+import emojis from 'Utils/emojiList';
 
 export default {
   data: () => ({ emojis, isExpanded: false }),

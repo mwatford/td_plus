@@ -20,12 +20,11 @@
 
 <script>
 import { mapState } from 'vuex';
-import ProjectTile from '../components/ProjectTile.vue';
-import boxAnimations from '../mixins/boxAnimations';
-import navigate from '../mixins/navigate';
-import { manageProject } from '../services/LocalDbManager';
-import http from '../services/api/index';
-import factory from '../classes/ProjectFactory';
+import ProjectTile from 'Components/ProjectTile.vue';
+import boxAnimations from 'Mixins/boxAnimations';
+import navigate from 'Mixins/navigate';
+import { manageProject } from 'Services/LocalDbManager';
+import http from 'Services/api/index';
 
 export default {
   mixins: [boxAnimations, navigate],
@@ -77,17 +76,15 @@ export default {
     },
     async setActiveProject(project) {
       try {
-        let d;
         if (this.auth) {
           const { data } = await http.projects.fetchActiveProject(
             this.token,
             project._id
           );
-          d = factory.create(data.type, data);
-        } else {
-          d = factory.create(project.type, project);
+          project = data;
         }
-        this.$store.commit('activeProject/SET_PROJECT', d);
+
+        this.$store.commit('activeProject/SET_PROJECT', project);
       } catch (e) {
         this.alert('error', e || 'Something went wrong');
       }

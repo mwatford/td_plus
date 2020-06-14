@@ -8,8 +8,8 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import sideBar from './components/side-bar.vue';
-import alerts from './components/alerts.vue';
+import sideBar from 'Components/side-bar.vue';
+import alerts from 'Components/alerts.vue';
 
 export default {
   components: {

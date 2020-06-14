@@ -1,8 +1,8 @@
-import Home from '../views/Home.vue';
-import Profile from '../views/Profile.vue';
-import View from '../views/Project/View.vue';
-import Start from '../views/FakeStart.vue';
-import Create from '../views/Create.vue';
+import Home from 'Views/Home.vue';
+import Profile from 'Views/Profile.vue';
+import View from 'Views/Project/View.vue';
+import Start from 'Views/FakeStart.vue';
+import Create from 'Views/Create.vue';
 
 export default [
   {
@@ -17,7 +17,6 @@ export default [
     name: 'create',
     path: '/create',
     component: Create,
-    
     meta: {
       requiresAuth: false,
     },

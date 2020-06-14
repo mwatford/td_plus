@@ -24,7 +24,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import cloneDeep from '../../utils/cloneDeep';
+import cloneDeep from 'Utils/cloneDeep';
 import task from './task.vue';
 
 export default {
@@ -59,7 +59,6 @@ export default {
 .box {
   width: 240px;
   padding: 20px;
-  margin-right: 3px;
   margin-bottom: 3px;
   min-height: 240px;
 

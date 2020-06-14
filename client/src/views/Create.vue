@@ -46,12 +46,12 @@
 <script>
 import axios from 'axios';
 import { mapState } from 'vuex';
-import boxAnimations from '../mixins/boxAnimations';
-import { hashPassword } from '../utils/password';
-import navigate from '../mixins/navigate';
-import factory from '../classes/ProjectFactory';
-import { manageProject } from '../services/LocalDbManager';
-import http from '../services/api/index';
+import boxAnimations from 'Mixins/boxAnimations';
+import { hashPassword } from 'Utils/password';
+import navigate from 'Mixins/navigate';
+import factory from 'Classes/ProjectFactory';
+import { manageProject } from 'Services/LocalDbManager';
+import http from 'Services/api/index';
 
 export default {
   mixins: [boxAnimations, navigate],

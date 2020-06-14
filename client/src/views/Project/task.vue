@@ -57,9 +57,9 @@
 </template>
 
 <script>
-import snippet from '../../mixins/snippet';
+import snippet from 'Mixins/snippet';
 import { mapState } from 'vuex';
-import cloneDeep from '../../utils/cloneDeep';
+import cloneDeep from 'Utils/cloneDeep';
 
 export default {
   props: ['task', 'listIndex', 'taskIndex', 'user'],
@@ -114,12 +114,12 @@ export default {
         .then(this.triggerUpdate);
     },
     triggerUpdate() {
-      if (!this.auth) {
+      if (!this.auth)
         return this.$store.dispatch(
           'activeProject/saveLocally',
           this.project.name
         );
-      }
+
       this.$eventBus.$emit('project-updated');
     },
     getData(task, value = null) {
