@@ -1,6 +1,6 @@
 <template>
   <div class="modal col">
-    <ul
+    <!-- <ul
       class="col box box--inverted suggestions"
       v-if="suggestions.length"
       ref="suggestions"
@@ -18,15 +18,22 @@
           {{ suggestion.email }}
         </h5>
       </li>
-    </ul>
+    </ul> -->
+    <div class="box box--inverted col suggestions">
+      <AppList header="Invite" :items="suggestions" v-slot="{ item }">
+        <h3 class="text" @click="addUser(item)">{{ item.email }}</h3>
+      </AppList>
+    </div>
     <div class="box box--inverted">
       <input
         type="text"
         class="input"
         name="invite"
+        @input="onInput"
         v-model="search"
         data-search
         placeholder="invite people"
+        ref="input"
       />
       <button class="button button--inverted" @click="close">Cancel</button>
     </div>
@@ -34,11 +41,16 @@
 </template>
 
 <script>
+import AppList from 'Components/appList/AppList.vue';
 import { mapState } from 'vuex';
 import cloneDeep from 'Utils/cloneDeep';
 import http from 'Services/api/index';
+import _ from 'lodash';
 
 export default {
+  components: {
+    AppList,
+  },
   data() {
     return {
       search: '',
@@ -67,11 +79,16 @@ export default {
       return suggestions;
     },
   },
+  mounted() {
+    this.$refs['input'].focus();
+  },
   methods: {
     close() {
-      this.$eventBus.$emit('close-modal');
+      this.$eventBus.$emit('close-search');
     },
-
+    onInput: _.debounce(function () {
+      if (this.search.trim().length) this.fetchUsers();
+    }, 800),
     async addUser(user) {
       try {
         await http.projects.addUser(this.token, {
@@ -87,19 +104,15 @@ export default {
         this.alert('error', e || 'Error adding the user');
       }
     },
-    async fetchUsers(search) {
+    async fetchUsers() {
       try {
-        const { data } = await http.users.searchByEmail(this.token, search);
+        const { data } = await http.users.searchByEmail(
+          this.token,
+          this.search
+        );
         this.responseList = data;
       } catch (e) {
         this.alert('error', 'Connection error');
-      }
-    },
-  },
-  watch: {
-    search(n) {
-      if (n.length > 3) {
-        this.fetchUsers(n);
       }
     },
   },
@@ -138,6 +151,8 @@ export default {
   width: 380px;
   box-shadow: 0 0 15px 3px #00000062;
   padding: 50px;
+  justify-content: center;
+  align-items: center;
 }
 .suggestions {
   height: auto;

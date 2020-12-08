@@ -6,7 +6,7 @@
     <li v-for="(item, index) in items" :key="index" class="list__item">
       <slot :item="item" :index="index"></slot>
     </li>
-    <li v-if="items.length < limit" class="list__item">
+    <li v-if="isBelowLimit" class="list__item">
       <slot name="list-action"></slot>
     </li>
   </ul>
@@ -28,11 +28,12 @@ export default {
       type: String,
     },
   },
-  methods: {
-    addList() {},
-    deleteList() {},
-    changeListName() {},
+  computed: {
+    isBelowLimit() {
+      return this.limit && this.items.length < this.limit;
+    },
   },
+  methods: {},
 };
 </script>
 

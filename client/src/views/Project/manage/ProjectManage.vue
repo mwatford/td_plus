@@ -3,10 +3,11 @@
   <div v-else class="m-auto row view">
     <AddTask></AddTask>
     <ProjectLists></ProjectLists>
-    <MemberList v-if="auth"></MemberList>
+    <MemberList v-if="auth"> </MemberList>
     <button @click="deleteProject" class="button">
       DELETE PROJECT
     </button>
+    <UserSearch v-if="searchOpen"></UserSearch>
   </div>
 </template>
 
@@ -34,7 +35,7 @@ export default {
     return {
       loading: 'start',
       limit: 9,
-      search: false,
+      searchOpen: false,
     };
   },
   computed: {
@@ -44,14 +45,31 @@ export default {
       auth: state => state.auth.status,
     }),
   },
+  mounted() {
+    if (this.auth) {
+      this.authenticate();
+      this.$eventBus.$on('open-search', this.openSearch);
+      this.$eventBus.$on('close-search', this.closeSearch);
+    }
+  },
+  beforeDestroy() {
+    this.$eventBus.$off('open-search', this.openSearch);
+    this.$eventBus.$off('close-search', this.closeSearch);
+  },
   methods: {
     ...mapMutations({ update: 'activeProject/UPDATE' }),
+    openSearch() {
+      this.searchOpen = true;
+    },
+    closeSearch() {
+      this.searchOpen = false;
+    },
     async authenticate() {
-      this.loading = 'loading';
       try {
+        this.loading = 'loading';
         await http.projects.isAdmin(this.token, this.project._id);
         this.loading = 'start';
-      } catch (error) {
+      } catch (e) {
         this.loading = 'failed';
         this.alert('error', e.response.data);
         this.navigate(-1);
@@ -132,9 +150,6 @@ export default {
         ? this.$store.dispatch('activeProject/saveLocally', this.project.name)
         : this.updateProject();
     },
-    closeModal() {
-      this.search = false;
-    },
     async removeUser(user, index) {
       try {
         await http.projects.removeUser(this.token, {
@@ -143,7 +158,7 @@ export default {
         });
         this.alert('success', 'User has been removed');
       } catch (e) {
-        this.alert('error', 'User was not removed');
+        this.alert('error', 'User has not been removed');
       }
     },
     updateUser({ projects, _id }, action) {
@@ -164,17 +179,6 @@ export default {
       });
     },
   },
-  mounted() {
-    if (this.auth) {
-      this.authenticate();
-      this.$eventBus.$on('close-modal', this.closeModal);
-      this.$eventBus.$on('add-user', this.addUser);
-    }
-  },
-  beforeDestroy() {
-    this.$eventBus.$off('add-user', this.addUser);
-    this.$eventBus.$off('close-modal', this.closeModal);
-  },
 };
 </script>
 
@@ -184,5 +188,8 @@ export default {
 }
 .box {
   padding: 50px;
+}
+.button {
+  margin-left: auto;
 }
 </style>

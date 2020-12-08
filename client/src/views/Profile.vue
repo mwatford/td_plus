@@ -62,14 +62,14 @@ export default {
   },
   methods: {
     async save() {
-      if (this.testName) {
-        try {
+      try {
+        if (this.testName) {
           const data = await http.users.updateUser(this.token, this.changes);
 
           this.handleResponse(data);
-        } catch (e) {
-          this.alert(e);
         }
+      } catch (e) {
+        this.alert(e);
       }
     },
     handleResponse() {

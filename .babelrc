@@ -1,4 +1,14 @@
 {
+  // "plugins": [
+  //   [
+  //     "module-resolver",
+  //     {
+  //       "alias": {
+  //         "Components": "./client/src/components/"
+  //       }
+  //     }
+  //   ]
+  // ],
   "presets": [
     [
       "@babel/preset-env",

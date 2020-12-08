@@ -24,7 +24,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import cloneDeep from 'Utils/cloneDeep';
+import { cloneDeep } from 'lodash';
 import task from './task.vue';
 
 export default {
@@ -80,5 +80,9 @@ ul {
   max-height: 600px;
   overflow-y: auto;
   width: 280px;
+
+  &:first-of-type {
+    margin: 0;
+  }
 }
 </style>

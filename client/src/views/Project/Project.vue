@@ -7,7 +7,7 @@ import { mapState } from 'vuex';
 import navigate from 'Mixins/navigate';
 import { popUp, scaleDown } from 'Mixins/animations';
 import loader from 'Components/loading.vue';
-import dashboard from './Dashboard.vue';
+import dashboard from './dashboard/Dashboard.vue';
 import manage from './manage/ProjectManage.vue';
 import password from './password.vue';
 

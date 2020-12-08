@@ -7,7 +7,7 @@
         slot="list-item-action"
       ></AppListItemAction>
     </template>
-    <h3 slot="list-action" class="text text--center">
+    <h3 slot="list-action" class="text text--center" @click="openSearch">
       <app-icon type="search" size="19"></app-icon>
     </h3>
   </AppList>
@@ -23,8 +23,16 @@ export default {
     AppListItemAction,
     AppList,
   },
+  data: () => ({
+    searchOpen: false,
+  }),
   computed: {
     ...mapState({ members: state => state.activeProject.data.members || [] }),
+  },
+  methods: {
+    openSearch() {
+      this.$eventBus.$emit('open-search');
+    },
   },
 };
 </script>
