@@ -3,10 +3,8 @@
   <div v-else class="m-auto row view">
     <AddTask></AddTask>
     <ProjectLists></ProjectLists>
-    <MemberList v-if="auth"> </MemberList>
-    <button @click="deleteProject" class="button">
-      DELETE PROJECT
-    </button>
+    <MemberList v-if="auth"></MemberList>
+    <button @click="deleteProject" class="button">DELETE PROJECT</button>
     <UserSearch v-if="searchOpen"></UserSearch>
   </div>
 </template>
@@ -46,6 +44,8 @@ export default {
     }),
   },
   mounted() {
+    this.$eventBus.$on('save-project', this.save);
+
     if (this.auth) {
       this.authenticate();
       this.$eventBus.$on('open-search', this.openSearch);
@@ -76,19 +76,20 @@ export default {
       }
     },
     async deleteProject() {
-      const confirmed = confirm(
-        `Are you absolutely sure you want to delete '${this.project.name}'?`
-      );
-
-      if (!confirmed) return;
-
       try {
+        const confirmed = confirm(
+          `Are you absolutely sure you want to delete '${this.project.name}'?`
+        );
+
+        if (!confirmed) return;
+
         if (!this.auth) {
           await manageProject('delete', this.project);
         } else {
           await http.projects.delete(this.token, this.project._id);
           this.$socket.emit('project deleted');
         }
+
         this.alert('success', 'Project has been deleted');
         this.navigate({ name: 'home' });
       } catch (error) {
@@ -150,34 +151,34 @@ export default {
         ? this.$store.dispatch('activeProject/saveLocally', this.project.name)
         : this.updateProject();
     },
-    async removeUser(user, index) {
-      try {
-        await http.projects.removeUser(this.token, {
-          id: this.project._id,
-          userId: user.id,
-        });
-        this.alert('success', 'User has been removed');
-      } catch (e) {
-        this.alert('error', 'User has not been removed');
-      }
-    },
-    updateUser({ projects, _id }, action) {
-      if (action === 'add') {
-        projects.push(this.project._id);
-      }
+    // async removeUser(user, index) {
+    //   try {
+    //     await http.projects.removeUser(this.token, {
+    //       id: this.project._id,
+    //       userId: user.id,
+    //     });
+    //     this.alert('success', 'User has been removed');
+    //   } catch (e) {
+    //     this.alert('error', 'User has not been removed');
+    //   }
+    // },
+    // updateUser({ projects, _id }, action) {
+    //   if (action === 'add') {
+    //     projects.push(this.project._id);
+    //   }
 
-      return this.$this.http({
-        method: 'put',
-        url: `/api/users/${_id}`,
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-          'Content-Type': 'application/json',
-        },
-        data: {
-          changes: { projects },
-        },
-      });
-    },
+    //   return this.$this.http({
+    //     method: 'put',
+    //     url: `/api/users/${_id}`,
+    //     headers: {
+    //       Authorization: `Bearer ${this.token}`,
+    //       'Content-Type': 'application/json',
+    //     },
+    //     data: {
+    //       changes: { projects },
+    //     },
+    //   });
+    // },
   },
 };
 </script>

@@ -8,6 +8,7 @@ const fetchUser = http => async ({ commit, dispatch }, { token }) => {
   } catch (error) {
     const { response } = error;
     const { data } = response;
+
     if (data.message) {
       dispatch('alerts/display', data.message, { root: true });
     }
@@ -16,7 +17,7 @@ const fetchUser = http => async ({ commit, dispatch }, { token }) => {
 
 const save = http => async ({ commit, dispatch }, { changes, token }) => {
   try {
-    const { data } = await http.projects.updateUser(token, changes);
+    const { data } = await http.users.updateUser(token, changes);
 
     commit('SET_USER', data);
     dispatch(
@@ -25,10 +26,14 @@ const save = http => async ({ commit, dispatch }, { changes, token }) => {
       { root: true }
     );
   } catch (e) {
-    dispatch('alerts/display', {
-      type: 'success',
-      message: e || 'Error setting your name',
-    });
+    dispatch(
+      'alerts/display',
+      {
+        type: 'success',
+        message: e || 'Error setting your name',
+      },
+      { root: true }
+    );
   }
 };
 

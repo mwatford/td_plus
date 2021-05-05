@@ -39,7 +39,7 @@ export default {
 
 <style lang="scss">
 .list {
-  margin-left: 3px;
+  margin-right: 3px;
   list-style-type: none;
 
   &__item {

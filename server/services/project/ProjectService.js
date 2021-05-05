@@ -22,11 +22,13 @@ const isAdmin = (project, userId) => {
   if (!project || !userId) {
     throw new Error('Missing function argument(s)!');
   }
+
   return project.admin == userId;
 };
 
 const addMember = (project, userId) => {
   project.members.push(userId);
+
   return project.save();
 };
 

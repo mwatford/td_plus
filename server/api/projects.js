@@ -1,17 +1,17 @@
 const router = require('express').Router();
 const controller = require('../controllers/projects/index');
 
-const authenticate = require('../middleware/authentication');
+const authenticateToken = require('../middleware/jwt').authenticateToken();
 
 const handler = require('../utils/handler');
 
-router.use(authenticate);
+router.use(authenticateToken);
 
 router.post(
   '/create',
   handler(controller.create, (req, res, next) => {
     return {
-      sub: req.user.sub,
+      id: req.user.id,
       project: req.body,
     };
   })
@@ -21,7 +21,7 @@ router.get(
   '/all/:id',
   handler(controller.getUserProjects, (req, res, next) => {
     return {
-      sub: req.user.sub,
+      id: req.user.id,
     };
   })
 );
@@ -30,8 +30,8 @@ router.get(
   '/:id',
   handler(controller.getProject, (req, res, next) => {
     return {
-      sub: req.user.sub,
-      id: req.params.id,
+      id: req.user.id,
+      projectId: req.params.id,
     };
   })
 );
@@ -40,8 +40,8 @@ router.get(
   '/:id/admin',
   handler(controller.isAdmin, (req, res, next) => {
     return {
-      sub: req.user.sub,
-      id: req.params.id,
+      id: req.user.id,
+      projectId: req.params.id,
     };
   })
 );
@@ -50,8 +50,8 @@ router.delete(
   '/:id',
   handler(controller.deleteProject, (req, res, next) => {
     return {
-      sub: req.user.sub,
-      id: req.params.id,
+      id: req.user.id,
+      projectId: req.params.id,
     };
   })
 );
@@ -60,7 +60,7 @@ router.post(
   '/import',
   handler(controller.import, (req, res, next) => {
     return {
-      sub: req.user.sub,
+      id: req.user.id,
       projects: req.body,
     };
   })

@@ -1,16 +1,35 @@
 const router = require('express').Router();
 const controller = require('../controllers/users/index');
-
-const authenticate = require('../middleware/authentication');
-
 const handler = require('../utils/handler');
+const unprotectedRoutes = require('./unprotected-routes');
 
-router.use(authenticate);
+const authenticateToken = require('../middleware/jwt').authenticateToken(
+  unprotectedRoutes
+);
+
+router.use(authenticateToken);
+
+router.post(
+  '/register',
+  handler(controller.register, (req, res, next) => {
+    return {
+      email: req.body.email,
+      password: req.body.password,
+    };
+  })
+);
+
+router.post(
+  '/sign-in',
+  handler(controller.signIn, (req, res, next) => {
+    return { email: req.body.email, password: req.body.password };
+  })
+);
 
 router.get(
   '/current',
   handler(controller.currentUser, (req, res, next) => {
-    return { sub: req.user.sub };
+    return { email: req.user.email };
   })
 );
 
@@ -27,7 +46,7 @@ router.delete(
   '/current',
   handler(controller.delete, (req, res, next) => {
     return {
-      sub: req.user.sub,
+      email: req.user.email,
     };
   })
 );
@@ -36,7 +55,7 @@ router.put(
   '/current',
   handler(controller.update, (req, res, next) => {
     return {
-      id: req.params.id,
+      id: req.user.id,
       changes: req.body,
     };
   })

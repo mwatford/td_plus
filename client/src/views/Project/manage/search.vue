@@ -132,6 +132,10 @@ export default {
   align-items: center;
   padding: 50px;
 
+  input {
+    outline: none;
+  }
+
   &::before {
     content: '';
     z-index: -1;

@@ -45,18 +45,22 @@ export default {
       }
     },
     editListName(index) {
-      if (typeof index !== 'number') return;
+      try {
+        if (typeof index !== 'number') return;
 
-      let name = prompt('Change name:');
+        let name = prompt('Change name:').trim();
 
-      if (typeof name === 'object' || !name.trim().length)
-        return this.alert('error', "Name can't be empty");
+        if (!name) {
+          return this.alert('error', 'Name can not be empty');
+        }
 
-      this.update({
-        fn: this.project.editListName,
-        data: { index, name },
-      });
-      this.save();
+        this.update({
+          fn: this.project.editListName,
+          data: { index, name },
+        });
+
+        this.$eventBus.$emit('save-project');
+      } catch (error) {}
     },
     deleteList(index, name) {
       if (typeof index !== 'number') return;

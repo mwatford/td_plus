@@ -73,6 +73,7 @@ export default {
   background: #000000;
   flex-direction: column;
   z-index: 1;
+  border-right: 1px solid #fff;
 
   &__button {
     cursor: pointer;

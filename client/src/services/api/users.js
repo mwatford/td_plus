@@ -1,12 +1,17 @@
-const fetchUser = http => token => {
-  return http({
+const register = http => data =>
+  http({ method: 'post', url: '/api/users/register', data });
+
+const signIn = http => data =>
+  http({ method: 'post', url: '/api/users/sign-in', data });
+
+const fetchUser = http => token =>
+  http({
     method: 'get',
     url: '/api/users/current',
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
-};
 
 const updateUser = http => (token, changes) =>
   http({
@@ -38,6 +43,8 @@ const searchByEmail = http => (token, query) =>
   });
 
 export default http => ({
+  register: register(http),
+  signIn: signIn(http),
   fetchUser: fetchUser(http),
   updateUser: updateUser(http),
   deleteUser: deleteUser(http),

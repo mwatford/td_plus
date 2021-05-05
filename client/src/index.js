@@ -21,7 +21,7 @@ Vue.component('app-icon', icon);
 
 // Import the plugin here
 // import { Auth0Plugin } from './auth/index.js';
-import fakeAuthPlugin from './modules/fakeAuthPlugin.js';
+// import fakeAuthPlugin from './modules/fakeAuthPlugin.js';
 import VueSocket from './modules/Socket';
 
 // Install the authentication plugin here
@@ -34,7 +34,8 @@ import VueSocket from './modules/Socket';
 //   },
 // });
 
-Vue.prototype.$auth = fakeAuthPlugin;
+// Vue.prototype.$auth = fakeAuthPlugin;
+// Vue.prototype.$auth = Auth0Plugin;
 
 Vue.use(VueChatScroll);
 

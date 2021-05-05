@@ -14,9 +14,7 @@
       v-model="task.description"
     />
     <div class="col" v-if="auth">
-      <label>
-        Select member
-      </label>
+      <label> Select member </label>
       <BaseSelect
         :options="members"
         :selected="task.member"
@@ -48,11 +46,13 @@ export default {
     }),
   },
   methods: {
-    onChange() {},
+    onChange() {
+
+    },
     addTask() {
       this.$store.commit('activeProject/ADD_TASK', this.task);
 
-      this.save();
+      this.$eventBus.$emit('save-project');
 
       this.task = this.createEmptyTask();
     },
@@ -60,6 +60,7 @@ export default {
       return {
         name: '',
         description: '',
+        member: '',
       };
     },
   },
@@ -67,6 +68,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.box {
+  margin-right: 3px;
+
+  input {
+    outline: none;
+  }
+}
 form {
   height: 457px;
   max-height: 100%;

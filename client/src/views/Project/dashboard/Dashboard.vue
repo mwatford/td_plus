@@ -82,7 +82,7 @@ ul {
   width: 280px;
 
   &:first-of-type {
-    margin: 0;
+    // margin: 0;
   }
 }
 </style>

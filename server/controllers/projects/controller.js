@@ -1,8 +1,8 @@
 const helpers = require('./helpers');
 
-const create = models => async ({ sub, project }) => {
+const create = models => async ({ id, project }) => {
   const { User } = models;
-  const admin = await User.findOne({ sub }, '-sub');
+  const admin = await User.findById(id);
 
   if (admin) {
     const newProject = await helpers.saveProject(models, project, admin);
@@ -11,10 +11,10 @@ const create = models => async ({ sub, project }) => {
   }
 };
 
-const getUserProjects = models => async ({ sub }) => {
+const getUserProjects = models => async ({ id }) => {
   const { User, Project } = models;
 
-  const user = await User.findOne({ sub }, '-sub');
+  const user = await User.findById(id);
 
   const projects = await Project.find({}, 'name members password admin')
     .where('_id')
@@ -24,12 +24,13 @@ const getUserProjects = models => async ({ sub }) => {
   return { data: projects, status: 200 };
 };
 
-const getProject = models => async ({ sub, id }) => {
-  const { User, Project } = models;
-  const { _id } = await User.findOne({ sub });
-  const project = await Project.findById(id);
+// might need to rewrite
+const getProject = models => async ({ id, projectId }) => {
+  const { Project } = models;
+  // const { _id } = await User.findOneById(id);
+  const project = await Project.findById(projectId);
 
-  const isMember = await project.members.find(el => _id.equals(el));
+  const isMember = await project.members.find(member => id === member);
 
   if (isMember) {
     return {
@@ -42,12 +43,11 @@ const getProject = models => async ({ sub, id }) => {
   };
 };
 
-const isAdmin = models => async ({ id, sub }) => {
+const isAdmin = models => async ({ id, projectId }) => {
   const { Project, User } = models;
 
-  const { _id } = await User.findOne({ sub });
-  const project = await Project.findById(id);
-  const isAdmin = _id.equals(project.admin);
+  const project = await Project.findById(projectId);
+  const isAdmin = project.admin === id;
 
   if (isAdmin) {
     return { status: 200 };
@@ -55,14 +55,17 @@ const isAdmin = models => async ({ id, sub }) => {
   return { status: 403 };
 };
 
-const deleteProject = models => async ({ sub, id }) => {
+const deleteProject = models => async ({ id, projectId }) => {
   const { Project, User } = models;
-  const { _id } = await User.findOne({ sub });
-  const project = await Project.findById(id);
-  const isAdmin = _id.equals(project.admin);
+  // const { _id } = await User.findOne({ id });
+  const project = await Project.findById(projectId);
+  const isAdmin = project.admin === id;
 
   if (isAdmin) {
-    await Project.findByIdAndRemove(id, helpers.updateUsersAfterDelete(User));
+    await Project.findByIdAndRemove(
+      projectId,
+      helpers.updateUsersAfterDelete(User)
+    );
 
     return { status: 200 };
   } else {
@@ -70,10 +73,10 @@ const deleteProject = models => async ({ sub, id }) => {
   }
 };
 
-const importProjects = models => async ({ sub, projects }) => {
+const importProjects = models => async ({ id, projects }) => {
   const { User, Project } = models;
 
-  let admin = await User.findOne({ sub });
+  let admin = await User.findById(id);
 
   if (admin) {
     await Promise.all(
@@ -81,7 +84,7 @@ const importProjects = models => async ({ sub, projects }) => {
     );
   }
 
-  admin = await User.findOne({ sub });
+  admin = await User.findById(id);
 
   const userProjects = await Project.find({}, 'name members password admin')
     .where('_id')

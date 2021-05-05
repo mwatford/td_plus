@@ -1,9 +1,7 @@
 <template>
-  <form action="" @submit.prevent="chooseName">
+  <form class="box" @submit.prevent="chooseName">
     <input
       type="text"
-      name=""
-      id=""
       class="input"
       placeholder="Choose your name"
       v-model="name"
@@ -14,6 +12,7 @@
 
 <script>
 import { mapState } from 'vuex';
+
 export default {
   data() {
     return {
@@ -28,11 +27,11 @@ export default {
   },
   methods: {
     async chooseName() {
-      if (!name.trim()) return this.alert('error', 'Choose your name.');
+      if (!this.name.trim()) return this.alert('error', 'Choose your name.');
 
       await this.$store.dispatch('user/save', {
         token: this.token,
-        data: { name: this.name },
+        changes: { name: this.name },
       });
 
       this.$eventBus.$emit('name-chosen');
@@ -45,7 +44,6 @@ export default {
 form {
   display: flex;
   flex-direction: column;
-  height: 100%;
 }
 .button {
   margin-top: 30px;
