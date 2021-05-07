@@ -14,14 +14,14 @@
 </template>
 
 <script>
-import { comparePasswords } from 'Utils/password';
-import { mapState } from 'vuex';
+import { comparePasswords } from 'Utils/password'
+import { mapState } from 'vuex'
 
 export default {
   data() {
     return {
       password: '',
-    };
+    }
   },
   computed: {
     ...mapState({
@@ -34,16 +34,16 @@ export default {
       const passwordValid = this.comparePasswords(
         this.password,
         this.project.password
-      );
+      )
       if (passwordValid) {
-        this.$eventBus.$emit('correct-password');
+        this.$eventBus.$emit('correct-password')
       } else {
-        this.alert('error', 'Incorrect password');
-        this.password = '';
+        this.alert('error', 'Incorrect password')
+        this.password = ''
       }
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

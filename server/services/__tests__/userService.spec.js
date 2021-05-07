@@ -1,101 +1,101 @@
-const UserService = require("../user/userService");
+const UserService = require('../user/userService')
 
-describe("userService test", () => {
-  test("has a module", () => {
-    expect(UserService).toBeDefined();
-  });
+describe('userService test', () => {
+  test('has a module', () => {
+    expect(UserService).toBeDefined()
+  })
 
-  describe("find test", () => {
-    test("finds a user", () => {
-      const findOne = jest.fn();
+  describe('find test', () => {
+    test('finds a user', () => {
+      const findOne = jest.fn()
       const MockModel = {
-        findOne
-      };
-      const userService = UserService(MockModel);
-      userService.find("123");
+        findOne,
+      }
+      const userService = UserService(MockModel)
+      userService.find('123')
 
-      expect(findOne).toHaveBeenCalledTimes(1);
-    });
-  });
+      expect(findOne).toHaveBeenCalledTimes(1)
+    })
+  })
 
-  describe("create test", () => {
-    test("creates a user", () => {
-      const save = jest.fn();
-      let email;
+  describe('create test', () => {
+    test('creates a user', () => {
+      const save = jest.fn()
+      let email
 
-      const MockModel = function(data) {
-        email = data.email;
+      const MockModel = function (data) {
+        email = data.email
 
         return {
           ...data,
-          save
-        };
-      };
+          save,
+        }
+      }
 
-      const userService = UserService(MockModel);
+      const userService = UserService(MockModel)
 
-      userService.createUser({ email: "asd@asd.com" });
+      userService.createUser({ email: 'asd@asd.com' })
 
-      expect(email).toEqual("asd@asd.com");
-      expect(save).toHaveBeenCalledTimes(1);
-    });
-  });
+      expect(email).toEqual('asd@asd.com')
+      expect(save).toHaveBeenCalledTimes(1)
+    })
+  })
 
-  describe("findById test", () => {
-    test("finds a user by id", () => {
-      const findById = jest.fn();
+  describe('findById test', () => {
+    test('finds a user by id', () => {
+      const findById = jest.fn()
 
       const MockModel = {
-        findById
-      };
-      const userService = UserService(MockModel);
+        findById,
+      }
+      const userService = UserService(MockModel)
 
-      userService.findById("1233");
+      userService.findById('1233')
 
-      expect(MockModel.findById).toHaveBeenCalledTimes(1);
-      expect(MockModel.findById).toHaveBeenCalledWith("1233");
-    });
-  });
+      expect(MockModel.findById).toHaveBeenCalledTimes(1)
+      expect(MockModel.findById).toHaveBeenCalledWith('1233')
+    })
+  })
 
-  describe("get test", () => {
-    test("gets all users", () => {
-      const find = jest.fn();
+  describe('get test', () => {
+    test('gets all users', () => {
+      const find = jest.fn()
       const MockModel = {
-        find
-      };
+        find,
+      }
 
-      const userService = UserService(MockModel);
+      const userService = UserService(MockModel)
 
-      userService.get({});
+      userService.get({})
 
-      expect(find).toHaveBeenCalledTimes(1);
-      expect(find).toHaveBeenCalledWith({}, "-sub");
-    });
-  });
+      expect(find).toHaveBeenCalledTimes(1)
+      expect(find).toHaveBeenCalledWith({}, '-sub')
+    })
+  })
 
-  describe("updateUser test", () => {
-    test("updates a user", async () => {
-      const save = jest.fn();
+  describe('updateUser test', () => {
+    test('updates a user', async () => {
+      const save = jest.fn()
       const user = {
-        name: "Adam",
-        save
-      };
+        name: 'Adam',
+        save,
+      }
       const userChanges = {
-        name: "Mark"
-      };
+        name: 'Mark',
+      }
       const findOne = jest.fn(() => {
-        return user;
-      });
+        return user
+      })
 
       const MockModel = {
-        findOne
-      };
-      const userService = UserService(MockModel);
+        findOne,
+      }
+      const userService = UserService(MockModel)
 
-      await userService.updateUser(user, userChanges);
+      await userService.updateUser(user, userChanges)
 
-      expect(save).toHaveBeenCalledTimes(1);
-      expect(user.name).toEqual("Mark");
-    });
-  });
-});
+      expect(save).toHaveBeenCalledTimes(1)
+      expect(user.name).toEqual('Mark')
+    })
+  })
+})

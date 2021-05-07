@@ -14,13 +14,13 @@
 </template>
 
 <script>
-import boxAnimations from 'Mixins/boxAnimations';
-import signIn from 'Components/sign-in.vue';
-import loader from 'Components/loading.vue';
-import username from 'Components/username.vue';
-import users from 'Components/users.vue';
-import animations from 'Mixins/animations';
-import navigate from 'Mixins/navigate';
+import boxAnimations from 'Mixins/boxAnimations'
+import signIn from 'Components/sign-in.vue'
+import loader from 'Components/loading.vue'
+import username from 'Components/username.vue'
+import users from 'Components/users.vue'
+import animations from 'Mixins/animations'
+import navigate from 'Mixins/navigate'
 
 export default {
   mixins: [boxAnimations, animations, navigate],
@@ -29,29 +29,29 @@ export default {
       state: 'loading',
       component: signIn,
       displayUsers: false,
-    };
+    }
   },
   computed: {
     enterAnimation() {
       return this.component === loader
         ? this.popUp(200, 0, 'spring')
-        : this.fadeIn(200, 0, 'linear');
+        : this.fadeIn(200, 0, 'linear')
     },
     leaveAnimation() {
       return this.component !== loader
         ? this.scaleDown(200, 0, 'linear')
-        : this.fadeOut(200, 0, 'linear');
+        : this.fadeOut(200, 0, 'linear')
     },
   },
   methods: {
     login() {
-      this.component = users;
+      this.component = users
     },
     fetchUser(user) {
-      if (!user) return;
+      if (!user) return
 
-      this.$store.commit('auth/SET_TOKEN', user.token);
-      this.$store.commit('auth/SET_STATUS', true);
+      this.$store.commit('auth/SET_TOKEN', user.token)
+      this.$store.commit('auth/SET_STATUS', true)
 
       return this.$store
         .dispatch('user/fetchUser', {
@@ -59,27 +59,27 @@ export default {
           email: user.email,
         })
         .then(() => {
-          this.state = 'done';
+          this.state = 'done'
 
           return !this.$store.state.user.name
             ? (this.component = username)
-            : this.$router.push({ name: 'home' });
+            : this.$router.push({ name: 'home' })
         })
         .catch(err => {
-          this.state = 'failed';
-        });
+          this.state = 'failed'
+        })
     },
   },
   mounted() {
-    this.$eventBus.$on('sign-in', this.login);
-    this.$eventBus.$on('user-chosen', this.fetchUser);
-    this.$eventBus.$on('name-chosen', () => this.navigate({ name: 'home' }));
-    this.boxEnterAnimation(400, 0, false);
+    this.$eventBus.$on('sign-in', this.login)
+    this.$eventBus.$on('user-chosen', this.fetchUser)
+    this.$eventBus.$on('name-chosen', () => this.navigate({ name: 'home' }))
+    this.boxEnterAnimation(400, 0, false)
   },
   beforeRouteLeave(to, from, next) {
-    this.boxExitAnimation(300, 0, false).then(next);
+    this.boxExitAnimation(300, 0, false).then(next)
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

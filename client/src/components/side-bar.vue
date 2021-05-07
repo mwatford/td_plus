@@ -42,8 +42,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import navigate from '../mixins/navigate';
+import { mapState } from 'vuex'
+import navigate from '../mixins/navigate'
 
 export default {
   mixins: [navigate],
@@ -56,10 +56,10 @@ export default {
   },
   methods: {
     logout() {
-      window.location.reload();
+      window.location.reload()
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -11,13 +11,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from 'vuex'
 
 export default {
   data() {
     return {
       name: '',
-    };
+    }
   },
   computed: {
     ...mapState({
@@ -27,17 +27,17 @@ export default {
   },
   methods: {
     async chooseName() {
-      if (!this.name.trim()) return this.alert('error', 'Choose your name.');
+      if (!this.name.trim()) return this.alert('error', 'Choose your name.')
 
       await this.$store.dispatch('user/save', {
         token: this.token,
         changes: { name: this.name },
-      });
+      })
 
-      this.$eventBus.$emit('name-chosen');
+      this.$eventBus.$emit('name-chosen')
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

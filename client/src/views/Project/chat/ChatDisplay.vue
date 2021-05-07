@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import ChatMessage from './ChatMessage.vue';
+import { mapState } from 'vuex'
+import ChatMessage from './ChatMessage.vue'
 
 export default {
   components: { ChatMessage },
@@ -31,10 +31,10 @@ export default {
   },
   methods: {
     username(value) {
-      return this.members.find(el => el.id === value).name;
+      return this.members.find(el => el.id === value).name
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

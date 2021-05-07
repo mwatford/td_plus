@@ -23,9 +23,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import { cloneDeep } from 'lodash';
-import task from './task.vue';
+import { mapState } from 'vuex'
+import { cloneDeep } from 'lodash'
+import task from './task.vue'
 
 export default {
   components: {
@@ -41,15 +41,15 @@ export default {
     }),
     filteredLists() {
       return cloneDeep(this.project.lists).map(list => {
-        list.data = list.data.filter(task => task.member === this.user._id);
-        return list;
-      });
+        list.data = list.data.filter(task => task.member === this.user._id)
+        return list
+      })
     },
     lists() {
-      return this.filter ? this.filteredLists : this.unfilteredLists;
+      return this.filter ? this.filteredLists : this.unfilteredLists
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -4,7 +4,7 @@ export default {
       this.$store.dispatch('alerts/display', {
         message,
         type,
-      });
+      })
     },
   },
-};
+}

@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import snippet from '../mixins/snippet';
+import snippet from '../mixins/snippet'
 export default {
   mixins: [snippet],
   props: {
@@ -16,7 +16,7 @@ export default {
       required: true,
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

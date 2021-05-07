@@ -44,14 +44,14 @@ export default {
           sub: '55555',
         },
       ],
-    };
+    }
   },
   methods: {
     selectUser(user) {
-      this.$eventBus.$emit('user-chosen', user);
+      this.$eventBus.$emit('user-chosen', user)
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

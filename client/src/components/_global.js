@@ -1,4 +1,4 @@
-import Vue from 'vue';
-import BaseSelect from './base/BaseSelect.vue';
+import Vue from 'vue'
+import BaseSelect from './base/BaseSelect.vue'
 
-Vue.component('BaseSelect', BaseSelect);
+Vue.component('BaseSelect', BaseSelect)

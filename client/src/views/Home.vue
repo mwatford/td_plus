@@ -19,12 +19,12 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import ProjectTile from 'Components/ProjectTile.vue';
-import boxAnimations from 'Mixins/boxAnimations';
-import navigate from 'Mixins/navigate';
-import { manageProject } from 'Services/LocalDbManager';
-import http from 'Services/api/index';
+import { mapState } from 'vuex'
+import ProjectTile from 'Components/ProjectTile.vue'
+import boxAnimations from 'Mixins/boxAnimations'
+import navigate from 'Mixins/navigate'
+import { manageProject } from 'Services/LocalDbManager'
+import http from 'Services/api/index'
 
 export default {
   mixins: [boxAnimations, navigate],
@@ -34,7 +34,7 @@ export default {
   data() {
     return {
       display: false,
-    };
+    }
   },
   computed: {
     ...mapState({
@@ -47,21 +47,21 @@ export default {
   methods: {
     async getProjects() {
       try {
-        let projects = await manageProject('get');
+        let projects = await manageProject('get')
 
         if (!this.auth) {
           return projects.length
             ? this.$store.commit('projects/SET_PROJECTS', projects)
-            : 0;
+            : 0
         }
 
         if (projects.length) {
-          await this.importLocalProjects(projects);
+          await this.importLocalProjects(projects)
         }
 
-        await this.fetchProjects();
+        await this.fetchProjects()
       } catch (e) {
-        this.alert('error', e);
+        this.alert('error', e)
       }
     },
     async fetchProjects() {
@@ -69,9 +69,9 @@ export default {
         await this.$store.dispatch('projects/fetchProjects', {
           token: this.token,
           id: this.user._id,
-        });
+        })
       } catch (e) {
-        this.alert('error', e);
+        this.alert('error', e)
       }
     },
     async setActiveProject(project) {
@@ -80,43 +80,43 @@ export default {
           const { data } = await http.projects.fetchActiveProject(
             this.token,
             project._id
-          );
-          project = data;
+          )
+          project = data
         }
 
-        this.$store.commit('activeProject/SET_PROJECT', project);
+        this.$store.commit('activeProject/SET_PROJECT', project)
       } catch (e) {
-        this.alert('error', e || 'Something went wrong');
+        this.alert('error', e || 'Something went wrong')
       }
     },
     async importLocalProjects(projects) {
       const userResponse = confirm(
         'We have found local projects, do you want to import them?'
-      );
+      )
 
       if (userResponse) {
-        const { data } = await http.projects.import(this.token, projects);
+        const { data } = await http.projects.import(this.token, projects)
 
-        this.$store.commit('projects/SET_PROJECTS', data);
+        this.$store.commit('projects/SET_PROJECTS', data)
 
-        await manageProject('removeAll');
+        await manageProject('removeAll')
       }
     },
   },
   beforeUpdate() {
-    this.display = true;
+    this.display = true
   },
   mounted() {
     this.getProjects()
       .then(() => this.boxEnterAnimation(200, 50, true))
-      .catch(e => {});
+      .catch(e => {})
   },
   beforeRouteLeave(to, from, next) {
     this.boxExitAnimation(500, 20, true)
       .then(next)
-      .catch(e => {});
+      .catch(e => {})
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

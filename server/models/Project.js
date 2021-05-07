@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 const ProjectSchema = new Schema(
   {
@@ -19,6 +19,6 @@ const ProjectSchema = new Schema(
   {
     versionKey: false,
   }
-);
+)
 
-module.exports = mongoose.model('Project', ProjectSchema);
+module.exports = mongoose.model('Project', ProjectSchema)

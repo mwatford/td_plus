@@ -3,7 +3,7 @@ export const defaultState = () => {
     filter: false,
     data: null,
     dispatcher: undefined,
-  };
-};
+  }
+}
 
-export const state = defaultState();
+export const state = defaultState()

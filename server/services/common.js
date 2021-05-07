@@ -1,13 +1,13 @@
 const create = Model => data => {
   if (!data) {
-    throw new Error('Data was not passed!');
+    throw new Error('Data was not passed!')
   }
 
-  const instance = new Model(data);
+  const instance = new Model(data)
 
-  return instance.save();
-};
+  return instance.save()
+}
 
 module.exports = {
   create,
-};
+}

@@ -1,8 +1,8 @@
-import Home from 'Views/Home.vue';
-import Profile from 'Views/Profile.vue';
-import View from 'Views/Project/View.vue';
-import Start from 'Views/Start.vue';
-import Create from 'Views/Create.vue';
+import Home from 'Views/Home.vue'
+import Profile from 'Views/Profile.vue'
+import View from 'Views/Project/View.vue'
+import Start from 'Views/Start.vue'
+import Create from 'Views/Create.vue'
 
 export default [
   {
@@ -60,4 +60,4 @@ export default [
       guest: true,
     },
   },
-];
+]

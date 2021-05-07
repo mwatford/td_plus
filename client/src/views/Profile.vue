@@ -1,6 +1,6 @@
 <template>
   <div class="profile box m-auto">
-    <button class="button as--end" @click="deleteAccount" disabled>
+    <button class="button as--end" @click="deleteAccount">
       Delete account
     </button>
     <form @submit.prevent>
@@ -28,10 +28,10 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import boxAnimations from 'Mixins/boxAnimations';
-import navigate from 'Mixins/navigate';
-import http from 'Services/api/index';
+import { mapState } from 'vuex'
+import boxAnimations from 'Mixins/boxAnimations'
+import navigate from 'Mixins/navigate'
+import http from 'Services/api/index'
 
 export default {
   mixins: [boxAnimations, navigate],
@@ -39,7 +39,7 @@ export default {
     return {
       name: '',
       changes: {},
-    };
+    }
   },
   computed: {
     ...mapState({
@@ -47,51 +47,52 @@ export default {
       token: state => state.auth.token,
     }),
     valid() {
-      return this.testName;
+      return this.testName
     },
     testName() {
       if (!!this.name) {
-        this.changes.name = this.name;
-        return true;
+        this.changes.name = this.name
+        return true
       }
 
-      delete this.changes.name;
+      delete this.changes.name
 
-      return false;
+      return false
     },
   },
   methods: {
     async save() {
       try {
         if (this.testName) {
-          const data = await http.users.updateUser(this.token, this.changes);
+          const data = await http.users.updateUser(this.token, this.changes)
 
-          this.handleResponse(data);
+          this.handleResponse(data)
         }
       } catch (e) {
-        this.alert(e);
+        this.alert(e)
       }
     },
     handleResponse() {
-      this.$store.commit('user/SET_USER', this.changes);
-      this.alert('success', 'Your profile has been upated');
+      this.$store.commit('user/SET_USER', this.changes)
+      this.alert('success', 'Your profile has been upated')
     },
     async deleteAccount() {
       try {
-        await http.users.deleteUser(this.token);
-        this.$auth.logout();
+        await http.users.deleteUser(this.token)
+
+        location.reload()
       } catch (e) {
-        this.alert('error', 'Could not delete your account');
+        this.alert('error', 'Could not delete your account')
       }
     },
   },
   mounted() {
-    this.boxEnterAnimation(300, 0, false);
+    this.boxEnterAnimation(300, 0, false)
   },
   beforeRouteLeave(to, from, next) {
-    this.boxExitAnimation(500, 0, false).then(next);
+    this.boxExitAnimation(500, 0, false).then(next)
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

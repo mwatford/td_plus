@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from 'vuex'
 
 export default {
   props: {
@@ -30,11 +30,11 @@ export default {
   },
   computed: {
     isBelowLimit() {
-      return this.limit && this.items.length < this.limit;
+      return this.limit && this.items.length < this.limit
     },
   },
   methods: {},
-};
+}
 </script>
 
 <style lang="scss">

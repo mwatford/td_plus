@@ -1,163 +1,161 @@
-const ProjectService = require("../project/ProjectService");
+const ProjectService = require('../project/ProjectService')
 
-describe("projectService test", () => {
-  test("has a module", () => {
-    expect(ProjectService).toBeDefined();
-  });
+describe('projectService test', () => {
+  test('has a module', () => {
+    expect(ProjectService).toBeDefined()
+  })
 
-  String.prototype.equals = function(x) {
-    return this === x;
-  };
+  String.prototype.equals = function (x) {
+    return this === x
+  }
 
-  describe("createProject test", () => {
-    const save = jest.fn();
-    let admin;
+  describe('createProject test', () => {
+    const save = jest.fn()
+    let admin
 
-    const MockModel = function(data) {
-      admin = data.admin;
+    const MockModel = function (data) {
+      admin = data.admin
 
       return {
         ...data,
-        save
-      };
-    };
+        save,
+      }
+    }
 
-    const projectService = ProjectService(MockModel);
+    const projectService = ProjectService(MockModel)
 
     const project = {
-      admin: "1234"
-    };
+      admin: '1234',
+    }
 
-    projectService.createProject(project);
+    projectService.createProject(project)
 
-    test("creates a project", () => {
-      expect(save).toHaveBeenCalled();
-      expect(admin).toEqual("1234");
-    });
+    test('creates a project', () => {
+      expect(save).toHaveBeenCalled()
+      expect(admin).toEqual('1234')
+    })
 
-    test("throws error when data is not defined", () => {
+    test('throws error when data is not defined', () => {
       expect(() => {
-        projectService.createProject();
-      }).toThrow("Data was not passed!");
-    });
-  });
+        projectService.createProject()
+      }).toThrow('Data was not passed!')
+    })
+  })
 
-  describe("find test", () => {
-    const findById = jest.fn();
+  describe('find test', () => {
+    const findById = jest.fn()
     const MockModel = {
-      findById
-    };
+      findById,
+    }
 
-    const projectService = ProjectService(MockModel);
+    const projectService = ProjectService(MockModel)
 
-    test("finds a single project with provided id", () => {
-      projectService.find("1232");
+    test('finds a single project with provided id', () => {
+      projectService.find('1232')
 
-      expect(MockModel.findById).toHaveBeenCalledTimes(1);
-      expect(MockModel.findById).toHaveBeenCalledWith("1232");
-    });
+      expect(MockModel.findById).toHaveBeenCalledTimes(1)
+      expect(MockModel.findById).toHaveBeenCalledWith('1232')
+    })
 
-    test("throws error when id is not passed", () => {
+    test('throws error when id is not passed', () => {
       expect(() => {
-        projectService.find();
-      }).toThrow("Id was not provided!");
-    });
-  });
+        projectService.find()
+      }).toThrow('Id was not provided!')
+    })
+  })
 
-  describe("isMember", () => {
-    const projectService = ProjectService({});
+  describe('isMember', () => {
+    const projectService = ProjectService({})
 
     const mockProject = {
-      members: ["1234", "1445", "1355"]
-    };
+      members: ['1234', '1445', '1355'],
+    }
 
-    test("should return true if members list contains the user", () => {
-      const response = projectService.isMember(mockProject, "1234");
+    test('should return true if members list contains the user', () => {
+      const response = projectService.isMember(mockProject, '1234')
 
-      expect(response).toEqual(true);
-    });
+      expect(response).toEqual(true)
+    })
 
-    test("returns false when user is not in member list", () => {
-      const response = projectService.isMember(mockProject, "3333");
+    test('returns false when user is not in member list', () => {
+      const response = projectService.isMember(mockProject, '3333')
 
-      expect(response).toEqual(false);
-    });
+      expect(response).toEqual(false)
+    })
 
-    test("throws an error when parameters are not passed", () => {
+    test('throws an error when parameters are not passed', () => {
       expect(() => {
-        projectService.isMember(mockProject);
-      }).toThrow("Missing function argument(s)!");
+        projectService.isMember(mockProject)
+      }).toThrow('Missing function argument(s)!')
 
       expect(() => {
-        projectService.isMember(null, "1234");
-      }).toThrow("Missing function argument(s)!");
-    });
-  });
+        projectService.isMember(null, '1234')
+      }).toThrow('Missing function argument(s)!')
+    })
+  })
 
-  describe("isAdmin", () => {
-    const projectService = ProjectService({});
+  describe('isAdmin', () => {
+    const projectService = ProjectService({})
 
-    test("throws an error when arguments are missing", () => {
+    test('throws an error when arguments are missing', () => {
       expect(() => {
-        projectService.isAdmin(null, "1234");
-      }).toThrow("Missing function argument(s)!");
-    });
+        projectService.isAdmin(null, '1234')
+      }).toThrow('Missing function argument(s)!')
+    })
 
-    test("returns bolean", () => {
+    test('returns bolean', () => {
       const mockProject = {
-        admin: "123"
-      };
-      const response = projectService.isAdmin(mockProject, "123");
-      const fail = projectService.isAdmin(mockProject, "1234");
+        admin: '123',
+      }
+      const response = projectService.isAdmin(mockProject, '123')
+      const fail = projectService.isAdmin(mockProject, '1234')
 
-      expect(response).toBeTruthy();
-      expect(fail).toBeFalsy();
-    });
-  });
+      expect(response).toBeTruthy()
+      expect(fail).toBeFalsy()
+    })
+  })
 
-  describe("addMember test", () => {
-    const projectService = ProjectService({});
-    const save = jest.fn();
+  describe('addMember test', () => {
+    const projectService = ProjectService({})
+    const save = jest.fn()
     const mockProject = {
       members: [],
-      save: function() {
-        save();
-        return this;
-      }
-    };
+      save: function () {
+        save()
+        return this
+      },
+    }
 
-    test("adds member to a project", () => {
-      const updatedProject = projectService.addMember(mockProject, "44335");
+    test('adds member to a project', () => {
+      const updatedProject = projectService.addMember(mockProject, '44335')
 
-      const expected = updatedProject.members.find(el => el === "44335");
+      const expected = updatedProject.members.find(el => el === '44335')
 
-      expect(save).toHaveBeenCalled();
-      expect(expected).toBeTruthy();
-    });
-  });
+      expect(save).toHaveBeenCalled()
+      expect(expected).toBeTruthy()
+    })
+  })
 
-  describe("delete test", () => {
-    const findByIdAndRemove = jest.fn((a, cb) => cb());
+  describe('delete test', () => {
+    const findByIdAndRemove = jest.fn((a, cb) => cb())
 
     const MockModel = {
-      findByIdAndRemove
-    };
+      findByIdAndRemove,
+    }
 
-    const projectService = ProjectService(MockModel);
+    const projectService = ProjectService(MockModel)
 
-    test("throws error when arguments are missing", async () => {
-      await expect(projectService.delete()).rejects.toThrow(
-        "Missing argument!"
-      );
-    });
+    test('throws error when arguments are missing', async () => {
+      await expect(projectService.delete()).rejects.toThrow('Missing argument!')
+    })
 
-    test("deletes a project", async () => {
-      const cb = jest.fn();
+    test('deletes a project', async () => {
+      const cb = jest.fn()
 
-      await projectService.delete("1234", cb);
+      await projectService.delete('1234', cb)
 
-      expect(findByIdAndRemove).toHaveBeenCalledWith("1234", cb);
-      expect(cb).toHaveBeenCalled();
-    });
-  });
-});
+      expect(findByIdAndRemove).toHaveBeenCalledWith('1234', cb)
+      expect(cb).toHaveBeenCalled()
+    })
+  })
+})

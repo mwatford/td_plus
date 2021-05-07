@@ -41,11 +41,11 @@
 </template>
 
 <script>
-import AppList from 'Components/appList/AppList.vue';
-import { mapState } from 'vuex';
-import cloneDeep from 'Utils/cloneDeep';
-import http from 'Services/api/index';
-import _ from 'lodash';
+import AppList from 'Components/appList/AppList.vue'
+import { mapState } from 'vuex'
+import cloneDeep from 'Utils/cloneDeep'
+import http from 'Services/api/index'
+import _ from 'lodash'
 
 export default {
   components: {
@@ -55,7 +55,7 @@ export default {
     return {
       search: '',
       responseList: [],
-    };
+    }
   },
   computed: {
     ...mapState({
@@ -64,59 +64,56 @@ export default {
       user: state => state.user,
     }),
     memberList() {
-      return this.project.members;
+      return this.project.members
     },
     suggestions() {
-      let suggestions = this.responseList;
+      let suggestions = this.responseList
 
       this.memberList.forEach(el => {
-        let element = suggestions.find(elem => elem._id === el.id);
-        let index = suggestions.indexOf(element);
+        let element = suggestions.find(elem => elem._id === el.id)
+        let index = suggestions.indexOf(element)
 
-        if (index > -1) suggestions.splice(index, 1);
-      });
+        if (index > -1) suggestions.splice(index, 1)
+      })
 
-      return suggestions;
+      return suggestions
     },
   },
   mounted() {
-    this.$refs['input'].focus();
+    this.$refs['input'].focus()
   },
   methods: {
     close() {
-      this.$eventBus.$emit('close-search');
+      this.$eventBus.$emit('close-search')
     },
     onInput: _.debounce(function () {
-      if (this.search.trim().length) this.fetchUsers();
+      if (this.search.trim().length) this.fetchUsers()
     }, 800),
     async addUser(user) {
       try {
         await http.projects.addUser(this.token, {
           id: this.project._id,
           userId: user._id,
-        });
+        })
 
         await this.$store.dispatch('activeProject/fetchProject', {
           token: this.token,
           id: this.project._id,
-        });
+        })
       } catch (e) {
-        this.alert('error', e || 'Error adding the user');
+        this.alert('error', e || 'Error adding the user')
       }
     },
     async fetchUsers() {
       try {
-        const { data } = await http.users.searchByEmail(
-          this.token,
-          this.search
-        );
-        this.responseList = data;
+        const { data } = await http.users.searchByEmail(this.token, this.search)
+        this.responseList = data
       } catch (e) {
-        this.alert('error', 'Connection error');
+        this.alert('error', 'Connection error')
       }
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

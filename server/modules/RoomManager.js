@@ -1,63 +1,63 @@
 function RoomManager() {
-  const ROOMS = {};
+  const ROOMS = {}
   this.showRooms = () => {
-    console.log(ROOMS);
-  };
+    console.log(ROOMS)
+  }
   this.create = name => {
-    if (!ROOMS[name]) ROOMS[name] = roomFactory();
-  };
+    if (!ROOMS[name]) ROOMS[name] = roomFactory()
+  }
   this.get = name => {
-    return ROOMS[name];
-  };
+    return ROOMS[name]
+  }
   this.delete = name => {
-    delete ROOMS[name];
-  };
+    delete ROOMS[name]
+  }
   this.addUser = (user, room) => {
     ROOMS[room].addUser(user)
-  };
+  }
 }
 
 const roomFactory = () => {
-  const users = [];
-  const messages = [];
+  const users = []
+  const messages = []
   return {
     addUser(user) {
-      users.push(user);
+      users.push(user)
     },
     removeUser(user) {
-      users.splice(user, 1);
+      users.splice(user, 1)
     },
     addMessage(message) {
-      messages.push(message);
+      messages.push(message)
     },
     get users() {
-      console.log(users);
+      console.log(users)
     },
     get messages() {
-      return messages;
+      return messages
     },
     get empty() {
-      return users.length ? false : true;
-    }
-  };
-};
+      return users.length ? false : true
+    },
+  }
+}
 
 const Singleton = (() => {
-  let instance;
+  let instance
 
   function createRoomManager() {
-    instance = new RoomManager();
-    return instance;
+    instance = new RoomManager()
+    return instance
   }
 
   return {
     getRoomManager() {
       if (!instance) {
-        instance = createRoomManager();
+        instance = createRoomManager()
       }
-      return instance;
-    }
-  };
-})();
+      return instance
+    },
+  }
+})()
 
-module.exports = Singleton;
+module.exports = Singleton

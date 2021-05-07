@@ -17,10 +17,10 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
-import AppList from 'Components/appList/AppList.vue';
-import AppListItemAction from 'Components/appList/AppListItemAction.vue';
-import saveProject from 'Mixins/saveProject';
+import { mapState, mapMutations } from 'vuex'
+import AppList from 'Components/appList/AppList.vue'
+import AppListItemAction from 'Components/appList/AppListItemAction.vue'
+import saveProject from 'Mixins/saveProject'
 
 export default {
   mixins: [saveProject],
@@ -31,49 +31,49 @@ export default {
   computed: {
     ...mapState({ project: state => state.activeProject.data }),
     lists() {
-      return this.project.lists || [];
+      return this.project.lists || []
     },
   },
   methods: {
     ...mapMutations({ update: 'activeProject/UPDATE' }),
     addList() {
-      let name = prompt('Name:');
+      let name = prompt('Name:')
 
       if (name) {
-        this.update({ fn: this.project.addList, data: { name: name } });
-        this.save();
+        this.update({ fn: this.project.addList, data: { name } })
+        this.save()
       }
     },
     editListName(index) {
       try {
-        if (typeof index !== 'number') return;
+        if (typeof index !== 'number') return
 
-        let name = prompt('Change name:').trim();
+        let name = prompt('Change name:').trim()
 
         if (!name) {
-          return this.alert('error', 'Name can not be empty');
+          return this.alert('error', 'Name can not be empty')
         }
 
         this.update({
           fn: this.project.editListName,
           data: { index, name },
-        });
+        })
 
-        this.$eventBus.$emit('save-project');
+        this.save()
       } catch (error) {}
     },
     deleteList(index, name) {
-      if (typeof index !== 'number') return;
+      if (typeof index !== 'number') return
 
-      let userResponse = confirm(`Are you sure you want to delete ${name}`);
+      let userResponse = confirm(`Are you sure you want to delete ${name}`)
 
       if (userResponse) {
-        this.update({ fn: this.project.deleteList, data: { index } });
-        this.save();
+        this.update({ fn: this.project.deleteList, data: { index } })
+        this.save()
       }
     },
   },
-};
+}
 </script>
 
 <style></style>

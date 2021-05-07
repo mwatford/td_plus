@@ -6,9 +6,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import ChatDisplay from './ChatDisplay.vue';
-import ChatInput from './ChatInput.vue';
+import { mapState } from 'vuex'
+import ChatDisplay from './ChatDisplay.vue'
+import ChatInput from './ChatInput.vue'
 
 export default {
   components: {
@@ -18,24 +18,24 @@ export default {
   data() {
     return {
       messages: [],
-    };
+    }
   },
   methods: {
     loadMessages() {
       this.$socket.on('message', data => {
         if (Array.isArray(data)) {
-          this.messages.push(...data);
+          this.messages.push(...data)
         } else {
-          this.messages.push(data);
+          this.messages.push(data)
         }
-      });
-      this.$socket.emit('load messages');
+      })
+      this.$socket.emit('load-messages')
     },
   },
   mounted() {
-    this.loadMessages();
+    this.loadMessages()
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

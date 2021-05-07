@@ -1,8 +1,8 @@
 const register = http => data =>
-  http({ method: 'post', url: '/api/users/register', data });
+  http({ method: 'post', url: '/api/users/register', data })
 
 const signIn = http => data =>
-  http({ method: 'post', url: '/api/users/sign-in', data });
+  http({ method: 'post', url: '/api/users/sign-in', data })
 
 const fetchUser = http => token =>
   http({
@@ -11,7 +11,7 @@ const fetchUser = http => token =>
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  });
+  })
 
 const updateUser = http => (token, changes) =>
   http({
@@ -22,7 +22,7 @@ const updateUser = http => (token, changes) =>
       'Content-Type': 'application/json',
     },
     data: changes,
-  });
+  })
 
 const deleteUser = http => token =>
   http({
@@ -31,7 +31,7 @@ const deleteUser = http => token =>
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  });
+  })
 
 const searchByEmail = http => (token, query) =>
   http({
@@ -40,7 +40,7 @@ const searchByEmail = http => (token, query) =>
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  });
+  })
 
 export default http => ({
   register: register(http),
@@ -49,4 +49,4 @@ export default http => ({
   updateUser: updateUser(http),
   deleteUser: deleteUser(http),
   searchByEmail: searchByEmail(http),
-});
+})

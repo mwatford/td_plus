@@ -44,14 +44,14 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { mapState } from 'vuex';
-import boxAnimations from 'Mixins/boxAnimations';
-import { hashPassword } from 'Utils/password';
-import navigate from 'Mixins/navigate';
-import factory from 'Classes/ProjectFactory';
-import { manageProject } from 'Services/LocalDbManager';
-import http from 'Services/api/index';
+import axios from 'axios'
+import { mapState } from 'vuex'
+import boxAnimations from 'Mixins/boxAnimations'
+import { hashPassword } from 'Utils/password'
+import navigate from 'Mixins/navigate'
+import factory from 'Classes/ProjectFactory'
+import { manageProject } from 'Services/LocalDbManager'
+import http from 'Services/api/index'
 
 export default {
   mixins: [boxAnimations, navigate],
@@ -61,7 +61,7 @@ export default {
       name: '',
       type: '',
       project: null,
-    };
+    }
   },
   computed: {
     ...mapState({
@@ -75,48 +75,48 @@ export default {
           value: el,
           text: el,
         })) || []
-      );
+      )
     },
   },
   methods: {
     async create() {
       try {
-        await this.validate();
+        await this.validate()
 
-        const password = this.password ? await hashPassword(this.password) : '';
-        this.project = factory.create(this.type, { name: this.name, password });
+        const password = this.password ? await hashPassword(this.password) : ''
+        this.project = factory.create(this.type, { name: this.name, password })
 
         if (this.auth) {
-          await http.projects.create(this.token, this.project);
-          await this.updateUser();
+          await http.projects.create(this.token, this.project)
+          await this.updateUser()
         } else {
-          manageProject('add', this.project);
+          manageProject('add', this.project)
         }
 
-        this.alert('success', 'Project created');
-        this.navigate({ name: 'home' });
+        this.alert('success', 'Project created')
+        this.navigate({ name: 'home' })
       } catch (e) {
-        this.alert('error', e || 'Something went wrong');
+        this.alert('error', e || 'Something went wrong')
       }
     },
     async validate() {
-      if (!this.name || !this.type) return Promise.reject();
-      return Promise.resolve();
+      if (!this.name || !this.type) return Promise.reject()
+      return Promise.resolve()
     },
     updateUser() {
       return this.$store.dispatch('user/fetchUser', {
         token: this.token,
         email: this.user.email,
-      });
+      })
     },
   },
   mounted() {
-    this.boxEnterAnimation(300, 0, false);
+    this.boxEnterAnimation(300, 0, false)
   },
   beforeRouteLeave(to, from, next) {
-    this.boxExitAnimation(300, 0, false).then(next);
+    this.boxExitAnimation(300, 0, false).then(next)
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

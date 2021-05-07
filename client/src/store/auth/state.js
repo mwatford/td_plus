@@ -1,8 +1,8 @@
 export const defaultState = () => {
   return {
     token: null,
-    status: ""
-  };
-};
+    status: '',
+  }
+}
 
-export const state = defaultState();
+export const state = defaultState()

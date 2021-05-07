@@ -10,7 +10,7 @@
     <button
       class="task__button task__button--blue"
       v-if="displayButton"
-      @click="move(listIndex, taskIndex, -1)"
+      @click="move(-1)"
     >
       <app-icon type="arrow-left" class="m-auto"></app-icon>
     </button>
@@ -23,7 +23,7 @@
     </div>
     <button
       class="task__button task__button--green"
-      @click="move(listIndex, taskIndex, 1)"
+      @click="move(1)"
       v-if="displayButton"
     >
       <app-icon type="arrow-right" class="m-auto"></app-icon>
@@ -31,11 +31,15 @@
     <button
       class="task__button task__button--blue"
       v-if="auth && !task.member"
-      @click="grabTask(listIndex, taskIndex)"
+      @click="grabTask"
     >
       <app-icon type="hand" class="m-auto"></app-icon>
     </button>
-    <form class="box box--inverted task__description" v-if="descriptionOpen">
+    <form
+      class="box box--inverted task__description"
+      v-if="descriptionOpen"
+      @submit.prevent
+    >
       <h4>{{ snippet(task.name, 16) }}</h4>
       <textarea v-model="description" class="input"> </textarea>
       <div class="row">
@@ -57,9 +61,10 @@
 </template>
 
 <script>
-import snippet from 'Mixins/snippet';
-import { mapState } from 'vuex';
-import cloneDeep from 'Utils/cloneDeep';
+import snippet from 'Mixins/snippet'
+import { mapState, mapMutations } from 'vuex'
+import cloneDeep from 'Utils/cloneDeep'
+import { manageProject } from 'Services/LocalDbManager'
 
 export default {
   props: ['task', 'listIndex', 'taskIndex', 'user'],
@@ -68,7 +73,7 @@ export default {
     return {
       descriptionOpen: false,
       description: this.task.description,
-    };
+    }
   },
   computed: {
     ...mapState({
@@ -76,72 +81,58 @@ export default {
       project: state => state.activeProject.data,
     }),
     displayButton() {
-      if (!this.auth) return true;
-      if (this.user === this.task.member) return true;
-      return false;
+      if (!this.auth) return true
+      if (this.user === this.task.member) return true
+      return false
     },
   },
   methods: {
-    move(listIndex, taskIndex, value) {
-      const data = this.getData(this.task, value);
+    ...mapMutations({ update: 'activeProject/UPDATE' }),
+    move(val) {
+      this.update({
+        fn: this.project.moveTask,
+        data: {
+          id: this.task._id,
+          from: this.listIndex,
+          to: this.listIndex + val,
+        },
+      })
 
-      this.$store
-        .dispatch('activeProject/moveTask', data)
-        .then(this.triggerUpdate);
+      this.triggerUpdate()
     },
     updateDescription() {
-      const changes = cloneDeep(this.task);
-      const data = this.getData(this.task);
+      this.update({
+        fn: this.project.updateTask,
+        data: {
+          id: this.task._id,
+          listIndex: this.listIndex,
+          changes: { description: this.description },
+        },
+      })
 
-      changes.description = this.description;
-      data.changes = changes;
-
-      this.$store
-        .dispatch('activeProject/updateTask', data)
-        .then(this.triggerUpdate);
-
-      this.descriptionOpen = false;
+      this.triggerUpdate()
     },
     grabTask() {
-      const changes = cloneDeep(this.task);
-      const data = this.getData(this.task);
+      this.update({
+        fn: this.project.updateTask,
+        data: {
+          id: this.task._id,
+          listIndex: this.listIndex,
+          changes: { member: this.user },
+        },
+      })
 
-      changes.member = this.user;
-      data.changes = changes;
-
-      this.$store
-        .dispatch('activeProject/updateTask', data)
-        .then(this.triggerUpdate);
+      this.triggerUpdate()
     },
-    triggerUpdate() {
-      if (!this.auth)
-        return this.$store.dispatch(
-          'activeProject/saveLocally',
-          this.project.name
-        );
-
-      this.$eventBus.$emit('project-updated');
-    },
-    getData(task, value = null) {
-      const data = {
-        listIndex: this.listIndex,
-        taskIndex: this.taskIndex,
-        value,
-      };
-
-      if (this.auth) {
-        data.taskIndex = cloneDeep(
-          this.$store.getters['activeProject/getTaskIndex'](
-            this.listIndex,
-            task._id
-          )
-        );
+    async triggerUpdate() {
+      if (!this.auth) {
+        return await manageProject('add', this.project)
       }
 
-      return data;
+      this.$eventBus.$emit('project-updated')
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

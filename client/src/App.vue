@@ -7,9 +7,9 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-import sideBar from 'Components/side-bar.vue';
-import alerts from 'Components/alerts.vue';
+import { mapState, mapActions } from 'vuex'
+import sideBar from 'Components/side-bar.vue'
+import alerts from 'Components/alerts.vue'
 
 export default {
   components: {
@@ -23,7 +23,7 @@ export default {
       isAuthenticated: state => state.auth.status,
     }),
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

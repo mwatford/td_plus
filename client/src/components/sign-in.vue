@@ -13,14 +13,14 @@
 </template>
 
 <script>
-import http from 'Services/api/index';
+import http from 'Services/api/index'
 
 export default {
   data() {
     return {
       email: '',
       password: '',
-    };
+    }
   },
   methods: {
     async submitForm() {
@@ -28,31 +28,28 @@ export default {
         const { data } = await http.users.signIn({
           email: this.email,
           password: this.password,
-        });
+        })
 
-        const { token } = data;
+        const { token } = data
 
-        this.$store.commit('auth/SET_TOKEN', token);
-        this.$store.commit('auth/SET_STATUS', true);
+        this.$store.commit('auth/SET_TOKEN', token)
+        this.$store.commit('auth/SET_STATUS', true)
 
         await this.$store.dispatch('user/fetchUser', {
           token,
-        });
+        })
 
         if (!this.$store.state.user.name) {
-          this.$eventBus.$emit('choose-name');
+          this.$eventBus.$emit('choose-name')
         } else {
-          this.$router.push({ name: 'home' });
+          this.$router.push({ name: 'home' })
         }
       } catch (error) {
-        this.$store.dispatch('alerts/display', {
-          type: 'error',
-          message: 'Invalid credentials',
-        });
+        this.alert('error', 'Invalid credentials')
       }
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

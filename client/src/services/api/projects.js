@@ -7,8 +7,8 @@ const sendProjects = http => (token, data) => {
       'Content-Type': 'application/json',
     },
     data,
-  });
-};
+  })
+}
 
 const fetchActiveProject = http => (token, id) =>
   http({
@@ -17,7 +17,7 @@ const fetchActiveProject = http => (token, id) =>
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  });
+  })
 
 const updateProject = http => (token, id) => data =>
   http({
@@ -28,7 +28,7 @@ const updateProject = http => (token, id) => data =>
       'Content-Type': 'application/json',
     },
     data,
-  });
+  })
 
 const create = http => (token, data) =>
   http({
@@ -39,7 +39,7 @@ const create = http => (token, data) =>
       'Content-Type': 'application/json',
     },
     data,
-  });
+  })
 
 const fetchAllProjects = http => (token, id) =>
   http({
@@ -48,7 +48,7 @@ const fetchAllProjects = http => (token, id) =>
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  });
+  })
 
 const isAdmin = http => (token, id) =>
   http({
@@ -57,7 +57,7 @@ const isAdmin = http => (token, id) =>
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  });
+  })
 
 const deleteProject = http => (token, id) =>
   http({
@@ -66,7 +66,7 @@ const deleteProject = http => (token, id) =>
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  });
+  })
 
 const addUser = http => (token, { id, userId }) =>
   http({
@@ -75,14 +75,14 @@ const addUser = http => (token, { id, userId }) =>
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  });
+  })
 
 const removeUser = http => (token, { id, userId }) =>
   http({
     method: 'put',
     url: `/api/projects/${id}/removeUser/${userId}`,
     headers: { Authorization: `Bearer ${token}` },
-  });
+  })
 
 export default http => ({
   import: sendProjects(http),
@@ -94,4 +94,4 @@ export default http => ({
   delete: deleteProject(http),
   addUser: addUser(http),
   removeUser: removeUser(http),
-});
+})

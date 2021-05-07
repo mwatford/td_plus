@@ -10,19 +10,20 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex';
-import navigate from 'Mixins/navigate';
-import snippet from 'Mixins/snippet';
-import cloneDeep from 'Utils/cloneDeep';
-import UserSearch from './search.vue';
-import { manageProject } from 'Services/LocalDbManager';
-import http from 'Services/api/index';
-import AddTask from './AddTask.vue';
-import MemberList from './MemberList.vue';
-import ProjectLists from './ProjectLists.vue';
+import { mapState, mapGetters, mapMutations } from 'vuex'
+import navigate from 'Mixins/navigate'
+import snippet from 'Mixins/snippet'
+import saveProject from 'Mixins/saveProject'
+import cloneDeep from 'Utils/cloneDeep'
+import UserSearch from './search.vue'
+import { manageProject } from 'Services/LocalDbManager'
+import http from 'Services/api/index'
+import AddTask from './AddTask.vue'
+import MemberList from './MemberList.vue'
+import ProjectLists from './ProjectLists.vue'
 
 export default {
-  mixins: [navigate, snippet],
+  mixins: [navigate, snippet, saveProject],
   components: {
     UserSearch,
     AddTask,
@@ -34,7 +35,7 @@ export default {
       loading: 'start',
       limit: 9,
       searchOpen: false,
-    };
+    }
   },
   computed: {
     ...mapState({
@@ -44,143 +45,58 @@ export default {
     }),
   },
   mounted() {
-    this.$eventBus.$on('save-project', this.save);
-
     if (this.auth) {
-      this.authenticate();
-      this.$eventBus.$on('open-search', this.openSearch);
-      this.$eventBus.$on('close-search', this.closeSearch);
+      this.authenticate()
+      this.$eventBus.$on('open-search', this.openSearch)
+      this.$eventBus.$on('close-search', this.closeSearch)
     }
   },
   beforeDestroy() {
-    this.$eventBus.$off('open-search', this.openSearch);
-    this.$eventBus.$off('close-search', this.closeSearch);
+    this.$eventBus.$off('open-search', this.openSearch)
+    this.$eventBus.$off('close-search', this.closeSearch)
   },
   methods: {
     ...mapMutations({ update: 'activeProject/UPDATE' }),
     openSearch() {
-      this.searchOpen = true;
+      this.searchOpen = true
     },
     closeSearch() {
-      this.searchOpen = false;
+      this.searchOpen = false
     },
     async authenticate() {
       try {
-        this.loading = 'loading';
-        await http.projects.isAdmin(this.token, this.project._id);
-        this.loading = 'start';
+        this.loading = 'loading'
+        await http.projects.isAdmin(this.token, this.project._id)
+        this.loading = 'start'
       } catch (e) {
-        this.loading = 'failed';
-        this.alert('error', e.response.data);
-        this.navigate(-1);
+        this.loading = 'failed'
+        this.alert('error', e.response.data)
+        this.navigate(-1)
       }
     },
     async deleteProject() {
       try {
         const confirmed = confirm(
           `Are you absolutely sure you want to delete '${this.project.name}'?`
-        );
+        )
 
-        if (!confirmed) return;
+        if (!confirmed) return
 
         if (!this.auth) {
-          await manageProject('delete', this.project);
+          await manageProject('delete', this.project)
         } else {
-          await http.projects.delete(this.token, this.project._id);
-          this.$socket.emit('project deleted');
+          await http.projects.delete(this.token, this.project._id)
+          this.$socket.emit('project-deleted')
         }
 
-        this.alert('success', 'Project has been deleted');
-        this.navigate({ name: 'home' });
+        this.alert('success', 'Project has been deleted')
+        this.navigate({ name: 'home' })
       } catch (error) {
-        this.alert('error', 'Something went wrong');
+        this.alert('error', 'Something went wrong')
       }
     },
-    changeListName(index) {
-      const name = prompt(`Rename list '${this.project.lists[index].name}':`);
-
-      if (name) {
-        this.$store.commit('activeProject/UPDATE_LIST_NAME', {
-          name,
-          index,
-        });
-        const project = cloneDeep(this.project);
-
-        this.save();
-      }
-    },
-    updateProject() {
-      this.loading = 'start';
-
-      const changes = cloneDeep({
-        lists: this.project.lists,
-        members: this.project.members.map(el => ({
-          id: el.id,
-          role: el.role,
-          permissions: el.permissions,
-        })),
-      });
-
-      return this.$store
-        .dispatch('activeProject/updateProject', {
-          id: this.project._id,
-          changes,
-        })
-        .then(() => {
-          this.loading = 'start';
-          this.$socket.emit('updated', this.project);
-        })
-        .catch(e => {
-          this.loading = 'start';
-          this.alert('error', 'Your changes have not been saved.');
-        });
-    },
-    deleteList(index) {
-      const confirmed = confirm(
-        `Are you sure you want to delete "${this.project.lists[index].name}"`
-      );
-
-      if (confirmed) {
-        this.$store.commit('activeProject/DELETE_LIST', index);
-
-        this.save();
-      }
-    },
-    save() {
-      return !this.auth
-        ? this.$store.dispatch('activeProject/saveLocally', this.project.name)
-        : this.updateProject();
-    },
-    // async removeUser(user, index) {
-    //   try {
-    //     await http.projects.removeUser(this.token, {
-    //       id: this.project._id,
-    //       userId: user.id,
-    //     });
-    //     this.alert('success', 'User has been removed');
-    //   } catch (e) {
-    //     this.alert('error', 'User has not been removed');
-    //   }
-    // },
-    // updateUser({ projects, _id }, action) {
-    //   if (action === 'add') {
-    //     projects.push(this.project._id);
-    //   }
-
-    //   return this.$this.http({
-    //     method: 'put',
-    //     url: `/api/users/${_id}`,
-    //     headers: {
-    //       Authorization: `Bearer ${this.token}`,
-    //       'Content-Type': 'application/json',
-    //     },
-    //     data: {
-    //       changes: { projects },
-    //     },
-    //   });
-    // },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

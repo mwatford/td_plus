@@ -1,11 +1,11 @@
-const router = require('express').Router();
-const controller = require('../controllers/projects/index');
+const router = require('express').Router()
+const controller = require('../controllers/projects/index')
 
-const authenticateToken = require('../middleware/jwt').authenticateToken();
+const authenticateToken = require('../middleware/jwt').authenticateToken()
 
-const handler = require('../utils/handler');
+const handler = require('../utils/handler')
 
-router.use(authenticateToken);
+router.use(authenticateToken)
 
 router.post(
   '/create',
@@ -13,18 +13,18 @@ router.post(
     return {
       id: req.user.id,
       project: req.body,
-    };
+    }
   })
-);
+)
 
 router.get(
   '/all/:id',
   handler(controller.getUserProjects, (req, res, next) => {
     return {
       id: req.user.id,
-    };
+    }
   })
-);
+)
 
 router.get(
   '/:id',
@@ -32,9 +32,9 @@ router.get(
     return {
       id: req.user.id,
       projectId: req.params.id,
-    };
+    }
   })
-);
+)
 
 router.get(
   '/:id/admin',
@@ -42,9 +42,9 @@ router.get(
     return {
       id: req.user.id,
       projectId: req.params.id,
-    };
+    }
   })
-);
+)
 
 router.delete(
   '/:id',
@@ -52,9 +52,9 @@ router.delete(
     return {
       id: req.user.id,
       projectId: req.params.id,
-    };
+    }
   })
-);
+)
 
 router.post(
   '/import',
@@ -62,18 +62,18 @@ router.post(
     return {
       id: req.user.id,
       projects: req.body,
-    };
+    }
   })
-);
+)
 
 router.get(
   '/active/:id',
   handler(controller.activeProject, (req, res, next) => {
     return {
       id: req.params.id,
-    };
+    }
   })
-);
+)
 
 router.put(
   '/:id',
@@ -81,9 +81,9 @@ router.put(
     return {
       project: req.body,
       id: req.params.id,
-    };
+    }
   })
-);
+)
 
 router.put(
   '/:id/addUser/:userId',
@@ -91,17 +91,17 @@ router.put(
     return {
       id: req.params.id,
       userId: req.params.userId,
-    };
+    }
   })
-);
+)
 router.put(
   '/:id/removeUser/:userId',
   handler(controller.removeUser, (req, res, next) => {
     return {
       id: req.params.id,
       userId: req.params.userId,
-    };
+    }
   })
-);
+)
 
-module.exports = router;
+module.exports = router

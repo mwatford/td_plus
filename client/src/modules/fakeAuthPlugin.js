@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios'
 
 const fetchUsers = () =>
   axios({
@@ -8,13 +8,13 @@ const fetchUsers = () =>
       'Content-Type': 'application/json',
     },
   }).then(({ data }) => {
-    console.log({ data });
-  });
+    console.log({ data })
+  })
 
 const loginWithPopup = () => {
-  return fetchUsers();
-};
+  return fetchUsers()
+}
 
 export default {
   loginWithPopup,
-};
+}

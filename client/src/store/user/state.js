@@ -1,11 +1,11 @@
 export const defaultState = () => {
   return {
-    id: "",
-    name: "",
-    email: "",
+    id: '',
+    name: '',
+    email: '',
     projects: [],
-    token: null
-  };
-};
+    token: null,
+  }
+}
 
-export const state = defaultState();
+export const state = defaultState()

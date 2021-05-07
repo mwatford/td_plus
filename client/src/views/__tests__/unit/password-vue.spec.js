@@ -1,11 +1,11 @@
-import Component from '../../Project/password.vue';
-import { createLocalVue, shallowMount } from '@vue/test-utils';
-import activeProject from 'activeProject';
+import Component from '../../Project/password.vue'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+import activeProject from 'activeProject'
 
-let localVue = createLocalVue();
+let localVue = createLocalVue()
 
-const alert = jest.fn();
-const compare = jest.fn();
+const alert = jest.fn()
+const compare = jest.fn()
 
 const factory = (data = {}) => {
   const options = {
@@ -13,66 +13,66 @@ const factory = (data = {}) => {
     computed: {
       project: () => activeProject,
     },
-  };
+  }
 
-  Object.assign(options, data);
-  const wrapper = shallowMount(Component, options);
+  Object.assign(options, data)
+  const wrapper = shallowMount(Component, options)
 
   wrapper.setMethods({
     alert,
     comparePasswords: compare,
-  });
+  })
 
-  return wrapper;
-};
+  return wrapper
+}
 
 describe('Password', () => {
-  const wrapper = factory();
+  const wrapper = factory()
   test('is vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
-  });
+    expect(wrapper.isVueInstance()).toBeTruthy()
+  })
 
   describe('renders', () => {
     test('correct project name', () => {
-      const actual = wrapper.find('h3');
-      expect(actual.text()).toEqual('project name');
-    });
-  });
-});
+      const actual = wrapper.find('h3')
+      expect(actual.text()).toEqual('project name')
+    })
+  })
+})
 
 describe('methods', () => {
   beforeAll(() => {
-    jest.clearAllMocks();
-  });
+    jest.clearAllMocks()
+  })
 
   describe('comparePasswords', () => {
-    const $emit = jest.fn();
+    const $emit = jest.fn()
     const options = {
       mocks: {
         $eventBus: {
           $emit,
         },
       },
-    };
-    const wrapper = factory(options);
-    wrapper.setData({ password: 'test password' });
+    }
+    const wrapper = factory(options)
+    wrapper.setData({ password: 'test password' })
 
     test('gets called on form submit', () => {
-      wrapper.find('form').trigger('submit');
+      wrapper.find('form').trigger('submit')
 
-      expect(compare).toHaveBeenCalled();
-    });
+      expect(compare).toHaveBeenCalled()
+    })
 
     test('gets called with correct arguments', () => {
-      expect(compare).toHaveBeenCalledWith('test password', 'project password');
-    });
+      expect(compare).toHaveBeenCalledWith('test password', 'project password')
+    })
 
     test('emits event if passwords match', () => {
-      compare.mockImplementationOnce(() => true);
+      compare.mockImplementationOnce(() => true)
 
-      wrapper.find('form').trigger('submit');
+      wrapper.find('form').trigger('submit')
 
-      expect($emit).toHaveBeenCalledWith('correct-password');
-    });
-  });
-});
+      expect($emit).toHaveBeenCalledWith('correct-password')
+    })
+  })
+})

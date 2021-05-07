@@ -18,7 +18,7 @@
       <BaseSelect
         :options="members"
         :selected="task.member"
-        @change="onChange"
+        @change="value => (task.member = value)"
       ></BaseSelect>
     </div>
     <button class="button" @click="addTask">
@@ -28,15 +28,19 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from 'vuex'
+import saveProject from 'Mixins/saveProject'
+
 export default {
+  mixins: [saveProject],
   data() {
     return {
       task: this.createEmptyTask(),
-    };
+    }
   },
   computed: {
     ...mapState({
+      project: state => state.activeProject.data,
       members: state =>
         state.activeProject.data.members.map(el => ({
           text: el.name,
@@ -46,25 +50,25 @@ export default {
     }),
   },
   methods: {
-    onChange() {
-
-    },
     addTask() {
-      this.$store.commit('activeProject/ADD_TASK', this.task);
+      this.$store.commit('activeProject/UPDATE', {
+        fn: this.project.addTask,
+        data: { task: this.task, listIndex: 0 },
+      })
 
-      this.$eventBus.$emit('save-project');
+      this.save()
 
-      this.task = this.createEmptyTask();
+      this.task = this.createEmptyTask()
     },
     createEmptyTask() {
       return {
         name: '',
         description: '',
         member: '',
-      };
+      }
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

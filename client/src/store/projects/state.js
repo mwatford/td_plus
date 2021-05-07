@@ -1,7 +1,7 @@
 export const defaultState = () => {
   return {
-    data: []
-  };
-};
+    data: [],
+  }
+}
 
-export const state = defaultState();
+export const state = defaultState()

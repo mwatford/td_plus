@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import icons from './icons/index';
+import icons from './icons/index'
 
 export default {
   components: {
@@ -36,14 +36,14 @@ export default {
   },
   computed: {
     iconStyle() {
-      const { size } = this;
+      const { size } = this
       return {
         width: `${size}px`,
         height: `${size}px`,
-      };
+      }
     },
   },
-};
+}
 </script>
 
 <style></style>

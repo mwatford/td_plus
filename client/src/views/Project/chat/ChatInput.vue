@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import EmojiPicker from './EmojiPicker.vue';
+import EmojiPicker from './EmojiPicker.vue'
 
 export default {
   components: { EmojiPicker },
@@ -19,16 +19,16 @@ export default {
   methods: {
     sendMessage() {
       if (this.input.trim().length) {
-        this.$socket.emit('sendMessage', this.input);
+        this.$socket.emit('send-message', this.input)
       }
-      this.input = '';
+      this.input = ''
     },
     addEmoji(el) {
-      this.input += String.fromCodePoint(el);
-      this.$refs['message'].focus();
+      this.input += String.fromCodePoint(el)
+      this.$refs['message'].focus()
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

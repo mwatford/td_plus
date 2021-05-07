@@ -13,14 +13,14 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 export default {
   computed: {
     ...mapState({
-      alerts: state => state.alerts.content
-    })
-  }
-};
+      alerts: state => state.alerts.content,
+    }),
+  },
+}
 </script>
 
 <style lang="scss" scoped>

@@ -1,5 +1,5 @@
-import { getInstance } from './index';
-import store from '../store/index';
+import { getInstance } from './index'
+import store from '../store/index'
 
 export const authGuard = (to, from, next) => {
   // const authService = getInstance();
@@ -7,16 +7,16 @@ export const authGuard = (to, from, next) => {
   const fn = () => {
     // If the user is authenticated, continue with the route
     if (store.state.auth.status) {
-      return next();
+      return next()
     }
 
     // Otherwise, log in
-    next({ name: 'start' });
-  };
+    next({ name: 'start' })
+  }
 
   // If loading has already finished, check our auth state using `fn()`
   // if (!authService.loading) {}
-  return fn();
+  return fn()
 
   // Watch for the loading property to change before we check isAuthenticated
   // authService.$watch('loading', loading => {
@@ -24,4 +24,4 @@ export const authGuard = (to, from, next) => {
   //     return fn();
   //   }
   // });
-};
+}

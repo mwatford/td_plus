@@ -2,7 +2,9 @@
   <div class="m-auto">
     <div :class="['loading', pulse]">
       <div :class="['circle', rotate]" :style="style">
-        <p v-if="state === 'failed'" class="scale" ><app-icon type="reload" size="22"></app-icon></p>
+        <p v-if="state === 'failed'" class="scale">
+          <app-icon type="reload" size="22"></app-icon>
+        </p>
       </div>
     </div>
   </div>
@@ -13,51 +15,51 @@ export default {
   props: {
     size: {
       type: Number,
-      required: true
+      required: true,
     },
     state: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     style() {
-      const { size } = this;
+      const { size } = this
       return {
         width: `${size}px`,
         height: `${size}px`,
-        borderColor: this.color
-      };
+        borderColor: this.color,
+      }
     },
     display() {
-      return this.state !== "start";
+      return this.state !== 'start'
     },
     rotate() {
-      if (this.state === "failed") {
-        return "shake";
+      if (this.state === 'failed') {
+        return 'shake'
       }
-      return "rotate";
+      return 'rotate'
     },
     pulse() {
-      if (this.state === "loading") {
-        return "pulse";
+      if (this.state === 'loading') {
+        return 'pulse'
       }
-      return "";
+      return ''
     },
     color() {
       switch (this.state) {
-        case "failed":
-          return "red";
-        case "success":
-          return "green";
-        case "done":
-          return "green";
+        case 'failed':
+          return 'red'
+        case 'success':
+          return 'green'
+        case 'done':
+          return 'green'
         default:
-          return "#fff";
+          return '#fff'
       }
-    }
-  }
-};
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>

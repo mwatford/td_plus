@@ -6,7 +6,7 @@ module.exports = a => {
     find: jest.fn(),
     findOneAndRemove: jest.fn(),
     findByIdAndUpdate: jest.fn(),
-  };
+  }
 
-  return Object.assign(defaults, a);
-};
+  return Object.assign(defaults, a)
+}

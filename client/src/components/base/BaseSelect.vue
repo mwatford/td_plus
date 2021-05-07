@@ -6,8 +6,9 @@
       :key="item.text"
       ref="option"
       :value="item.value"
-      >{{ item.text }}</option
     >
+      {{ item.text }}
+    </option>
   </select>
 </template>
 
@@ -34,10 +35,10 @@ export default {
   }),
   methods: {
     handleChange() {
-      this.$emit('change', this.selected);
+      this.$emit('change', this.selected)
     },
   },
-};
+}
 </script>
 
 <style></style>

@@ -1,7 +1,7 @@
 export const defaultState = () => {
   return {
-    content: []
-  };
-};
+    content: [],
+  }
+}
 
-export const state = defaultState();
+export const state = defaultState()

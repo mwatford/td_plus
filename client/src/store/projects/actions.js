@@ -8,8 +8,8 @@ export const actions = requestModule => {
           Authorization: `Bearer ${token}`,
         },
       }).then(response => {
-        commit('SET_PROJECTS', response.data);
-      });
+        commit('SET_PROJECTS', response.data)
+      })
     },
-  };
-};
+  }
+}

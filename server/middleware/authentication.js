@@ -1,6 +1,6 @@
-const jwt = require('express-jwt');
-const jwksRsa = require('jwks-rsa');
-const authConfig = require('./auth_config');
+const jwt = require('express-jwt')
+const jwksRsa = require('jwks-rsa')
+const authConfig = require('./auth_config')
 
 // Set up Auth0 configuration
 // Define middleware that validates incoming bearer tokens
@@ -16,7 +16,7 @@ const checkJwt = jwt({
   audience: authConfig.audience,
   issuer: `https://${authConfig.domain}/`,
   algorithm: ['RS256'],
-});
+})
 
 // function fakeMiddleware(req, res, next) {
 //   const authHeader = req.headers['authorization'];
@@ -31,4 +31,4 @@ const checkJwt = jwt({
 //   next();
 // }
 
-module.exports = checkJwt;
+module.exports = checkJwt

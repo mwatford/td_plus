@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import http from 'Services/api/index';
+import http from 'Services/api/index'
 
 export default {
   data() {
@@ -31,42 +31,43 @@ export default {
       email: '',
       password: '',
       repassword: '',
-    };
+    }
   },
   computed: {
     passwordsMatch() {
-      return this.password === this.repassword;
+      return this.password === this.repassword
     },
   },
   methods: {
     async submitForm() {
-      if (!this.passwordsMatch)
-        return this.$store.dispatch('alerts/display', {
-          type: 'error',
-          message: 'Passwords do not match',
-        });
+      try {
+        if (!this.passwordsMatch)
+          return this.alert('error', 'Passwords do not match')
 
-      const { data } = await http.users.register({
-        email: this.email,
-        password: this.password,
-      });
+        const { data } = await http.users.register({
+          email: this.email,
+          password: this.password,
+        })
 
-      const { token } = data;
+        const { token } = data
 
-      this.$store.commit('auth/SET_TOKEN', token);
-      this.$store.commit('auth/SET_STATUS', true);
+        this.$store.commit('auth/SET_TOKEN', token)
+        this.$store.commit('auth/SET_STATUS', true)
 
-      await this.$store.dispatch('user/fetchUser', {
-        token,
-      });
+        await this.$store.dispatch('user/fetchUser', {
+          token,
+        })
 
-      if (!this.$store.state.user.name)
-        return this.$eventBus.$emit('choose-name');
+        if (!this.$store.state.user.name)
+          return this.$eventBus.$emit('choose-name')
 
-      this.$router.push({ name: 'home' });
+        this.$router.push({ name: 'home' })
+      } catch (error) {
+        this.alert('error', error.response.data.message)
+      }
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

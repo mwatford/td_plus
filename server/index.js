@@ -1,11 +1,11 @@
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8000
 
-(async () => {
-  const app = await require("./app")();
+;(async () => {
+  const app = await require('./app')()
 
-  const http = require("http").createServer(app);
+  const http = require('http').createServer(app)
 
-  http.listen(PORT, console.log(`Server running on port: ${PORT}`));
+  http.listen(PORT, console.log(`Server running on port: ${PORT}`))
 
-  require("./controllers/liveProject/index")(http);
-})();
+  require('./controllers/liveProject/index')(http)
+})()

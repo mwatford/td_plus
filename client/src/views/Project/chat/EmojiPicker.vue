@@ -3,9 +3,7 @@
     :class="['emojiPicker', { 'emojiPicker--open': isExpanded }]"
     @click="isExpanded = !isExpanded"
   >
-    <div>
-      &#x1F604;
-    </div>
+    <div>&#x1F604;</div>
     <ul class="emojiList" v-if="isExpanded">
       <li
         class="emojiList__element"
@@ -20,16 +18,16 @@
 </template>
 
 <script>
-import emojis from 'Utils/emojiList';
+import emojis from 'Utils/emojiList'
 
 export default {
   data: () => ({ emojis, isExpanded: false }),
   methods: {
     onEmojiClick(el) {
-      this.$emit('chosen', el);
+      this.$emit('chosen', el)
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -16,10 +16,10 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import AppList from 'Components/appList/AppList.vue';
-import AppListItemAction from 'Components/appList/AppListItemAction.vue';
-import http from 'Services/api/index';
+import { mapState } from 'vuex'
+import AppList from 'Components/appList/AppList.vue'
+import AppListItemAction from 'Components/appList/AppListItemAction.vue'
+import http from 'Services/api/index'
 
 export default {
   components: {
@@ -38,28 +38,30 @@ export default {
   },
   methods: {
     openSearch() {
-      this.$eventBus.$emit('open-search');
+      this.$eventBus.$emit('open-search')
     },
     async removeUser(user, index) {
       try {
         await http.projects.removeUser(this.token, {
           id: this.project._id,
           userId: user.id,
-        });
+        })
 
         await this.$store.dispatch('activeProject/fetchProject', {
           token: this.token,
           id: this.project._id,
-        });
+        })
 
-        this.alert('success', 'User has been removed');
+        this.$socket.emit('user-removed', user.id)
+
+        this.alert('success', 'User has been removed')
       } catch (e) {
-        this.alert('error', e || 'User has not been removed');
+        this.alert('error', e || 'User has not been removed')
       }
     },
     updateUser({ projects, _id }, action) {
       if (action === 'add') {
-        projects.push(this.project._id);
+        projects.push(this.project._id)
       }
 
       return this.$this.http({
@@ -72,10 +74,10 @@ export default {
         data: {
           changes: { projects },
         },
-      });
+      })
     },
   },
-};
+}
 </script>
 
 <style></style>

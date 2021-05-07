@@ -1,1 +1,1 @@
-module.exports = ['/register', '/sign-in'];
+module.exports = ['/register', '/sign-in']
