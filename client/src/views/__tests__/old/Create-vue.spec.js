@@ -1,5 +1,5 @@
 import Component from '../../Create.vue'
-import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import suggestions from 'create/suggestions'
 import store from '../../../store/index'
 
@@ -77,7 +77,6 @@ describe('Component', () => {
         })
 
         expect(actual.findAll('h4').at(0).text()).toEqual('suggestion name')
-
         expect(actual.findAll('h5').at(0).text()).toEqual('suggestion email')
       })
     })

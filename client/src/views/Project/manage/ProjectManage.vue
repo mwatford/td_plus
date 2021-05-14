@@ -10,11 +10,10 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import navigate from 'Mixins/navigate'
 import snippet from 'Mixins/snippet'
 import saveProject from 'Mixins/saveProject'
-import cloneDeep from 'Utils/cloneDeep'
 import UserSearch from './search.vue'
 import { manageProject } from 'Services/LocalDbManager'
 import http from 'Services/api/index'

@@ -24,10 +24,8 @@ const getUserProjects = models => async ({ id }) => {
   return { data: projects, status: 200 }
 }
 
-// might need to rewrite
 const getProject = models => async ({ id, projectId }) => {
   const { Project } = models
-  // const { _id } = await User.findOneById(id);
   const project = await Project.findById(projectId)
 
   const isMember = await project.members.find(member => id === member)
@@ -44,7 +42,7 @@ const getProject = models => async ({ id, projectId }) => {
 }
 
 const isAdmin = models => async ({ id, projectId }) => {
-  const { Project, User } = models
+  const { Project } = models
 
   const project = await Project.findById(projectId)
   const isAdmin = project.admin === id

@@ -1,5 +1,5 @@
 import Component from '../../Project/Dashboard.vue'
-import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import activeProject from 'activeProject'
 import user from 'user'
 

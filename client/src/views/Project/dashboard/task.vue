@@ -63,7 +63,6 @@
 <script>
 import snippet from 'Mixins/snippet'
 import { mapState, mapMutations } from 'vuex'
-import cloneDeep from 'Utils/cloneDeep'
 import { manageProject } from 'Services/LocalDbManager'
 
 export default {

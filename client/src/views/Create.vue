@@ -70,12 +70,10 @@ export default {
       auth: state => state.auth.status,
     }),
     options() {
-      return (
-        Object.keys(factory.templates).map(el => ({
-          value: el,
-          text: el,
-        })) || []
-      )
+      return Object.keys(factory.templates).map(el => ({
+        value: el,
+        text: el,
+      }))
     },
   },
   methods: {

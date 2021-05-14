@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import ChatDisplay from './ChatDisplay.vue'
 import ChatInput from './ChatInput.vue'
 

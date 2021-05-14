@@ -123,15 +123,12 @@ describe('project controller', () => {
     test('returns 200, project on success', async () => {
       const save = jest.fn()
       Models.Project.findById.mockImplementationOnce(() =>
-        Promise.resolve(
-          {
-            _id: 'test project id',
-            name: 'test name',
-            members: [{ id: 'test user id' }],
-            save,
-          },
-          save
-        )
+        Promise.resolve({
+          _id: 'test project id',
+          name: 'test name',
+          members: [{ id: 'test user id' }],
+          save,
+        })
       )
       Models.User.findById.mockImplementationOnce(() =>
         Promise.resolve({

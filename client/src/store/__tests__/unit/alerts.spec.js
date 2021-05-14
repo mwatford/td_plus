@@ -1,16 +1,10 @@
 import { defaultState } from '../../alerts/state'
 import store from '../../index'
-import { actions } from '../../alerts/actions'
 
 beforeEach(done => {
   store.commit('alerts/RESET_STATE')
   done()
 })
-
-// beforeAll(done => {
-//   store.commit("alerts/RESET_STATE");
-//   done();
-// });
 
 describe('alerts', () => {
   describe('state', () => {
