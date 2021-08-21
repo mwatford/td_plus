@@ -80,6 +80,7 @@ export default {
       project: state => state.activeProject.data,
     }),
     displayButton() {
+      return !this.auth || this.user === this.task.member || false
       if (!this.auth) return true
       if (this.user === this.task.member) return true
       return false
@@ -94,6 +95,7 @@ export default {
           id: this.task._id,
           from: this.listIndex,
           to: this.listIndex + val,
+          timestamp: this.task.timestamp,
         },
       })
 

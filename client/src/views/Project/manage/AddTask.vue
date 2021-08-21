@@ -53,7 +53,10 @@ export default {
     addTask() {
       this.$store.commit('activeProject/UPDATE', {
         fn: this.project.addTask,
-        data: { task: this.task, listIndex: 0 },
+        data: {
+          task: { ...this.task, timestamp: Date.now() },
+          listIndex: 0,
+        },
       })
 
       this.save()

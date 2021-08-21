@@ -50,12 +50,16 @@ export class Basic {
 
     this.lists[listIndex].data.push(task)
   }
-  moveTask({ id, from, to }) {
+  moveTask({ id, from, to, timestamp }) {
     if (from === to) return
 
-    const item = this.lists[from].data.find(el => el._id === id)
+    console.log(timestamp)
 
-    if (item && this._listExists(to)) {
+    const item = id
+      ? this.lists[from].data.findIndex(el => el._id === id)
+      : this.lists[from].data.findIndex(el => el.timestamp === timestamp)
+
+    if (typeof item !== 'undefined' && this._listExists(to)) {
       const task = this.lists[from].data.splice(item, 1)
       this.lists[to].data.push(...task)
     }
