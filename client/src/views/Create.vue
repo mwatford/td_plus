@@ -44,7 +44,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import { mapState } from 'vuex'
 import boxAnimations from 'Mixins/boxAnimations'
 import { hashPassword } from 'Utils/password'
