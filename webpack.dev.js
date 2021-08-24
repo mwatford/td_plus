@@ -20,9 +20,9 @@ module.exports = merge(common, {
   plugins: [new HtmlWebpackPlugin({ template: "./client/src/index.html" })],
   devServer: {
     hot: true,
-    port: 8080,
+    port: 8000,
     proxy: {
-      "/api": "http://localhost:8000"
+      "/api": "http://localhost:3000"
     },
     historyApiFallback: {
       rewrites: [
